@@ -24,7 +24,6 @@ h1 {
     width: 50%;
     max-width: 600px;  /* Limit the width of the form */
     min-width: 400px;
-    margin-top: 50px;  /* Add top margin for better spacing */
     margin-bottom: 50px;
     padding: 20px;
     text-align: center; /* Centers the text */
@@ -87,7 +86,6 @@ footer {
     font-family: Arial, sans-serif;
     text-align: center;
     font-size: 14px; /* Smaller, static font size */
-    position: fixed;  /* Fixes the footer to the bottom */
     bottom: 0;        /* Ensures it stays at the bottom of the page */
     width: 100%;      /* Stretches the footer to full width */
     left: 0;          /* Ensures it's aligned with the left edge */
