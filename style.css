@@ -1,0 +1,57 @@
+/* style.css */
+
+/* Styling to ensure the label and input are on separate lines */
+ 
+body {
+    background-color: #2C3E50; /* A light gray background */
+    font-family: Arial, sans-serif; /* Set a clean, modern font */
+    color: #ECF0F1; 
+}
+
+h1 {
+    text-align: center;
+}
+.input-container {
+    margin-bottom: 10px; /* Space between each label-input pair */
+}
+
+label {
+    text-align: center;
+    display: block; /* Makes the label a block element, ensuring it takes up the full width */
+    margin-bottom: 5px; /* Adds space between the label and the input */
+    margin-top: 20px;
+}
+
+input[type="number"] {
+    margin: 0 auto;
+    display: block; /* Ensures the input takes up a full line */
+    width: 50%; /* Makes the input field stretch across the container */
+    padding: 10px; /* Adds some padding inside the input */
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    box-sizing: border-box; /* Ensures padding is included in the element's width */
+    text-align: center;
+}
+
+#clickMe {
+    /* Your styles for the button */
+    display: block; /* Makes the button a block-level element */
+    margin: 20px auto; /* Centers the button horizontally */
+    background-color: #4CAF50; /* Green background */
+    color: white; /* White text */
+    padding: 10px 20px; /* Padding inside the button */
+    border: none; /* Remove border */
+    border-radius: 5px; /* Rounded corners */
+    cursor: pointer; /* Change cursor to a pointer when hovered */
+    font-size: 16px; /* Set font size */
+}
+
+#clickMe:hover {
+    /* Styles when the button is hovered */
+    background-color: #45a049; /* Darker green when hovered */
+}
+
+#output {
+    text-align: center;
+    font-size: large;
+}

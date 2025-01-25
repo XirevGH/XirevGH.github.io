@@ -4,12 +4,34 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>JavaScript Boilerplate</title>
+    <link rel="stylesheet" href="style.css">
+    <title>Dirty Dozen Calculator</title>
 </head>
 <body>
-    <h1>Welcome to JavaScript Boilerplate</h1>
-    <button id="clickMe">Click Me</button>
-    <p id="output"></p>
+    <h1>Dirty Dozen Calculator</h1>
+    <h1>Enter your cards</h1>
+    <div>
+        <label for="numberInput">Red Threes + Fours To Nines:</label>
+        <input type="number" id="redThreeToNine" min="0" class="connectedTextField" name="numberInput">
+    </div>
+    <div>
+        <label for="numberInput">Tens, Jacks, Queens, Kings:</label>
+        <input type="number" id="tenToKing" min="0" class="connectedTextField" name="numberInput">
+    </div>
+    <div>
+        <label for="numberInput">Aces:</label>
+        <input type="number" id="ace" min="0" class="connectedTextField" name="numberInput">
+    </div>
+    <div>
+        <label for="numberInput">Twos:</label>
+        <input type="number" id="two" min="0" class="connectedTextField" name="numberInput">
+    </div>
+    <div>
+        <label for="numberInput">Black Threes:</label>
+        <input type="number" id="blackThree" min="0" class="connectedTextField" name="numberInput">
+    </div>
+    <!-- <button id="clickMe">Confirm</button> -->
+    <p id="output">Score: </p>
 
     <!-- Link to the external JavaScript file -->
     <script src="script.js" defer></script>
