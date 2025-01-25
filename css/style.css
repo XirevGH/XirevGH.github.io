@@ -66,7 +66,7 @@ h1 {
 
 
 .container {
-    min-width:500px;
+
     width: 50%;
     padding: 0px;
     text-align: center; /* Centers the text */
@@ -85,7 +85,6 @@ h1 {
     margin-bottom: 40px; /* Larger spacing between sections */
     text-align: center; /* Centers section content */
     flex-direction: column;
-    min-width:500px;
 }
 
 .form-control {
