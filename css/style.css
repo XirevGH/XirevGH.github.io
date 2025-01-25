@@ -2,9 +2,6 @@
 
 /* Styling to ensure the label and input are on separate lines */
 
-* {
-    outline: 1px solid red; /* Adds a red border to all elements */
-}
 
 body {
 
@@ -23,6 +20,14 @@ h1 {
     text-align: center;
 }
 
+h3 {
+    font-size: clamp(0.6rem, 5vw, 1rem)
+}
+
+p {
+    font-size: clamp(1rem, 5vw, 1rem);
+    white-space: nowrap;
+}
 .nav-item {
     margin: 0 auto;  /* Center horizontally */
     text-align: center;
@@ -93,6 +98,7 @@ h1 {
     flex-direction: column;
     text-align: center;
     min-width: 40px;
+    max-width: 60px;
 }
 
 #clickMe {
