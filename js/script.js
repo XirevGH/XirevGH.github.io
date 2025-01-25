@@ -2,14 +2,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     console.log('JavaScript is connected and running!');
 
-
-    const redThreeToNineInput = document.getElementById('redThreeToNine');
-    const tenToKingInput = document.getElementById('tenToKing');
-    const aceInput = document.getElementById('ace');
-    const twoInput = document.getElementById('two');
-    const blackThreeInput = document.getElementById('blackThree');
-
-    const inputBoxes = document.querySelectorAll('.connectedTextField');
+    const inputBoxes = document.querySelectorAll('.form-control');
 
     const output = document.getElementById('output');
     
@@ -31,22 +24,37 @@ document.addEventListener('DOMContentLoaded', () => {
 
     inputBoxes.forEach(inputBox => {
         inputBox.addEventListener('input', () => {
-
+            console.log('Event triggered');
             inputBoxes.forEach(box => {
-                if (box.id == "redThreeToNine") {
-                    updateScore(redThreeToNineInput, 5);
+                if (box.id == "redThreeToNinePos") {
+                    updateScore(box, 5);
                 }
-                if (box.id == "tenToKing") {
-                    updateScore(tenToKingInput, 10);
+                if (box.id == "tenToKingPos") {
+                    updateScore(box, 10);
                 }
-                if (box.id == "ace") {
-                    updateScore(aceInput, 20);
+                if (box.id == "acePos") {
+                    updateScore(box, 20);
                 }
-                if (box.id == "two") {
-                    updateScore(twoInput, 25);
+                if (box.id == "twoPos") {
+                    updateScore(box, 25);
                 }
-                if (box.id == "blackThree") {
-                    updateScore(blackThreeInput, 50);
+                if (box.id == "blackThreePos") {
+                    updateScore(box, 50);
+                }
+                if (box.id == "redThreeToNineNeg") {
+                    updateScore(box, -5);
+                }
+                if (box.id == "tenToKingNeg") {
+                    updateScore(box, -10);
+                }
+                if (box.id == "aceNeg") {
+                    updateScore(box, -20);
+                }
+                if (box.id == "twoNeg") {
+                    updateScore(box, -25);
+                }
+                if (box.id == "blackThreeNeg") {
+                    updateScore(box, -50);
                 }
 
             })
