@@ -1,7 +1,11 @@
 /* style.css */
 
 /* Styling to ensure the label and input are on separate lines */
- 
+
+* {
+    outline: 1px solid red; /* Adds a red border to all elements */
+}
+
 body {
 
     width: 100%;
@@ -58,7 +62,6 @@ h1 {
     height: 100%;
     width: 100%;
     font-size: 10px;
-
 }
 
 
@@ -135,7 +138,6 @@ footer {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    max-width: 1200px;
     margin: 0 auto;
     padding: 0 20px;
 }
