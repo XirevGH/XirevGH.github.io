@@ -3,35 +3,53 @@
 /* Styling to ensure the label and input are on separate lines */
  
 body {
+    height: 100%; /* Allow full height */
     background-color: #2C3E50; /* A light gray background */
     font-family: Arial, sans-serif; /* Set a clean, modern font */
     color: #ECF0F1; 
+    margin: 0;
+    overflow-x: hidden; /* Prevent horizontal scrolling */
 }
 
 h1 {
     text-align: center;
 }
-.input-container {
-    margin-bottom: 10px; /* Space between each label-input pair */
-}
 
-label {
-    text-align: center;
-    display: block; /* Makes the label a block element, ensuring it takes up the full width */
-    margin-bottom: 5px; /* Adds space between the label and the input */
-    margin-top: 20px;
-}
-
-input[type="number"] {
+.container {
     margin: 0 auto;
-    display: block; /* Ensures the input takes up a full line */
-    width: 50%; /* Makes the input field stretch across the container */
-    padding: 10px; /* Adds some padding inside the input */
-    border-radius: 5px;
-    border: 1px solid #ccc;
-    box-sizing: border-box; /* Ensures padding is included in the element's width */
-    text-align: center;
+    width: 50%;
+    max-width: 600px;  /* Limit the width of the form */
+    min-width: 400px;
+    margin-top: 50px;  /* Add top margin for better spacing */
+    padding: 20px;
+    text-align: center; /* Centers the text */
+  }
+  
+  .row {
+    display: flex;
+    justify-content:center;  /* Spread out the columns */
+    
 }
+  .section {
+    display: flex;
+    margin-bottom: 40px; /* Larger spacing between sections */
+    text-align: center; /* Centers section content */
+    flex-direction: column;
+}
+
+
+
+.form-control {
+    width: 80%;  /* 60% width for each input */
+    margin: 0 auto;  /* Center horizontally */
+    flex-direction: column;
+    text-align: center;
+    min-width: 40px;
+}
+
+
+
+
 
 #clickMe {
     /* Your styles for the button */

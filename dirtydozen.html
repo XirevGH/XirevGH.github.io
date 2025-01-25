@@ -1,35 +1,104 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
     <link rel="icon" href="images/playing-cards.png" type="image/x-icon">
     <title>Dirty Dozen Calculator</title>
 </head>
+
 <body>
     <h1>Dirty Dozen Calculator</h1>
     <h1>Enter your cards</h1>
-    <div>
-        <label for="numberInput">Red Threes + Fours To Nines:</label>
-        <input type="number" id="redThreeToNine" min="0" class="connectedTextField" name="numberInput">
-    </div>
-    <div>
-        <label for="numberInput">Tens, Jacks, Queens, Kings:</label>
-        <input type="number" id="tenToKing" min="0" class="connectedTextField" name="numberInput">
-    </div>
-    <div>
-        <label for="numberInput">Aces:</label>
-        <input type="number" id="ace" min="0" class="connectedTextField" name="numberInput">
-    </div>
-    <div>
-        <label for="numberInput">Twos:</label>
-        <input type="number" id="two" min="0" class="connectedTextField" name="numberInput">
-    </div>
-    <div>
-        <label for="numberInput">Black Threes:</label>
-        <input type="number" id="blackThree" min="0" class="connectedTextField" name="numberInput">
+    <div class="container">
+        <div class="section">
+            <h3>Red Threes + Fours To Nines</h3>
+            <div class="row">
+                <div class="col-3">
+                    <div>
+                        <p>In Hand</p>
+                        <input class="form-control" type="text">
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div>
+                        <p>On Table</p>
+                        <input class="form-control" type="text">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="section">
+            <h3>Tens, Jacks, Queens, Kings</h3>
+            <div class="row">
+                <div class="col-3">
+                    <div>
+                    <p>In Hand</p>
+                    <input class="form-control" type="text">
+                </div>
+            </div>
+            <div class="col-3">
+                <div>
+                    <p>On Table</p>
+                    <input class="form-control" type="text">
+                </div>
+                </div>
+            </div>
+        </div>
+        <div class="section">
+            <h3>Aces</h3>
+            <div class="row">
+                <div class="col-3">
+                    <div>
+                    <p>In Hand</p>
+                    <input class="form-control" type="text">
+                </div>
+            </div>
+            <div class="col-3">
+                <div>
+                    <p>On Table</p>
+                    <input class="form-control" type="text">
+                </div>
+                </div>
+            </div>
+        </div>
+        <div class="section">
+            <h3>Twos</h3>
+            <div class="row">
+                <div class="col-3">
+                    <div>
+                    <p>In Hand</p>
+                    <input class="form-control" type="text">
+                </div>
+            </div>
+            <div class="col-3">
+                <div>
+                    <p>On Table</p>
+                    <input class="form-control" type="text">
+                </div>
+            </div>
+            </div>
+        </div>
+        <div class="section">
+            <h3>Black Threes</h3>
+            <div class="row">
+                <div class="col-3">
+                    <div>
+                    <p>In Hand</p>
+                    <input class="form-control" type="text">
+                </div>
+            </div>
+            <div class="col-3">
+                <div>
+                    <p>On Table</p>
+                    <input class="form-control" type="text">
+                </div>
+            </div>
+        </div>
     </div>
     <!-- <button id="clickMe">Confirm</button> -->
     <p id="output">Score: </p>
@@ -56,4 +125,5 @@
         </div>
     </div>
 </footer>
+
 </html>
