@@ -30,12 +30,14 @@ h1 {
 }
 
 .navbargroup {
+    margin: 0 auto;
     height: 100%;
     width: 295px;
     gap: 5px;
 }
 
 .nav-pills {
+    margin: 0 auto;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -43,6 +45,7 @@ h1 {
 }
 
 .nav {
+    margin: 0 auto;
     margin-top: 5px;
     margin-bottom: 5px;
 }
