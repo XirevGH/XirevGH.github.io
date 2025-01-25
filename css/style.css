@@ -19,7 +19,44 @@ h1 {
     text-align: center;
 }
 
+.nav-item {
+    margin: 0 auto;  /* Center horizontally */
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.navbargroup {
+    height: 100%;
+    gap: 5px;
+}
+
+.nav-pills {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+.nav {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.nav-pills .nav-link {
+    border-radius: 10px 10px 0 0;
+}
+
+.nav-link {
+    height: 100%;
+    width: 100%;
+
+}
+
 .container {
+    justify-content: center;
     margin: 0 auto;
     width: 50%;
     max-width: 600px;  /* Limit the width of the form */
@@ -48,10 +85,6 @@ h1 {
     text-align: center;
     min-width: 40px;
 }
-
-
-
-
 
 #clickMe {
     /* Your styles for the button */
