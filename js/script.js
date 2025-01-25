@@ -2,6 +2,20 @@
 document.addEventListener('DOMContentLoaded', () => {
     console.log('JavaScript is connected and running!');
 
+    function loadHTML(file, elementId) {
+        fetch(file)
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById(elementId).innerHTML = data;
+            })
+            .catch(error => console.error('Error loading the file:', error));
+    }
+    
+    // Load the header, content, and footer
+    loadHTML('../header.html', 'header-container');
+    loadHTML('../bookkeeping.html', 'content-container');
+    loadHTML('../footer.html', 'footer-container');
+
     const inputBoxes = document.querySelectorAll('.form-control');
 
     const output = document.getElementById('output');
