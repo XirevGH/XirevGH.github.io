@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Load the header, content, and footer
     async function loadStartPage() {
         await loadHTML('../gamesetup.html', 'content-container');
-        await loadHTML('../footer.html', 'footer-container');
+        
     }
     
 
@@ -167,7 +167,7 @@ document.addEventListener('DOMContentLoaded', () => {
       
           // Input field
           const newInput = document.createElement('input');
-          newInput.className = 'col-4 offset-4';
+          newInput.className = 'col-6 offset-3';
           newInput.id = `player${i}name`; // Template literals are cleaner
           newInput.placeholder = `Name of Player ${i + 1}`;
       
