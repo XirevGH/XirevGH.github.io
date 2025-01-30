@@ -17,9 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Load the header, content, and footer
     async function loadStartPage() {
         await loadHTML('../gamesetup.html', 'content-container');
-        
     }
-    
 
     let score = 0;
     let playerCount = 0;
@@ -49,7 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 currentPlayer++;
                 document.getElementById("enter-cards").textContent = "Enter " + playerNames[currentPlayer] + "'s cards:";
                 document.querySelectorAll('.form-control').forEach(inputBox => { 
-                    inputBox.value = 0;
+                    inputBox.value = "";
                 });
                 const output = document.getElementById('output');
                 score = 0;
@@ -76,7 +74,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     currentPlayer = 0;
                     document.getElementById("enter-cards").textContent = "Enter " + playerNames[currentPlayer] + "'s cards:";
                     document.querySelectorAll('.form-control').forEach(inputBox => { 
-                        inputBox.value = 0;
+                        inputBox.value = "";
                     });
                     const output = document.getElementById('output');
                     score = 0;
