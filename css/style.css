@@ -69,6 +69,18 @@ p {
     font-size: 10px;
 }
 
+.disabled {
+    color: #9c9c9c !important;
+    background-color: #484d52 !important; 
+}
+.bg-secondary {
+    color: #ffffff !important;
+    background-color: #1f2ca5 !important; 
+}
+.selected {
+    color: #ffffff !important;
+    background-color: #3247ff !important; 
+}
 
 .container {
 
@@ -101,7 +113,7 @@ p {
     max-width: 60px;
 }
 
-#clickMe {
+.clickMe {
     /* Your styles for the button */
     display: block; /* Makes the button a block-level element */
     margin: 20px auto; /* Centers the button horizontally */
@@ -114,7 +126,7 @@ p {
     font-size: 16px; /* Set font size */
 }
 
-#clickMe:hover {
+.clickMe:hover {
     /* Styles when the button is hovered */
     background-color: #45a049; /* Darker green when hovered */
 }
