@@ -71,16 +71,16 @@ p {
 }
 
 .disabled {
-    color: #9c9c9c !important;
-    background-color: #484d52 !important; 
+    color: #4A4A4A !important;
+    background-color: #A49D91 !important; 
 }
 .bg-secondary {
-    color: #ffffff !important;
-    background-color: #1f2ca5 !important; 
+    color: #2A3F5F !important;
+    background-color: #72A0CF !important; 
 }
 .selected {
-    color: #ffffff !important;
-    background-color: #3247ff !important; 
+    color: #1A365F !important;
+    background-color: #84BAF1 !important; 
 }
 
 .container {
@@ -118,8 +118,8 @@ p {
     /* Your styles for the button */
     display: block; /* Makes the button a block-level element */
     margin: 20px auto; /* Centers the button horizontally */
-    background-color: #4CAF50; /* Green background */
-    color: white; /* White text */
+    background-color: #9BB5CF; /* Green background */
+    color: #333333; /* White text */
     padding: 10px 20px; /* Padding inside the button */
     border: none; /* Remove border */
     border-radius: 5px; /* Rounded corners */
@@ -129,7 +129,7 @@ p {
 
 .clickMe:hover {
     /* Styles when the button is hovered */
-    background-color: #45a049; /* Darker green when hovered */
+    background-color: #95ADC6; /* Darker green when hovered */
 }
 
 #output {

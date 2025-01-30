@@ -19,11 +19,11 @@ document.addEventListener('DOMContentLoaded', () => {
         await loadHTML('../gamesetup.html', 'content-container');
     }
 
+    const playerScores = new Map();
     let score = 0;
     let playerCount = 0;
     let playerNames = [];
     let currentPlayer = 0;
-    const playerScores = new Map();
     let round = 0;
 
     function initEventListeners() {
@@ -31,6 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
         initScoreInputListeners();
         initNavbarListeners();
         initConfirmButton();
+        initNextRoundButton();
         initPlayAgainButton();
     }
 
@@ -40,50 +41,75 @@ document.addEventListener('DOMContentLoaded', () => {
             return; // No error, just skip initialization
         }
         confirmButton.addEventListener('click', async () => {
+
             let currentPoints = playerScores.get(playerNames[currentPlayer]);
             playerScores.set(playerNames[currentPlayer], currentPoints + score);
             if (currentPlayer + 1 < playerCount){
-                window.scrollTo(0, 0);
                 currentPlayer++;
-                document.getElementById("enter-cards").textContent = "Enter " + playerNames[currentPlayer] + "'s cards:";
-                document.querySelectorAll('.form-control').forEach(inputBox => { 
-                    inputBox.value = "";
-                });
-                const output = document.getElementById('output');
-                score = 0;
-                output.textContent = "Score: 0";
+                resetBookkeepingPage();
             }
             else {
-                setNavbarButtonState(round, false);
-                round++;
-                if (round == 9) {
-                    await loadHTML('../winner.html', 'content-container');
-                    let highestScore = 0;
-                    let winningPlayer = "";
-                    for(i = 0; i < playerScores.size; i++) {
-                        if (playerScores.get(playerNames[i]) > highestScore) {
-                            highestScore = playerScores.get(playerNames[i]);
-                            winningPlayer = playerNames[i];
-                        }
-                    }
-                    console.log("The winner is " + winningPlayer + " with " + highestScore + " points!");
-                    document.getElementById("winner").textContent = "The winner is " + winningPlayer + " with " + highestScore + " points!";
-                }
-                else {
-                    window.scrollTo(0, 0);
-                    currentPlayer = 0;
-                    document.getElementById("enter-cards").textContent = "Enter " + playerNames[currentPlayer] + "'s cards:";
-                    document.querySelectorAll('.form-control').forEach(inputBox => { 
-                        inputBox.value = "";
-                    });
-                    const output = document.getElementById('output');
-                    score = 0;
-                    output.textContent = "Score: 0";
-                    setNavbarButtonState(round, true);
-                    document.getElementById("title").textContent = "Round " + round;
-                }
+                await loadHTML('../scoreboard.html', 'content-container');
+                createScoreboard();
             }
-        })
+        });
+    }
+
+    function createScoreboard() {
+        const scoreboard = document.getElementById('scoreboard');
+        const sortedPlayers = [...playerScores.entries()].sort((a, b) => b[1] - a[1]);
+        sortedPlayers.forEach(([playerName, score]) => {
+            const newRow = document.createElement('tr');
+            const newNameData = document.createElement('td');
+            const newScoreData = document.createElement('td');
+            newNameData.textContent = playerName;
+            newScoreData.textContent = score;
+            scoreboard.append(newRow);
+            newRow.append(newNameData, newScoreData);
+        });
+    }
+
+    async function initNextRoundButton() {
+        nextRoundButton = document.getElementById("start-round");
+        if (!nextRoundButton) {
+            return; // No error, just skip initialization
+        }
+        nextRoundButton.addEventListener('click', async () => { 
+            await loadHTML('../bookkeeping.html', 'content-container');
+            resetBookkeepingPage();
+            round++;
+            if (round == 9) {
+                await loadHTML('../winner.html', 'content-container');
+                let highestScore = 0;
+                let winningPlayer = "";
+                for(i = 0; i < playerScores.size; i++) {
+                    if (playerScores.get(playerNames[i]) > highestScore) {
+                        highestScore = playerScores.get(playerNames[i]);
+                        winningPlayer = playerNames[i];
+                    }
+                }
+                console.log("The winner is " + winningPlayer + " with " + highestScore + " points!");
+                document.getElementById("winner").textContent = "The winner is " + winningPlayer + " with " + highestScore + " points!";
+            }
+            else {
+                setNavbarButtonState(round - 1, false);
+                currentPlayer = 0;
+                resetBookkeepingPage();
+                setNavbarButtonState(round, true);
+                document.getElementById("title").textContent = "Round " + round;
+            }
+        });
+    }
+
+    async function resetBookkeepingPage() {
+        window.scrollTo(0, 0);
+        document.getElementById("enter-cards").textContent = "Enter " + playerNames[currentPlayer] + "'s cards:";
+        document.querySelectorAll('.form-control').forEach(inputBox => { 
+            inputBox.value = "";
+        });
+        const output = document.getElementById('output');
+        score = 0;
+        output.textContent = "Score: 0";
     }
 
     async function initPlayAgainButton() {
