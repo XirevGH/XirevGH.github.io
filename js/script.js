@@ -165,7 +165,7 @@ document.addEventListener('DOMContentLoaded', () => {
       
           // Input field
           const newInput = document.createElement('input');
-          newInput.className = 'col-6 offset-3';
+          newInput.className = 'col-8 offset-2';
           newInput.id = `player${i}name`; // Template literals are cleaner
           newInput.placeholder = `Name of Player ${i + 1}`;
       
