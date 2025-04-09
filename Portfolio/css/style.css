@@ -189,9 +189,9 @@ nav.scrolled {
     /* SVG Hexagon Pattern - Stroke color adjusted */
     background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><polygon points="50,1 95,25 95,75 50,99 5,75 5,25" fill="none" stroke="%238A2BE2" stroke-width="0.3"/></svg>');
     background-size: 150px 150px;
-    opacity: 0.08; /* Slightly less intense */
+    opacity: 0.12; /* Slightly less intense */
     z-index: -2;
-    animation: bg-pan 30s linear infinite; /* Subtle background animation */
+    animation: bg-pan 12s linear infinite; /* Subtle background animation */
 }
 
 @keyframes bg-pan {
