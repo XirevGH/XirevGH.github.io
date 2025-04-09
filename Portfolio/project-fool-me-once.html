@@ -1,0 +1,688 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Details | Fool Me Once - David da Costa</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M 8 3 Q 4 7, 5 12 Q 4 17, 8 21' stroke='%238A2BE2'/><path d='M 16 3 Q 20 7, 19 12 Q 20 17, 16 21' stroke='%2300BFFF'/></svg>">
+    <link rel="stylesheet" href="./css/style.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlightjs-line-numbers.js/2.8.0/highlightjs-line-numbers.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    
+    <style>
+        /* Assume --primary, --secondary, --light, --dark, --bg-medium-translucent, --border-light-translucent, --shadow-dark, --shadow-medium, --light-alt etc. are defined in style.css */
+
+        /* Apply a background similar to other sections */
+        .project-detail-page {
+             background: linear-gradient(rgba(18,18,18,0.95), rgba(18,18,18,0.95)),
+                         radial-gradient(circle at 15% 20%, var(--primary, #8A2BE2), transparent 50%),
+                         radial-gradient(circle at 85% 80%, var(--secondary, #00BFFF), transparent 50%);
+             background-blend-mode: overlay;
+             padding-top: 80px; /* Account for fixed navbar - Adjust if needed */
+             min-height: 100vh;
+             color: var(--light, #eee); /* Default text color for the page */
+        }
+
+        .project-banner {
+            width: 100%;
+            max-height: 50vh;
+            overflow: hidden;
+            position: relative;
+            margin-bottom: 3rem;
+            background-color: #222; /* Fallback bg color */
+        }
+
+        .project-banner img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            filter: brightness(0.8);
+        }
+
+        /* Gradient overlay on banner */
+        .project-banner::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 50%;
+            background: linear-gradient(to top, var(--dark, #121212) 5%, transparent);
+            pointer-events: none;
+        }
+
+        .project-detail-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 0 5%;
+        }
+
+        .project-detail-title {
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            color: var(--light, #eee);
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 0 15px var(--shadow-secondary, rgba(0, 191, 255, 0.5));
+        }
+
+        .project-detail-subtitle {
+            font-size: clamp(1.1rem, 3vw, 1.4rem);
+            color: var(--secondary, #00BFFF);
+            opacity: 0.9;
+        }
+
+        .project-detail-main-content {
+            max-width: 900px;
+            margin: 0 auto 4rem auto;
+            background: var(--bg-medium-translucent, rgba(40, 40, 40, 0.8));
+            padding: 3rem;
+            border-radius: 12px;
+            background: linear-gradient(270deg, var(--bg-medium) 0%, var(--dark) 100%);
+            box-shadow: 0 10px 30px var(--shadow-dark, rgba(0, 0, 0, 0.5));
+        }
+
+        .project-detail-info h3,
+        .project-media-gallery h3 {
+            font-size: 1.8rem;
+            color: var(--secondary, #00BFFF);
+            margin-top: 2.5rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.8rem;
+            border-bottom: 2px solid var(--primary, #8A2BE2);
+            display: inline-block;
+        }
+        .project-detail-info h3:first-of-type {
+            margin-top: 0;
+        }
+
+        .project-detail-info p,
+        .project-detail-info ul {
+            font-size: 1.05rem;
+            line-height: 1.8;
+            color: var(--light, #eee);
+            opacity: 0.95;
+            margin-bottom: 1.5rem;
+        }
+
+        .project-detail-info ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .project-detail-info ul li {
+            position: relative;
+            padding-left: 25px;
+            margin-bottom: 0.8rem;
+        }
+
+        .project-detail-info ul li::before {
+            content: '▹';
+            position: absolute;
+            left: 0;
+            top: 1px;
+            color: var(--secondary, #00BFFF);
+            font-size: 1.2em;
+            line-height: 1;
+        }
+
+        .project-detail-tags {
+            margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .project-detail-tag {
+             font-size: 0.85rem;
+             padding: 0.4rem 1rem;
+             border-radius: 50px;
+             background: var(--primary, #8A2BE2);
+             color: var(--light, #eee);
+             font-weight: 500;
+             transition: all 0.3s ease;
+             cursor: default;
+        }
+        .project-detail-tag:hover {
+             background: var(--secondary, #00BFFF);
+             color: var(--dark, #121212);
+             transform: translateY(-2px);
+        }
+
+        .project-detail-links {
+            margin-top: 3rem;
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        /* Assume .btn styles are in style.css */
+        .project-detail-links .btn {
+             min-width: 180px;
+             display: inline-flex;
+             align-items: center;
+             justify-content: center;
+             gap: 0.5rem;
+        }
+        .project-detail-links .btn svg {
+             width: 18px; height: 18px;
+        }
+
+        /* --- Styles for Media Embedded within Text --- */
+        .project-detail-info > figure {
+            /* Layout */
+            width: 100%; /* Take full width of the info block */
+            max-width: 700px; /* Optional: Limit max width */
+            margin: 2.5rem auto; /* Vertical spacing, center horizontally */
+
+            /* Styling (borrow from gallery-grid figure) */
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 6px 20px var(--shadow-medium, rgba(0, 0, 0, 0.3)); /* Adjusted shadow */
+            border: 1px solid var(--border-light-translucent, rgba(255, 255, 255, 0.1));
+
+            /* Reset browser default figure margins */
+            padding: 0;
+        }
+
+        /* Media element behavior inside embedded figures */
+        .project-detail-info > figure img,
+        .project-detail-info > figure video,
+        .project-detail-info > figure iframe {
+            display: block;
+            width: 100%;
+            height: auto; /* Maintain aspect ratio */
+            aspect-ratio: 16 / 9; /* Default aspect ratio */
+            object-fit: cover;
+            /* Add border between media and caption */
+            border-bottom: 1px solid var(--border-light-translucent, rgba(255, 255, 255, 0.1));
+        }
+        /* Remove bottom border if media is the ONLY child (no caption) */
+        .project-detail-info > figure :only-child {
+           border-bottom: none;
+        }
+
+
+        /* Caption styling for embedded figures */
+        .project-detail-info > figure figcaption {
+            padding: 0.8rem 1rem;
+            background-color: rgba(30, 30, 30, 0.8);
+            color: var(--light-alt, #ccc);
+            font-size: 0.9rem;
+            text-align: center;
+        }
+        /* --- End Embedded Media Styles --- */
+
+
+        /* --- Styles for Optional Separate Media Gallery --- */
+        .project-media-gallery {
+            margin-top: 3rem;
+        }
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        .gallery-grid figure {
+            margin: 0;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px var(--shadow-medium, rgba(0, 0, 0, 0.3));
+            border: 1px solid var(--border-light-translucent, rgba(255, 255, 255, 0.1));
+            background-color: #222; /* Fallback bg color */
+        }
+        .gallery-grid img,
+        .gallery-grid video,
+        .gallery-grid iframe {
+            display: block;
+            width: 100%;
+            height: auto;
+            aspect-ratio: 16 / 9;
+            object-fit: cover;
+             /* Add border between media and caption */
+            border-bottom: 1px solid var(--border-light-translucent, rgba(255, 255, 255, 0.1));
+        }
+        .gallery-grid figure :only-child {
+             border-bottom: none;
+        }
+        .gallery-grid figcaption {
+            padding: 0.8rem 1rem;
+            background-color: rgba(30, 30, 30, 0.8);
+            color: var(--light-alt, #ccc);
+            font-size: 0.9rem;
+            text-align: center;
+        }
+        /* --- End Separate Media Gallery Styles --- */
+
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .project-detail-main-content {
+                padding: 2rem;
+            }
+            .project-banner {
+                max-height: 40vh;
+            }
+            .project-detail-title {
+                 font-size: clamp(2rem, 8vw, 3rem);
+            }
+            .project-detail-subtitle {
+                 font-size: clamp(1rem, 4vw, 1.2rem);
+            }
+            /* Adjust separate gallery grid for smaller screens if needed */
+            .gallery-grid {
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Adjust min size */
+            }
+             /* Adjust embedded figure max-width if needed */
+            .project-detail-info > figure {
+                max-width: 100%; /* Allow full width */
+            }
+        }
+        @media (max-width: 576px) {
+             .project-detail-main-content {
+                 padding: 1.5rem;
+                 margin-left: 4%;
+                 margin-right: 4%;
+                 max-width: none; /* Allow full width minus padding */
+             }
+             .project-banner {
+                 margin-bottom: 2rem;
+             }
+             .project-detail-header {
+                 margin-bottom: 2rem;
+             }
+             .project-detail-links {
+                 flex-direction: column;
+                 align-items: center;
+             }
+             .project-detail-links .btn {
+                 width: 100%;
+                 max-width: 300px;
+             }
+              /* Stack items in separate gallery on smallest screens */
+             .gallery-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+    </style>
+</head>
+<body class="project-detail-page">
+    <nav id="navbar">
+        <a href="index.html" class="logo">David<span>da Costa</span></a>
+        <ul class="nav-links" id="navLinks">
+            <li><a href="index.html#home" class="nav-link">Home</a></li>
+            <li><a href="index.html#projects" class="nav-link">Projects</a></li>
+            <li><a href="index.html#skills" class="nav-link">Skills</a></li>
+            <li><a href="index.html#about" class="nav-link">About</a></li>
+            <li><a href="index.html#contact" class="nav-link">Contact</a></li>
+        </ul>
+        <button class="menu-btn" id="menuBtn" aria-label="Toggle navigation menu" aria-expanded="false">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-menu-icon lucide-menu">
+                <line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/>
+            </svg>
+        </button>
+    </nav>
+
+    <div class="project-banner">
+        <img src="./Images/foolmeonce.png" alt="Fool Me Once Gameplay Banner"
+             onerror="this.onerror=null; this.src='https://placehold.co/1600x500/1a1a1a/8A2BE2?text=Fool+Me+Once+Banner'; this.style.objectFit='contain';">
+    </div>
+
+
+    <!-- Update project title and subtitle -->
+<div class="project-detail-header">
+    <h1 class="project-detail-title">Fool Me Once</h1>
+    <p class="project-detail-subtitle">Competitive DDR Pad Navigation Game - 5 Day Game Jam Project</p>
+</div>
+
+<section class="project-detail-main-content" id="project-detail">
+    
+            <!-- Updated Tags -->
+            <div class="project-detail-tags">
+                <span class="project-detail-tag">Unreal Engine 5</span>
+                <span class="project-detail-tag">Blueprints</span>
+                <span class="project-detail-tag">Splitscreen</span>
+                <span class="project-detail-tag">Input Systems</span>
+                <span class="project-detail-tag">Game Jam</span>
+                <span class="project-detail-tag">UMG</span>
+                <span class="project-detail-tag">Rapid Prototyping</span>
+            </div>
+    <div class="project-detail-info">
+        <h3>Game Summary</h3>
+        <p>
+            Developed during an intense 5-day game jam using Unreal Engine 5, Fool Me Once reimagines dance pad controls for competitive maze navigation. Two players race to collect the most cakes using DDR pads while strategically rotating and moving through a complex grid-based arena.
+        </p>
+
+        <!-- Movement System Section -->
+        <h3>Core Technical Implementation</h3>
+        <h4>Node-Based Movement System</h4>
+        <p>
+            Created a node-based navigation system ensuring precise DDR pad controls:
+        </p>
+        <ul>
+            <li>Custom <strong>MovementNode</strong> class for traversal</li>
+            <li>Automatic node connection validation for collision-free paths</li>
+            <li>Dynamic camera alignment for next-node visibility</li>
+        </ul>
+
+        <figure>
+            <video controls>
+                <source src="./Videos/NodeMovementRotation.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            <figcaption>Demonstration of grid-based movement and rotation mechanics</figcaption>
+        </figure>
+
+        <figure>
+            <video controls>
+                <source src="./Videos/NextNodeVisibility.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            <figcaption>Demonstration of rotation for next-node visibility</figcaption>
+        </figure>
+
+        <!-- Splitscreen Implementation -->
+        <h4>Splitscreen & Input Management</h4>
+        <p>
+            Engineered unconventional control scheme supporting two DDR pads through single keyboard input:
+        </p>
+        <ul>
+            <li>Controller mapping workaround for simultaneous pad use</li>
+            <li>State management to prevent controller duplication bugs</li>
+            <li>Dynamic camera viewport allocation</li>
+        </ul>
+
+        <figure>
+            <a href="./Images/SpawnPlayers.png" class="lightbox-trigger">
+                <img src="./Images/SpawnPlayers.png"
+                     alt="Blueprint for spawning players"
+                     class="enlargeable-image" onerror="this.onerror=null; this.src='./Images/SpawnPlayers.png'; this.style.objectFit='contain';">
+            </a>
+            <figcaption>Spawning players and hooking up controls for splitscreen (Click image to enlarge)</figcaption> </figure>
+
+        <!-- Level Design Section -->
+        <h4>Procedural Item Spawning</h4>
+        <p>
+            Implemented randomized collectible system with:
+        </p>
+        <ul>
+            <li>Node-based position validation</li>
+            <li>Anti-overlap collision checks</li>
+            <li>Animated floating collectibles</li>
+        </ul>
+
+        
+            <figure class="code-figure"> 
+                <div class="code-container">
+                    <pre><code class="language-cpp">bool ACakeChaseGameMode::AttemptSpawnSingleCake()
+{
+    if (CurrentAmountCakes &gt;= MaximumCakes)
+    {
+        return false; // Already at max
+    }
+
+    if (!CakeBP)
+    {
+        return false;
+    }
+
+    AActor* SpawnedActor = AttemptSpawnActorAtRandomNode(CakeBP);
+
+    if (SpawnedActor)
+    {
+        CurrentAmountCakes++; // Increment count ONLY on successful spawn
+        return true;
+    }
+}
+
+AActor* ACakeChaseGameMode::AttemptSpawnActorAtRandomNode(TSubclassOf&lt;AActor&gt; ActorClassToSpawn)
+{
+    if (!ActorClassToSpawn)
+    {
+        return nullptr;
+    }
+
+    if (MovementNodes.Num() == 0)
+    {
+    return nullptr;
+    }
+
+    // Find Available Nodes (Nodes without any actor overlapping nearby)
+    TArray&lt;AActor*&gt; AvailableNodes;
+    const float CheckRadius = 50.0f; // Radius around node center to check for obstructions
+    TArray&lt;AActor*&gt; OverlappingActors;
+    
+    TArray&lt;TEnumAsByte&lt;EObjectTypeQuery&gt;&gt; ObjectTypes;
+    ObjectTypes.Add(UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_WorldDynamic));
+    ObjectTypes.Add(UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_Pawn));
+
+    for (AActor* Node : MovementNodes)
+    {
+        if (!Node) continue;
+
+        FVector NodeLocation = Node-&gt;GetActorLocation();
+        OverlappingActors.Empty();
+
+        bool bIsOccupied = UKismetSystemLibrary::SphereOverlapActors(
+            GetWorld(),
+            NodeLocation,
+            CheckRadius,
+            ObjectTypes,
+            AActor::StaticClass(),
+            TArray&lt;AActor*&gt;(),
+            OverlappingActors
+        );
+
+        // Check if spot is available
+        if (!bIsOccupied)
+        {
+            AvailableNodes.Add(Node);
+        }
+    }
+    
+    if (AvailableNodes.Num() == 0)
+    {
+        // No free spot
+        return nullptr; 
+    }
+
+    int32 RandomNodeIndex = FMath::RandRange(0, AvailableNodes.Num() - 1);
+    AActor* ChosenNode = AvailableNodes[RandomNodeIndex];
+
+    FVector Location = ChosenNode-&gt;GetActorLocation();
+    FRotator Rotation = ChosenNode-&gt;GetActorRotation();
+
+    // Spawn the actor
+    AActor* SpawnedActor = GetWorld()-&gt;SpawnActor&lt;AActor&gt;(ActorClassToSpawn, Location, Rotation);
+
+    if (SpawnedActor)
+    {
+        // Succeeded with spawning
+        return SpawnedActor;
+    }
+    else
+    {
+        // Failed to spawn at location
+        return nullptr;
+    }
+}
+                </code></pre>
+            </div>
+                <figcaption>Random spawn with anti-overlap validation (C++ Snippet)</figcaption>
+            </figure>
+
+        <!-- Challenges Section -->
+        <h3>Key Challenges Overcome</h3>
+        <div class="challenge-solution">
+            <p class="challenge">🕹️ DDR Pad Input Limitations:</p>
+            <p class="solution">Created custom input mapping layer to translate dance pad signals into standard keyboard events</p>
+            
+            <p class="challenge">🎥 Camera Alignment:</p>
+            <p class="solution">Implemented dynamic rotation system that previews next movement direction</p>
+            
+            <p class="challenge">🧭 Navigation Precision:</p>
+            <p class="solution">Developed node connection validation system preventing pathfinding errors</p>
+        </div>
+
+        <!-- Outcome Section -->
+        <h3>Project Outcome</h3>
+        <p>
+            Despite tight time constraints, we delivered a fully functional competitive experience showcasing:
+        </p>
+        <ul>
+            <li>Novel use of DDR hardware in non-rhythm context</li>
+            <li>Robust splitscreen implementation</li>
+            <li>Complex input system workarounds</li>
+            <li>Positive player feedback on strategic movement mechanics</li>
+        </ul>
+
+        <!-- Final Media -->
+        <figure>
+            <video controls>
+                <source src="./Videos/FinalGameplay.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            <figcaption>Full gameplay showcase with UI elements</figcaption>
+        </figure>
+    </div>
+
+    <!-- Keep existing link section -->
+    <div class="project-detail-links">
+        <!-- Update demo link if available -->
+        <a href="https://github.com/XirevGH/FOMO-GameJam" class="btn btn-primary" target="_blank" rel="noopener noreferrer">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            View Source Code
+        </a>
+        <a href="index.html#projects" class="btn btn-secondary">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
+            Back to Projects
+        </a>
+    </div>
+</section>
+
+    <footer>
+         <div class="footer-content">
+             <div class="footer-about">
+                 <a href="index.html" class="footer-logo">David<span> da Costa</span></a>
+                 <p class="footer-description">Passionate game developer specializing in Unreal Engine and Unity. Building immersive worlds and engaging gameplay experiences.</p>
+                  <div class="social-links">
+                      <a href="https://www.linkedin.com/in/david-da-costa-4701831a5/" class="social-link" aria-label="LinkedIn Profile" target="_blank" rel="noopener noreferrer"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><path d="M2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg></a>
+                      <a href="https://github.com/XirevGH" class="social-link" aria-label="GitHub Profile" target="_blank" rel="noopener noreferrer"><svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"><title>GitHub</title><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg></a>
+                      <a href="https://x.com/xirevwow" class="social-link" aria-label="X (Twitter) Profile" target="_blank" rel="noopener noreferrer"><svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"><title>X</title><path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z"/></svg></a>
+                  </div>
+             </div>
+              <div class="footer-links-group">
+                  <h4 class="footer-title">Quick Links</h4>
+                  <ul class="footer-links">
+                      <li><a href="index.html#home"><span>Home</span></a></li>
+                      <li><a href="index.html#projects"><span>Projects</span></a></li>
+                      <li><a href="index.html#skills"><span>Skills</span></a></li>
+                      <li><a href="index.html#about"><span>About</span></a></li>
+                      <li><a href="index.html#contact"><span>Contact</span></a></li>
+                  </ul>
+              </div>
+              <div class="footer-links-group">
+                <h4 class="footer-title">Contact</h4>
+                <ul class="footer-links">
+                     <li><a href="mailto:david.dacosta.dev@outlook.com"><span>Email Me</span></a></li>
+                     <li><a href="#"><span>Request CV</span></a></li> 
+                     <li><a href="privacy-policy.html"><span>Privacy Policy</span></a></li> 
+                </ul>
+            </div>
+        </div>
+         <div class="copyright">
+             © <span id="currentYear"></span> David da Costa. All rights reserved.
+         </div>
+     </footer>
+
+    <button class="back-to-top" id="backToTopBtn" aria-label="Scroll back to top">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 7-7 7 7"/><path d="M12 19V5"/></svg>
+    </button>
+
+    <script src="./js/script.js"></script>
+    <div id="lightbox-overlay" class="lightbox-overlay">
+        <span class="lightbox-close" id="lightbox-close" title="Close">&times;</span>
+        <img src="" alt="Enlarged image" id="lightbox-image" class="lightbox-image">
+        <div class="lightbox-caption" id="lightbox-caption"></div> </div>
+    <script src="./js/script.js"></script>
+    <script>
+        // Lightbox Functionality
+        document.addEventListener('DOMContentLoaded', () => {
+            const lightboxOverlay = document.getElementById('lightbox-overlay');
+            const lightboxImage = document.getElementById('lightbox-image');
+            const lightboxCaption = document.getElementById('lightbox-caption'); // Get caption element
+            const lightboxClose = document.getElementById('lightbox-close');
+            const imageTriggers = document.querySelectorAll('.enlargeable-image'); // Select images directly
+
+            if (!lightboxOverlay || !lightboxImage || !lightboxClose || !lightboxCaption) {
+                console.warn('Lightbox elements not found. Enlargement disabled.');
+                return;
+            }
+
+            imageTriggers.forEach(img => {
+                img.style.cursor = 'zoom-in'; // Add visual cue
+                img.addEventListener('click', (event) => {
+                    event.preventDefault(); // Prevent default link behavior if wrapped in <a>
+
+                    const imageElement = event.currentTarget; // The clicked image
+                    const figureElement = imageElement.closest('figure'); // Find parent figure
+                    const captionElement = figureElement ? figureElement.querySelector('figcaption') : null; // Find caption within figure
+
+                    lightboxImage.src = imageElement.src; // Use src from the clicked image itself
+                    lightboxImage.alt = imageElement.alt; // Copy alt text
+
+                    // Set caption text if found
+                    if (captionElement) {
+                        lightboxCaption.textContent = captionElement.textContent;
+                        lightboxCaption.style.display = 'block';
+                    } else {
+                        lightboxCaption.style.display = 'none'; // Hide caption area if no caption
+                    }
+
+                    lightboxOverlay.style.display = 'flex'; // Show the overlay
+                    console.log('Lightbox opened');
+                });
+            });
+
+            // Close lightbox when clicking the close button
+            lightboxClose.addEventListener('click', () => {
+                lightboxOverlay.style.display = 'none';
+                lightboxImage.src = ''; // Clear image src
+                lightboxImage.alt = '';
+                lightboxCaption.textContent = ''; // Clear caption
+                console.log('Lightbox closed via button');
+            });
+
+            // Close lightbox when clicking on the overlay background (but not the image itself)
+            lightboxOverlay.addEventListener('click', (event) => {
+                if (event.target === lightboxOverlay) { // Only close if clicking the background
+                    lightboxOverlay.style.display = 'none';
+                    lightboxImage.src = '';
+                    lightboxImage.alt = '';
+                    lightboxCaption.textContent = '';
+                    console.log('Lightbox closed via overlay click');
+                }
+            });
+
+             // Close lightbox with the Escape key
+            document.addEventListener('keydown', (event) => {
+                if (event.key === 'Escape' && lightboxOverlay.style.display === 'flex') {
+                    lightboxOverlay.style.display = 'none';
+                    lightboxImage.src = '';
+                    lightboxImage.alt = '';
+                    lightboxCaption.textContent = '';
+                    console.log('Lightbox closed via Escape key');
+                }
+            });
+        });
+    </script>
+    </body>
+</html>

@@ -56,6 +56,8 @@ body {
 /* --- Navigation --- */
 nav {
     position: fixed;
+    top: 0;              /* *** ADD THIS: Stick to the top edge *** */
+    left: 0;             /* *** ADD THIS: Stick to the left edge *** */
     width: 100%;
     padding: 1.5rem 10%; /* Use percentage for padding */
     z-index: 1000; /* Ensure nav is on top */
@@ -72,7 +74,6 @@ nav.scrolled {
     background: rgba(18, 18, 18, 0.95);
     box-shadow: 0 5px 20px var(--shadow-dark);
 }
-
 .logo {
     font-size: 1.8rem;
     font-weight: 700;
@@ -508,6 +509,85 @@ nav.scrolled {
     border-color: var(--light);
     transform: scale(1.05);
 }
+
+/* --- Lightbox Styles --- */
+.lightbox-overlay {
+    position: fixed; /* Cover the whole viewport */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.85); /* Darker overlay */
+    display: none; /* Hidden by default */
+    justify-content: center;
+    align-items: center;
+    z-index: 10000; /* Ensure it's on top of everything */
+    padding: 20px; /* Add padding around the image */
+    box-sizing: border-box; /* Include padding in dimensions */
+    cursor: zoom-out; /* Indicate clicking background closes it */
+    opacity: 0; /* Start hidden for transition */
+    transition: opacity 0.3s ease;
+}
+
+/* Style to fade in */
+.lightbox-overlay:target, /* If using URL hash */
+.lightbox-overlay[style*="display: flex"] /* If using JS display property */ {
+    opacity: 1;
+}
+
+
+.lightbox-image {
+    display: block;
+    max-width: 90%;  /* Max width relative to viewport */
+    max-height: 80%; /* Max height relative to viewport (leave space for caption/close) */
+    object-fit: contain; /* Scale image down while preserving aspect ratio */
+    box-shadow: 0 0 40px rgba(0, 0, 0, 0.5); /* Shadow for the image */
+    cursor: default; /* Default cursor over the image itself */
+    border-radius: 4px; /* Slight rounding */
+}
+
+.lightbox-caption {
+    position: absolute;
+    bottom: 20px; /* Position at bottom */
+    left: 50%;
+    transform: translateX(-50%);
+    color: #eee;
+    background-color: rgba(0, 0, 0, 0.6);
+    padding: 8px 15px;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    text-align: center;
+    max-width: 80%;
+    display: none; /* Hidden initially or if no caption */
+}
+
+.lightbox-close {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    color: #fff;
+    font-size: 40px; /* Larger close button */
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.2s ease;
+    line-height: 1; /* Ensure consistent positioning */
+    text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+}
+
+.lightbox-close:hover {
+    color: #ccc;
+}
+
+/* Add cursor pointer to images that can be enlarged */
+.enlargeable-image {
+    cursor: zoom-in !important; /* Override default if needed */
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.enlargeable-image:hover {
+    transform: scale(1.02); /* Slight zoom effect on hover */
+    box-shadow: 0 4px 15px rgba(0, 191, 255, 0.3); /* Subtle glow */
+}
+/* --- End Lightbox Styles --- */
 
 /* --- Skills Section --- */
 .skills-section {
@@ -1276,3 +1356,92 @@ footer {
         transform: translateX(-50%);
     }
 }
+
+pre {
+    max-height: 400px;
+}
+
+figure.code-figure {
+    /* border-color: var(--secondary, #00BFFF); /* Optional: Your border */
+    position: relative;
+    margin: 1em 0; /* Adjusted margin for spacing */
+    border-radius: 5px; /* Apply rounding to the figure */
+    overflow: hidden; /* Clip content like figcaption to rounded corners */
+}
+
+.code-container {
+    /* --- Core Layout & Scrolling --- */
+    max-height: calc(100vh - 120px); /* Your max height */
+    overflow: auto;          /* <<< Handles BOTH scrollbars as needed */
+    position: relative;
+
+    /* --- Appearance (Consolidated) --- */
+    background-color: #282c34; /* Base background (e.g., Atom One Dark) */
+    color: #abb2bf;          /* Default text color */
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.9em;
+    /* border-radius is now on the figure */
+}
+
+.code-container pre {
+    width: max-content;
+    margin: 0;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.9em;
+    color: #abb2bf;
+}
+
+.code-container pre code {
+    display: block;
+    position: relative; /* Ensure proper positioning context */
+}
+
+
+figure.code-figure figcaption {
+    background-color: rgba(0, 100, 150, 0.8);
+}
+
+/* This targets the corner where the scrollbars meet */
+.code-container::-webkit-scrollbar-corner {
+    background-color: #1e1e24; /* Match your background color */
+}
+
+    /* Style the table created by the plugin */
+    .hljs-ln {
+        border-collapse: collapse;
+        width: 100%;        /* Occupy container width initially */
+        margin: 0;
+        table-layout: auto; /* <<< Important: Let content determine width */
+        /* Background is inherited from .code-container */
+    }
+
+    /* Style the line number cells */
+    .hljs-ln td.hljs-ln-numbers {
+        padding-right: 10px; /* Space between numbers and code */
+        border-right: 1px solid #444; /* Separator line */
+        color: #6c757d; /* Line number color */
+        text-align: right;
+        vertical-align: top; /* Align numbers to the top */
+
+        /* Make line numbers unselectable */
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+
+    /* Style the code cells */
+    .hljs-ln td.hljs-ln-code {
+        padding-left: 10px; /* Space between separator and code */
+        vertical-align: top; /* Align code lines to the top */
+    }
+
+    /* Ensure the code inside retains its block display and styling */
+    .hljs-ln code.hljs {
+        display: block; /* Or inline-block if needed */
+        padding: 0; /* Reset padding as it's handled by table cells */
+        margin: 0; /* Reset margin */
+        /* The background is usually on the parent <pre> or table */
+    }

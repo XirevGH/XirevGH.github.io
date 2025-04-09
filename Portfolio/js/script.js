@@ -12,6 +12,7 @@
     const currentYearSpan = document.getElementById('currentYear');
     const contactForm = document.getElementById('contactForm'); // Assuming your form has id="contactForm"
     const menuIconSvg = document.querySelector('.lucide-menu-icon');
+    const codeContainers = document.querySelectorAll('.code-container');
 
     // --- State Variables ---
     let isMenuOpen = false;
@@ -236,5 +237,13 @@
             }
         });
     }
+
+    // --- 9. Code syntax highlighting ---
+
+
+    hljs.highlightAll();
+
+    // --- 10. Line numbering ---
+    hljs.initLineNumbersOnLoad();
 
 }); // End DOMContentLoaded
