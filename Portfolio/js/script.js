@@ -112,9 +112,9 @@
         let wordIndex = 0;
         let charIndex = 0;
         let isDeleting = false;
-        const typingSpeed = 120;
-        const deletingSpeed = 60;
-        const delayBetweenWords = 1500;
+        const typingSpeed = 50;
+        const deletingSpeed = 30;
+        const delayBetweenWords = 1000;
 
         function type() {
             const currentWord = wordsToType[wordIndex];
@@ -239,11 +239,11 @@
     }
 
     // --- 9. Code syntax highlighting ---
-
-
     hljs.highlightAll();
 
     // --- 10. Line numbering ---
     hljs.initLineNumbersOnLoad();
+    
+
 
 }); // End DOMContentLoaded
