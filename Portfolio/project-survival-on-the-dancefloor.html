@@ -1,0 +1,781 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Project Documentation | Portfolio</title>
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M 8 3 Q 4 7, 5 12 Q 4 17, 8 21' stroke='%238A2BE2'/><path d='M 16 3 Q 20 7, 19 12 Q 20 17, 16 21' stroke='%2300BFFF'/></svg>"
+    />
+    <link rel="stylesheet" href="./css/style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlightjs-line-numbers.js/2.8.0/highlightjs-line-numbers.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  </head>
+  <body class="project-detail-page">
+    <nav id="navbar">
+      <div class="navbar-contact">
+        <a
+          href="https://www.linkedin.com/in/david-da-costa-4701831a5/"
+          class="social-link"
+          aria-label="LinkedIn Profile"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="black"
+            stroke="none"
+          >
+            <path
+              d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"
+            />
+            <path d="M2 9h4v12H2z" />
+            <circle cx="4" cy="4" r="2" />
+          </svg>
+        </a>
+        <a
+          href="https://github.com/XirevGH"
+          class="social-link"
+          aria-label="GitHub Profile"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <svg
+            role="img"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            fill="black"
+          >
+            <title>GitHub</title>
+            <path
+              d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"
+            />
+          </svg>
+        </a>
+        <a
+          href="https://x.com/xirevwow"
+          class="social-link"
+          aria-label="X (Twitter) Profile"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <svg
+            role="img"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            fill="black"
+          >
+            <title>X</title>
+            <path
+              d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z"
+            />
+          </svg>
+        </a>
+        <a class="email-text">david.dacosta.dev@outlook.com</a>
+      </div>
+
+      <div class="logo-container">
+        <a href="index.html#home" class="logo"
+          >David<span>da Costa</span> | Game <span>Programmer</span></a
+        >
+        <a class="mobile-email">david.dacosta.dev@outlook.com</a>
+      </div>
+
+      <ul class="nav-links" id="navLinks">
+        <li><a href="index.html#home" class="nav-link">Home</a></li>
+        <li><a href="index.html#projects" class="nav-link">Projects</a></li>
+        <li><a href="index.html#skills" class="nav-link">Skills</a></li>
+        <li><a href="index.html#about" class="nav-link">About</a></li>
+      </ul>
+
+      <button
+        class="menu-btn"
+        id="menuBtn"
+        aria-label="Toggle navigation menu"
+        aria-expanded="false"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          class="lucide lucide-menu-icon lucide-menu"
+        >
+          <line x1="4" x2="20" y1="12" y2="12" />
+          <line x1="4" x2="20" y1="6" y2="6" />
+          <line x1="4" x2="20" y1="18" y2="18" />
+        </svg>
+      </button>
+    </nav>
+
+    <div class="project-banner">
+      <img
+        src="./Images/sotd.png"
+        alt="Disco Game Documentation Banner"
+        onerror="this.onerror=null; this.src='https://placehold.co/1600x500/1a1a1a/8A2BE2?text=Disco+Game+Documentation'; this.style.objectFit='contain';"
+      />
+    </div>
+
+    <!-- Project Header -->
+    <div class="project-detail-header">
+      <h1 class="project-detail-title">Survival on the Dancefloor</h1>
+      <p class="project-detail-subtitle">
+        A Rhythm Based Survivor-like Game - 7 Weeks Project
+      </p>
+    </div>
+
+    <!-- Main Content -->
+    <section class="project-detail-main-content" id="project-detail">
+      <!-- Tags Section -->
+      <div class="project-detail-tags">
+        <span class="project-detail-tag">Team Size: 6</span>
+        <span class="project-detail-tag">Time: 7 Weeks</span>
+        <span class="project-detail-tag">Unity</span>
+        <span class="project-detail-tag">C#</span>
+        <span class="project-tag">Roguelite</span>
+        <span class="project-tag">Procedural</span>
+      </div>
+
+      <div class="project-detail-info">
+        <h3>Concept of the Game</h3>
+        <p>
+          The game was conceived as an homage to titles reminiscent of Vampire
+          Survivors, but with a twist—integrating the beat and rhythm of music
+          to affect gameplay. The musical tempo would influence how fast attacks
+          were executed, blending rhythmic elements with dynamic action. Set
+          against a disco backdrop, every detail—from the vibrant,
+          color-shifting dancefloor to the lively light effects—reinforced the
+          festive atmosphere. The game features dynamic enemy spawns, multiple
+          unique attack types, and an evolving upgrade system that challenges
+          players while immersing them in an engaging audiovisual experience.
+        </p>
+
+        <figure>
+          <video controls>
+            <source src="./Videos/GameplaySotD.mp4" type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+          <figcaption>Video of highly upgraded gameplay</figcaption>
+        </figure>
+
+        <!-- Goals and Solutions -->
+        <h3>Goals and Solutions</h3>
+
+        <!-- A. Creating the Disco Dancefloor -->
+        <h4>A. Creating the Disco Dancefloor</h4>
+        <p>
+          <strong>Goal:</strong> Develop a dynamic floor that resembles a disco
+          dancefloor where players can move freely in all directions. The floor
+          needed randomized, harmonious color transitions to evoke a nightclub
+          ambiance.
+        </p>
+        <p>
+          <strong>Solution:</strong> I designed a white tile with black borders
+          that was later programmatically colored. Using Unity’s tilemap system,
+          I created a custom tile palette and wrote a script to iterate through
+          the camera’s visible boundaries. Each tile was assigned one of seven
+          color options with weighted random probabilities, ensuring that shades
+          of purple and other dynamic hues dominated the scene. Enhanced with
+          shadows and a soft inner glow, the floor truly popped on screen.
+        </p>
+        <!-- Insert an image to visually communicate the dynamic dancefloor -->
+
+        <!-- B. Implementing Dynamic Enemy Spawning and Movement -->
+        <h4>B. Implementing Dynamic Enemy Spawning and Movement</h4>
+        <p>
+          <strong>Goal:</strong> Ensure the game environment felt alive by
+          spawning enemies dynamically based on the player’s view, with enemies
+          entering from beyond the camera bounds and moving toward the player.
+        </p>
+        <p>
+          <strong>Solution:</strong> Initially, enemy spawns were based on tile
+          positions visible to the camera. Later, I refined this by using
+          colliders as designated spawn zones outside the camera’s range. This
+          allowed enemies to emerge evenly from all edges and move toward the
+          player seamlessly. I also ensured that once defeated, enemies would
+          stop moving to optimize performance and prevent erratic behavior.
+        </p>
+        <!-- Optionally add an image or GIF showing enemy spawns -->
+        <figure>
+          <img
+            src="./Images/generatingDancefloor.gif"
+            alt="Dynamic disco dancefloor with spawning enemies"
+            class="enlargeable-image"
+          />
+          <figcaption>
+            Dynamic disco dancefloor with randomized color tiles and enhanced
+            lighting effects with enemies spawning at the borders.
+          </figcaption>
+        </figure>
+
+        <!-- C. Designing and Refining Attack Mechanics -->
+        <h4>C. Designing and Refining Attack Mechanics</h4>
+        <p>
+          <strong>Goal:</strong> Create responsive attack animations that
+          interact with multiple enemies while ensuring damage is applied only
+          once per attack cycle.
+        </p>
+        <p>
+          <strong>Solution:</strong> I developed an animated swinging
+          attack—initially conceptualized as a bass guitar swing—that included
+          dynamic collision detection via a HashSet. This system tracked enemies
+          already hit during an animation cycle and reset once the swing
+          returned to idle. I also incorporated particle effects and animated
+          damage numbers to visually communicate impact.
+        </p>
+
+        <figure class="code-figure">
+          <div class="code-container">
+            <pre><code class="language-csharp">private void OnTriggerStay2D(Collider2D other)
+{
+    bool isCurrentlySwinging = anim.GetCurrentAnimatorStateInfo(0).IsName("BassGuitarSwing");
+    bool isEnemyAlreadyHit = colliders.Contains(other);
+    bool isEnemy = other.gameObject.CompareTag("Enemy");
+
+    if (isCurrentlySwinging && isEnemy && !isEnemyAlreadyHit)
+    {
+        colliders.Add(other);
+        
+        DealDamage(other);
+    }
+
+    bool isCurrentlyIdle = anim.GetCurrentAnimatorStateInfo(0).IsName("BassGuitarIdle");
+
+    if (isCurrentlyIdle)
+    {
+        colliders.Clear();
+    }
+}
+            </code></pre>
+          </div>
+          <figcaption>
+            C# snippet of preventing multiple hits per swing.
+          </figcaption>
+        </figure>
+
+        <!-- D. Implementing a Chain Lightning/Force Lightning Mechanic -->
+        <h4>D. Implementing a Force Lightning Mechanic</h4>
+        <p>
+          <strong>Goal:</strong> Develop an attack ability that simulates force
+          lightning, targeting enemies dynamically based on proximity.
+        </p>
+        <p>
+          <strong>Solution:</strong> I implemented an algorithm that gathered
+          nearby enemies via a circular collider and sorted them by distance
+          using a SortedSet with a custom comparer. This allowed the attack to
+          consistently target the nearest enemies, with the number of targets
+          adjustable according to upgrades.
+        </p>
+
+        <figure>
+          <video controls>
+            <source src="./Videos/ElectricGuitar.mp4" type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+          <figcaption>
+            Video of Electric Guitar targeting nearest enemies.
+          </figcaption>
+        </figure>
+
+        <figure class="code-figure">
+          <div class="code-container">
+            <pre><code class="language-csharp">public override void Attack()
+{
+    if (gameObject.activeSelf)
+    {
+        if(enemies.Count != 0)
+        {
+            SoundManager.Instance.PlaySFX(attackSound, 1);
+            GameObject[] targetEnemies = GetClosestEnemies(AdjustTargetOverflow(amountOfTethers));
+            for (int i = 0; i &lt; targetEnemies.Length; i++)
+            {
+                GameObject clone = Instantiate(bolt);
+                clone.GetComponent&lt;ElectricBolt&gt;().SetPlayerObject(gameObject);
+                clone.GetComponent&lt;ElectricBolt&gt;().SetTargetUnit(targetEnemies[i]);
+                clone.SetActive(true);
+            }
+        }
+    } 
+}
+
+protected int AdjustTargetOverflow(int amountOfTethers)
+{
+    if (enemies.Count &lt; amountOfTethers)
+    {
+        return enemies.Count;
+    }
+    else
+    {
+        return amountOfTethers;
+    }
+}
+
+protected GameObject[] GetClosestEnemies(int amountOfTethers)
+{
+    SortedSet&lt;GameObject&gt; sortedEnemies = new SortedSet&lt;GameObject&gt;(new GameObjectComparer());
+    foreach (GameObject enemy in enemies)
+    {
+        sortedEnemies.Add(enemy);
+    }
+    return sortedEnemies.Take(amountOfTethers).ToArray();
+}
+            </code></pre>
+          </div>
+          <figcaption>Code for force lightning type ability.</figcaption>
+        </figure>
+
+        <!-- E. Integrating Dynamic Joysticks and UI Elements -->
+        <h4>E. Integrating Dynamic Joysticks and UI Elements</h4>
+        <p>
+          <strong>Goal:</strong> Ensure on‑screen controls function smoothly
+          across devices while maintaining a consistent UI experience.
+        </p>
+        <p>
+          <strong>Solution:</strong> After testing Unity’s new Input System
+          package and encountering lag, I reverted to a more reliable input
+          handling method. I adjusted the joystick hierarchy and configured
+          dynamic scaling for UI elements such as the health bar, guaranteeing
+          consistent usability and appearance on all screen sizes.
+        </p>
+
+        <!-- F. Developing an Extensive Upgrade System -->
+        <h4>F. Developing an Extensive Upgrade and Meta-Upgrade System</h4>
+        <p>
+          <strong>Goal:</strong> Create an upgrade system that allowed players
+          to improve weapons and abilities in real time and persist these
+          changes across sessions.
+        </p>
+        <p>
+          <strong>Solution:</strong> I built a hierarchical upgrade system where
+          all items inherited from a common abstract class. Using reflection, I
+          enabled dynamic method calls to update item attributes and stored
+          these upgrade levels in a JSON file. This system managed both in-game,
+          immediate upgrades and meta-upgrades in the main menu, offering deep
+          progression and replay value.
+        </p>
+
+        <figure>
+          <img
+            src="./Images/hierarchy.png"
+            alt="Dynamic disco dancefloor with spawning enemies"
+            class="enlargeable-image"
+          />
+          <figcaption>
+            Hierarchy of items in the game, this eventually grew further.
+          </figcaption>
+        </figure>
+
+        <figure>
+          <video controls>
+            <source src="./Videos/UpgradeSystem.mp4" type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+          <figcaption>
+            Video of meta upgrade system in the main menu and in-game upgrades.
+          </figcaption>
+        </figure>
+
+        <!-- G. Handling Transitions and Scene Management -->
+        <h4>G. Handling Transitions and Scene Management</h4>
+        <p>
+          <strong>Goal:</strong> Create seamless transitions between game scenes
+          and menus for a polished user experience.
+        </p>
+        <p>
+          <strong>Solution:</strong> I integrated LeanTween to manage smooth UI
+          transitions and created chained animations that controlled the scaling
+          and positioning of UI elements. A crossfade effect using a fading
+          black overlay further enhanced scene transitions.
+        </p>
+        <!-- Embed a video demonstration of transitions -->
+
+        <!-- H. Fine-Tuning Visual Effects (VFX) and Particle Systems -->
+        <h4>H. Fine-Tuning Visual Effects (VFX) and Particle Systems</h4>
+        <p>
+          <strong>Goal:</strong> Enhance the game’s visual appeal with dynamic
+          particle effects, trailing animations, and responsive VFX.
+        </p>
+        <p>
+          <strong>Solution:</strong> I refined various particle systems by
+          adjusting simulation parameters such as lifetime, emission rates, and
+          simulation spaces. The effects were tailored to accentuate attacks,
+          movement, and environmental lighting, all while integrating
+          post‑processing effects like bloom and vignette.
+        </p>
+
+        <!-- I. Performance and Bug Fixing -->
+        <h4>I. Performance and Bug Fixing</h4>
+        <p>
+          <strong>Goal:</strong> Optimize performance, manage memory
+          effectively, and resolve numerous bugs that arose from increasing
+          complexity.
+        </p>
+        <p>
+          <strong>Solution:</strong> Through careful playtesting and profiling,
+          I identified and fixed performance bottlenecks. Improvements included
+          adjusting tilemap generation boundaries, refining singleton
+          management, and implementing fail-safe collision and animation logic.
+          This systematic approach greatly stabilized the final game build.
+        </p>
+
+        <!-- My Role -->
+        <h3>My Role</h3>
+        <p>I held a multifaceted role throughout the project:</p>
+        <ul>
+          <li>
+            <strong>Technical Development:</strong> I authored the majority of
+            the overall codebase, focusing on key systems such as dynamic
+            tilemap generation, enemy spawning, attack animations, upgrading
+            systems, visual effects, post-process effects, lighting etc.
+          </li>
+          <li>
+            <strong>Problem Solving:</strong> I resolved challenges ranging from
+            collision detection to performance optimization, refining gameplay
+            mechanics through iterative testing.
+          </li>
+          <li>
+            <strong>UI/UX and Visual Effects:</strong> I enhanced on-screen
+            controls, user interface responsiveness, and integrated advanced
+            visual effects and particle systems to enrich the game’s disco
+            atmosphere.
+          </li>
+          <li>
+            <strong>Systems Integration and Persistence:</strong> I architected
+            and implemented an upgrade system that maintained player progress
+            via JSON-based persistence, ensuring seamless cross-session
+            continuity.
+          </li>
+          <li>
+            <strong>Collaboration:</strong> I worked closely with team members
+            to integrate various features and ensure a coherent final product.
+          </li>
+        </ul>
+
+        <!-- Challenges and Learning Outcomes -->
+        <h3>Challenges and Learning Outcomes</h3>
+        <p>This project provided valuable insights:</p>
+        <ul>
+          <li>
+            <strong>Managing Complexity:</strong> Addressing intricate code interactions and emphasizing modular design enhanced my approach to building scalable system architectures.
+
+          </li>
+          <li>
+            <strong>Dynamic Adaptation:</strong> Implementing runtime methods
+            via reflection deepened my understanding of dynamic system design.
+          </li>
+          <li>
+            <strong>Performance Optimization:</strong> Profiling and code
+            optimization techniques became crucial as the project’s complexity
+            grew.
+          </li>
+          <li>
+            <strong>UI/UX Responsiveness:</strong> Adapting interfaces to
+            multiple devices underlined the importance of responsive design.
+          </li>
+          <li>
+            <strong>Collaboration and Integration:</strong> Merging features
+            from different team members highlighted the need for clear coding
+            standards and adaptability.
+          </li>
+        </ul>
+
+        <!-- Conclusion -->
+        <h3>Conclusion</h3>
+        <p>
+          In summary, this project was an intensive and rewarding learning
+          experience. By blending rhythmic action with a striking disco
+          aesthetic, I developed a unique game that integrated dynamic gameplay,
+          robust upgrade mechanics, and rich visual effects. The challenges
+          overcome during development have sharpened my technical and creative
+          skills, and the solutions implemented have laid a strong foundation
+          for future projects.
+        </p>
+
+      <!-- Project Links -->
+      <div class="project-detail-links">
+        <a
+          href="https://github.com/XirevGH/MAPP-Grupp03"
+          class="btn btn-primary"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <polygon points="5 3 19 12 5 21 5 3" />
+          </svg>
+          View Source Code
+        </a>
+        <a href="index.html#projects" class="btn btn-secondary">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="m12 19-7-7 7-7" />
+            <path d="M19 12H5" />
+          </svg>
+          Back to Projects
+        </a>
+      </div>
+    </section>
+
+    <footer>
+      <div class="footer-content">
+        <div class="footer-about">
+          <a href="index.html" class="footer-logo"
+            >David<span> da Costa</span></a
+          >
+          <p class="footer-description">
+            Passionate game developer specializing in Unreal Engine and Unity.
+            Building immersive worlds and engaging gameplay experiences.
+          </p>
+          <div class="social-links">
+            <a
+              href="https://www.linkedin.com/in/david-da-costa-4701831a5/"
+              class="social-link"
+              aria-label="LinkedIn Profile"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                stroke="none"
+              >
+                <path
+                  d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"
+                />
+                <path d="M2 9h4v12H2z" />
+                <circle cx="4" cy="4" r="2" />
+              </svg>
+            </a>
+            <a
+              href="https://github.com/XirevGH"
+              class="social-link"
+              aria-label="GitHub Profile"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <svg
+                role="img"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                fill="currentColor"
+              >
+                <title>GitHub</title>
+                <path
+                  d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"
+                />
+              </svg>
+            </a>
+            <a
+              href="https://x.com/xirevwow"
+              class="social-link"
+              aria-label="X (Twitter) Profile"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <svg
+                role="img"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                fill="currentColor"
+              >
+                <title>X</title>
+                <path
+                  d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z"
+                />
+              </svg>
+            </a>
+          </div>
+        </div>
+        <div class="footer-links-group">
+          <h4 class="footer-title">Quick Links</h4>
+          <ul class="footer-links">
+            <li>
+              <a href="index.html#home"><span>Home</span></a>
+            </li>
+            <li>
+              <a href="index.html#projects"><span>Projects</span></a>
+            </li>
+            <li>
+              <a href="index.html#skills"><span>Skills</span></a>
+            </li>
+            <li>
+              <a href="index.html#about"><span>About</span></a>
+            </li>
+            <li>
+              <a href="index.html#contact"><span>Contact</span></a>
+            </li>
+          </ul>
+        </div>
+        <div class="footer-links-group">
+          <h4 class="footer-title">Contact</h4>
+          <ul class="footer-links">
+            <li>
+              <a href="mailto:david.dacosta.dev@outlook.com"
+                ><span>Email Me</span></a
+              >
+            </li>
+            <li>
+              <a href="#"><span>Request CV</span></a>
+            </li>
+            <li>
+              <a href="privacy-policy.html"><span>Privacy Policy</span></a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="copyright">
+        © <span id="currentYear"></span> David da Costa. All rights reserved.
+      </div>
+    </footer>
+
+    <button
+      class="back-to-top"
+      id="backToTopBtn"
+      aria-label="Scroll back to top"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path d="m5 12 7-7 7 7" />
+        <path d="M12 19V5" />
+      </svg>
+    </button>
+
+    <script src="./js/script.js"></script>
+    <div id="lightbox-overlay" class="lightbox-overlay">
+      <span class="lightbox-close" id="lightbox-close" title="Close"
+        >&times;</span
+      >
+      <img
+        src=""
+        alt="Enlarged image"
+        id="lightbox-image"
+        class="lightbox-image"
+      />
+      <div class="lightbox-caption" id="lightbox-caption"></div>
+    </div>
+    <script src="./js/script.js"></script>
+    <script>
+      // Lightbox Functionality
+      document.addEventListener("DOMContentLoaded", () => {
+        const lightboxOverlay = document.getElementById("lightbox-overlay");
+        const lightboxImage = document.getElementById("lightbox-image");
+        const lightboxCaption = document.getElementById("lightbox-caption");
+        const lightboxClose = document.getElementById("lightbox-close");
+        const imageTriggers = document.querySelectorAll(".enlargeable-image");
+
+        if (
+          !lightboxOverlay ||
+          !lightboxImage ||
+          !lightboxClose ||
+          !lightboxCaption
+        ) {
+          console.warn("Lightbox elements not found. Enlargement disabled.");
+          return;
+        }
+
+        imageTriggers.forEach((img) => {
+          img.style.cursor = "zoom-in";
+          img.addEventListener("click", (event) => {
+            event.preventDefault();
+            const imageElement = event.currentTarget;
+            const figureElement = imageElement.closest("figure");
+            const captionElement = figureElement
+              ? figureElement.querySelector("figcaption")
+              : null;
+            lightboxImage.src = imageElement.src;
+            lightboxImage.alt = imageElement.alt;
+
+            if (captionElement) {
+              lightboxCaption.textContent = captionElement.textContent;
+              lightboxCaption.style.display = "block";
+            } else {
+              lightboxCaption.style.display = "none";
+            }
+            lightboxOverlay.style.display = "flex";
+          });
+        });
+
+        lightboxClose.addEventListener("click", () => {
+          lightboxOverlay.style.display = "none";
+          lightboxImage.src = "";
+          lightboxImage.alt = "";
+          lightboxCaption.textContent = "";
+        });
+
+        lightboxOverlay.addEventListener("click", (event) => {
+          if (event.target === lightboxOverlay) {
+            lightboxOverlay.style.display = "none";
+            lightboxImage.src = "";
+            lightboxImage.alt = "";
+            lightboxCaption.textContent = "";
+          }
+        });
+
+        document.addEventListener("keydown", (event) => {
+          if (
+            event.key === "Escape" &&
+            lightboxOverlay.style.display === "flex"
+          ) {
+            lightboxOverlay.style.display = "none";
+            lightboxImage.src = "";
+            lightboxImage.alt = "";
+            lightboxCaption.textContent = "";
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
