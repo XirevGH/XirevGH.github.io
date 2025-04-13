@@ -1650,7 +1650,7 @@ figure.code-figure figcaption {
                     radial-gradient(circle at 85% 80%, var(--secondary, #00BFFF), transparent 50%);
         background-blend-mode: overlay;
         min-height: 100vh;
-        color: var(--light, #eee); /* Default text color for the page */
+        color: var(--light, #eee); 
    }
 
    .project-banner {
@@ -1659,7 +1659,7 @@ figure.code-figure figcaption {
        overflow: hidden;
        position: relative;
        margin-bottom: 3rem;
-       background-color: #222; /* Fallback bg color */
+       background-color: #222; 
    }
 
    .project-banner img {
@@ -1670,7 +1670,7 @@ figure.code-figure figcaption {
        filter: brightness(0.8);
    }
 
-   /* Gradient overlay on banner */
+   
    .project-banner::after {
        content: '';
        position: absolute;
@@ -1787,7 +1787,7 @@ figure.code-figure figcaption {
        flex-wrap: wrap;
    }
 
-   /* Assume .btn styles are in style.css */
+   
    .project-detail-links .btn {
         min-width: 180px;
         display: inline-flex;
@@ -1799,42 +1799,42 @@ figure.code-figure figcaption {
         width: 18px; height: 18px;
    }
 
-   /* --- Styles for Media Embedded within Text --- */
+   
    .project-detail-info > figure {
-       /* Layout */
-       width: 100%; /* Take full width of the info block */
-       max-width: 700px; /* Optional: Limit max width */
-       margin: 2.5rem auto; /* Vertical spacing, center horizontally */
+       
+       width: 100%; 
+       max-width: 700px; 
+       margin: 2.5rem auto; 
 
-       /* Styling (borrow from gallery-grid figure) */
+       
        border-radius: 8px;
        overflow: hidden;
-       box-shadow: 0 6px 20px var(--shadow-medium, rgba(0, 0, 0, 0.3)); /* Adjusted shadow */
+       box-shadow: 0 6px 20px var(--shadow-medium, rgba(0, 0, 0, 0.3)); 
        border: 1px solid var(--border-light-translucent, rgba(255, 255, 255, 0.1));
 
-       /* Reset browser default figure margins */
+       
        padding: 0;
    }
 
-   /* Media element behavior inside embedded figures */
+   
    .project-detail-info > figure img,
    .project-detail-info > figure video,
    .project-detail-info > figure iframe {
        display: block;
        width: 100%;
-       height: auto; /* Maintain aspect ratio */
-       aspect-ratio: 16 / 9; /* Default aspect ratio */
+       height: auto; 
+       aspect-ratio: 16 / 9; 
        object-fit: cover;
-       /* Add border between media and caption */
+       
        border-bottom: 1px solid var(--border-light-translucent, rgba(255, 255, 255, 0.1));
    }
-   /* Remove bottom border if media is the ONLY child (no caption) */
+   
    .project-detail-info > figure :only-child {
       border-bottom: none;
    }
 
 
-   /* Caption styling for embedded figures */
+   
    .project-detail-info > figure figcaption {
        padding: 0.8rem 1rem;
        background-color: rgba(30, 30, 30, 0.8);
@@ -1842,10 +1842,10 @@ figure.code-figure figcaption {
        font-size: 0.9rem;
        text-align: center;
    }
-   /* --- End Embedded Media Styles --- */
+   
 
 
-   /* --- Styles for Optional Separate Media Gallery --- */
+   
    .project-media-gallery {
        margin-top: 3rem;
    }
@@ -1860,7 +1860,7 @@ figure.code-figure figcaption {
        overflow: hidden;
        box-shadow: 0 4px 15px var(--shadow-medium, rgba(0, 0, 0, 0.3));
        border: 1px solid var(--border-light-translucent, rgba(255, 255, 255, 0.1));
-       background-color: #222; /* Fallback bg color */
+       background-color: #222; 
    }
    .gallery-grid img,
    .gallery-grid video,
@@ -1870,7 +1870,7 @@ figure.code-figure figcaption {
        height: auto;
        aspect-ratio: 16 / 9;
        object-fit: cover;
-        /* Add border between media and caption */
+        
        border-bottom: 1px solid var(--border-light-translucent, rgba(255, 255, 255, 0.1));
    }
    .gallery-grid figure :only-child {
@@ -1883,10 +1883,10 @@ figure.code-figure figcaption {
        font-size: 0.9rem;
        text-align: center;
    }
-   /* --- End Separate Media Gallery Styles --- */
+   
 
 
-   /* Responsive adjustments */
+   
    @media (max-width: 768px) {
        .project-detail-main-content {
            padding: 2rem;
@@ -1900,13 +1900,13 @@ figure.code-figure figcaption {
        .project-detail-subtitle {
             font-size: clamp(1rem, 4vw, 1.2rem);
        }
-       /* Adjust separate gallery grid for smaller screens if needed */
+       
        .gallery-grid {
-           grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Adjust min size */
+           grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
        }
-        /* Adjust embedded figure max-width if needed */
+        
        .project-detail-info > figure {
-           max-width: 100%; /* Allow full width */
+           max-width: 100%; 
        }
    }
    @media (max-width: 576px) {
@@ -1914,7 +1914,7 @@ figure.code-figure figcaption {
             padding: 1.5rem;
             margin-left: 4%;
             margin-right: 4%;
-            max-width: none; /* Allow full width minus padding */
+            max-width: none; 
         }
         .project-banner {
             margin-bottom: 2rem;
@@ -1930,8 +1930,48 @@ figure.code-figure figcaption {
             width: 100%;
             max-width: 300px;
         }
-         /* Stack items in separate gallery on smallest screens */
+         
         .gallery-grid {
            grid-template-columns: 1fr;
        }
    }
+
+   .privacy-content {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem;
+    background-color: rgba(30, 30, 36, 0.9);
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  }
+
+  .privacy-section {
+    margin-bottom: 2rem;
+  }
+
+  .privacy-section h3 {
+    color: #8a2be2;
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+  }
+
+  .privacy-section p,
+  .privacy-section ul {
+    margin-bottom: 1rem;
+    line-height: 1.7;
+  }
+
+  .privacy-section ul {
+    padding-left: 1.5rem;
+  }
+
+  .privacy-section ul li {
+    margin-bottom: 0.5rem;
+  }
+
+  .last-updated {
+    font-style: italic;
+    color: #b0b0b0;
+    margin-top: 2rem;
+    text-align: center;
+  }

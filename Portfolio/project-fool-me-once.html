@@ -53,16 +53,12 @@
              onerror="this.onerror=null; this.src='https://placehold.co/1600x500/1a1a1a/8A2BE2?text=Fool+Me+Once+Banner'; this.style.objectFit='contain';">
     </div>
 
-
-    <!-- Update project title and subtitle -->
 <div class="project-detail-header">
     <h1 class="project-detail-title">Fool Me Once</h1>
     <p class="project-detail-subtitle">Competitive DDR Pad Navigation Game - 5 Day Game Jam Project</p>
 </div>
 
 <section class="project-detail-main-content" id="project-detail">
-    
-            <!-- Updated Tags -->
             <div class="project-detail-tags">
                 <span class="project-detail-tag">Team Size: 4+</span>
                 <span class="project-detail-tag">Unreal Engine 5</span>
@@ -79,7 +75,6 @@
             Developed during an intense 5-day game jam using Unreal Engine 5, Fool Me Once reimagines dance pad controls for competitive maze navigation. Two players race to collect the most cakes using DDR pads while strategically rotating and moving through a complex grid-based arena.
         </p>
 
-        <!-- Movement System Section -->
         <h3>Core Technical Implementation</h3>
         <h4>Node-Based Movement System</h4>
         <p>
@@ -107,7 +102,6 @@
             <figcaption>Demonstration of rotation for next-node visibility</figcaption>
         </figure>
 
-        <!-- Splitscreen Implementation -->
         <h4>Splitscreen & Input Management</h4>
         <p>
             Engineered unconventional control scheme supporting two DDR pads through single keyboard input:
@@ -126,7 +120,6 @@
             </a>
             <figcaption>Spawning players and hooking up controls for splitscreen (Click image to enlarge)</figcaption> </figure>
 
-        <!-- Level Design Section -->
         <h4>Procedural Item Spawning</h4>
         <p>
             Implemented randomized collectible system with:
@@ -237,7 +230,6 @@ AActor* ACakeChaseGameMode::AttemptSpawnActorAtRandomNode(TSubclassOf&lt;AActor&
                 <figcaption>Random spawn with anti-overlap validation (C++ Snippet)</figcaption>
             </figure>
 
-        <!-- Challenges Section -->
         <h3>Key Challenges Overcome</h3>
         <div class="challenge-solution">
             <p class="challenge">🕹️ DDR Pad Input Limitations:</p>
@@ -250,7 +242,6 @@ AActor* ACakeChaseGameMode::AttemptSpawnActorAtRandomNode(TSubclassOf&lt;AActor&
             <p class="solution">Developed node connection validation system preventing pathfinding errors</p>
         </div>
 
-        <!-- Outcome Section -->
         <h3>Project Outcome</h3>
         <p>
             Despite tight time constraints, we delivered a fully functional competitive experience showcasing:
@@ -262,7 +253,6 @@ AActor* ACakeChaseGameMode::AttemptSpawnActorAtRandomNode(TSubclassOf&lt;AActor&
             <li>Positive player feedback on strategic movement mechanics</li>
         </ul>
 
-        <!-- Final Media -->
         <figure>
             <video controls>
                 <source src="./Videos/FinalGameplay.mp4" type="video/mp4">
@@ -272,9 +262,7 @@ AActor* ACakeChaseGameMode::AttemptSpawnActorAtRandomNode(TSubclassOf&lt;AActor&
         </figure>
     </div>
 
-    <!-- Keep existing link section -->
     <div class="project-detail-links">
-        <!-- Update demo link if available -->
         <a href="https://github.com/XirevGH/FOMO-GameJam" class="btn btn-primary" target="_blank" rel="noopener noreferrer">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
             View Source Code
@@ -332,7 +320,6 @@ AActor* ACakeChaseGameMode::AttemptSpawnActorAtRandomNode(TSubclassOf&lt;AActor&
         <div class="lightbox-caption" id="lightbox-caption"></div> </div>
     <script src="./js/script.js"></script>
     <script>
-        // Lightbox Functionality
         document.addEventListener('DOMContentLoaded', () => {
             const lightboxOverlay = document.getElementById('lightbox-overlay');
             const lightboxImage = document.getElementById('lightbox-image');
@@ -346,42 +333,39 @@ AActor* ACakeChaseGameMode::AttemptSpawnActorAtRandomNode(TSubclassOf&lt;AActor&
             }
 
             imageTriggers.forEach(img => {
-                img.style.cursor = 'zoom-in'; // Add visual cue
+                img.style.cursor = 'zoom-in';
                 img.addEventListener('click', (event) => {
-                    event.preventDefault(); // Prevent default link behavior if wrapped in <a>
+                    event.preventDefault();
 
-                    const imageElement = event.currentTarget; // The clicked image
-                    const figureElement = imageElement.closest('figure'); // Find parent figure
-                    const captionElement = figureElement ? figureElement.querySelector('figcaption') : null; // Find caption within figure
+                    const imageElement = event.currentTarget;
+                    const figureElement = imageElement.closest('figure');
+                    const captionElement = figureElement ? figureElement.querySelector('figcaption') : null;
 
-                    lightboxImage.src = imageElement.src; // Use src from the clicked image itself
-                    lightboxImage.alt = imageElement.alt; // Copy alt text
+                    lightboxImage.src = imageElement.src;
+                    lightboxImage.alt = imageElement.alt;
 
-                    // Set caption text if found
                     if (captionElement) {
                         lightboxCaption.textContent = captionElement.textContent;
                         lightboxCaption.style.display = 'block';
                     } else {
-                        lightboxCaption.style.display = 'none'; // Hide caption area if no caption
+                        lightboxCaption.style.display = 'none';
                     }
 
-                    lightboxOverlay.style.display = 'flex'; // Show the overlay
+                    lightboxOverlay.style.display = 'flex';
                     console.log('Lightbox opened');
                 });
             });
 
-            // Close lightbox when clicking the close button
             lightboxClose.addEventListener('click', () => {
                 lightboxOverlay.style.display = 'none';
-                lightboxImage.src = ''; // Clear image src
+                lightboxImage.src = '';
                 lightboxImage.alt = '';
-                lightboxCaption.textContent = ''; // Clear caption
+                lightboxCaption.textContent = '';
                 console.log('Lightbox closed via button');
             });
 
-            // Close lightbox when clicking on the overlay background (but not the image itself)
             lightboxOverlay.addEventListener('click', (event) => {
-                if (event.target === lightboxOverlay) { // Only close if clicking the background
+                if (event.target === lightboxOverlay) {
                     lightboxOverlay.style.display = 'none';
                     lightboxImage.src = '';
                     lightboxImage.alt = '';
@@ -390,7 +374,6 @@ AActor* ACakeChaseGameMode::AttemptSpawnActorAtRandomNode(TSubclassOf&lt;AActor&
                 }
             });
 
-             // Close lightbox with the Escape key
             document.addEventListener('keydown', (event) => {
                 if (event.key === 'Escape' && lightboxOverlay.style.display === 'flex') {
                     lightboxOverlay.style.display = 'none';
