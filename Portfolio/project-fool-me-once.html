@@ -1,183 +1,338 @@
-﻿<!DOCTYPE html>
+﻿<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Fool Me Once | Portfolio</title>
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M 8 3 Q 4 7, 5 12 Q 4 17, 8 21' stroke='%238A2BE2'/><path d='M 16 3 Q 20 7, 19 12 Q 20 17, 16 21' stroke='%2300BFFF'/></svg>">
-    <link rel="stylesheet" href="./css/style.css">
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M 8 3 Q 4 7, 5 12 Q 4 17, 8 21' stroke='%238A2BE2'/><path d='M 16 3 Q 20 7, 19 12 Q 20 17, 16 21' stroke='%2300BFFF'/></svg>"
+    />
+    <link rel="stylesheet" href="./css/style.css" />
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
-    
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css"
+    />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlightjs-line-numbers.js/2.8.0/highlightjs-line-numbers.min.js"></script>
-
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    
-</head>
-<body class="project-detail-page">
+    <script>
+      hljs.highlightAll();
+    </script>
+  </head>
+  <body class="project-detail-page">
     <nav id="navbar">
-        <div class="navbar-contact">
-             <a href="https://www.linkedin.com/in/david-da-costa-4701831a5/" class="social-link" aria-label="LinkedIn Profile" target="_blank" rel="noopener noreferrer">
-                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="black" stroke="none"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><path d="M2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>
-             </a>
-             <a href="https://github.com/XirevGH" class="social-link" aria-label="GitHub Profile" target="_blank" rel="noopener noreferrer">
-                 <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="black"><title>GitHub</title><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
-             </a>
-             <a href="https://x.com/xirevwow" class="social-link" aria-label="X (Twitter) Profile" target="_blank" rel="noopener noreferrer">
-                <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="black"><title>X</title><path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z"/></svg>             </a>
-             <a class="email-text">david.dacosta.dev@outlook.com</a>
-        </div>
+      <div class="navbar-contact">
+        <a
+          href="https://www.linkedin.com/in/david-da-costa-4701831a5/"
+          class="social-link"
+          aria-label="LinkedIn Profile"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="black"
+            stroke="none"
+          >
+            <path
+              d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"
+            />
+            <path d="M2 9h4v12H2z" />
+            <circle cx="4" cy="4" r="2" />
+          </svg>
+        </a>
+        <a
+          href="https://github.com/XirevGH"
+          class="social-link"
+          aria-label="GitHub Profile"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <svg
+            role="img"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            fill="black"
+          >
+            <title>GitHub</title>
+            <path
+              d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"
+            />
+          </svg>
+        </a>
+        <a
+          href="https://x.com/xirevwow"
+          class="social-link"
+          aria-label="X (Twitter) Profile"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <svg
+            role="img"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            fill="black"
+          >
+            <title>X</title>
+            <path
+              d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z"
+            />
+          </svg>
+        </a>
+        <a class="email-text">david.dacosta.dev@outlook.com</a>
+      </div>
 
-        <div class="logo-container">
-            <a href="index.html#home" class="logo">David<span>da Costa</span> | Game <span>Programmer</span></span></a>
-            <a class="mobile-email">david.dacosta.dev@outlook.com</a>
-        </div>
+      <div class="logo-container">
+        <a href="index.html#home" class="logo"
+          >David<span>da Costa</span> | Game <span>Programmer</span></a
+        >
+        <a class="mobile-email">david.dacosta.dev@outlook.com</a>
+      </div>
 
-        <ul class="nav-links" id="navLinks">
-            <li><a href="index.html#home" class="nav-link">Home</a></li>
-            <li><a href="index.html#projects" class="nav-link">Projects</a></li>
-            <li><a href="index.html#skills" class="nav-link">Skills</a></li>
-            <li><a href="index.html#about" class="nav-link">About</a></li>
-        </ul>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="index.html#home" class="nav-link">Home</a></li>
+        <li><a href="index.html#projects" class="nav-link">Projects</a></li>
+        <li><a href="index.html#skills" class="nav-link">Skills</a></li>
+        <li><a href="index.html#about" class="nav-link">About</a></li>
+      </ul>
 
-        <button class="menu-btn" id="menuBtn" aria-label="Toggle navigation menu" aria-expanded="false">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-menu-icon lucide-menu">
-                <line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
-        </button>
+      <button
+        class="menu-btn"
+        id="menuBtn"
+        aria-label="Toggle navigation menu"
+        aria-expanded="false"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          class="lucide lucide-menu-icon lucide-menu"
+        >
+          <line x1="4" x2="20" y1="12" y2="12" />
+          <line x1="4" x2="20" y1="6" y2="6" />
+          <line x1="4" x2="20" y1="18" y2="18" />
+        </svg>
+      </button>
     </nav>
 
     <div class="project-banner">
-        <img src="./Images/foolmeonce.png" alt="Fool Me Once Gameplay Banner"
-             onerror="this.onerror=null; this.src='https://placehold.co/1600x500/1a1a1a/8A2BE2?text=Fool+Me+Once+Banner'; this.style.objectFit='contain';">
+      <img
+        src="./Images/foolmeonce.png"
+        alt="Fool Me Once Gameplay Banner"
+        onerror="
+          this.onerror = null;
+          this.src =
+            'https://placehold.co/1600x500/1a1a1a/8A2BE2?text=Fool+Me+Once+Banner';
+          this.style.objectFit = 'contain';
+        "
+      />
     </div>
 
-<div class="project-detail-header">
-    <h1 class="project-detail-title">Fool Me Once</h1>
-    <p class="project-detail-subtitle">Competitive DDR Pad Navigation Game - 5 Day Game Jam Project</p>
-</div>
+    <div class="project-detail-header">
+      <h1 class="project-detail-title">Fool Me Once</h1>
+      <p class="project-detail-subtitle">
+        Competitive Splitscreen Maze Duel - 5 Day Game Jam
+      </p>
+    </div>
 
-<section class="project-detail-main-content" id="project-detail">
-            <div class="project-detail-tags">
-              <span class="project-tag">Team Size: 4</span>
-              <span class="project-tag">Time: 5 Days</span>
-              <span class="project-tag">UE 5</span>
-              <span class="project-tag">C++</span>
-              <span class="project-tag">Multiplayer</span>
-              <span class="project-tag">Game Jam</span>
-            </div>
-    <div class="project-detail-info">
-        <h3>Game Summary</h3>
+    <section class="project-detail-main-content" id="project-detail">
+      <div class="project-detail-tags">
+        <span class="project-tag">Team Size: 4</span>
+        <span class="project-tag">Time: 5 Days</span>
+        <span class="project-tag">Unreal Engine 5</span>
+        <span class="project-tag">C++</span>
+        <span class="project-tag">Splitscreen Multiplayer</span>
+        <span class="project-tag">Game Jam</span>
+      </div>
+
+      <div class="project-detail-info">
+        <h3>Game Overview</h3>
         <p>
-            Developed during an intense 5-day game jam using Unreal Engine 5, Fool Me Once reimagines dance pad controls for competitive maze navigation. Two players race to collect the most cakes using DDR pads while strategically rotating and moving through a complex grid-based arena.
+          Developed during an intensive 5-day game jam in Unreal Engine 5,
+          <strong>Fool Me Once</strong> is a competitive local multiplayer maze
+          duel designed for physical Dance Dance Revolution (DDR) pads. Two
+          players navigate a futuristic maze arena in splitscreen, racing to
+          collect cakes and deploying unpredictable power-ups and traps to
+          disorient each other.
         </p>
 
         <h3>Core Technical Implementation</h3>
-        <h4>Node-Based Movement System</h4>
+
+        <h4>1. Discrete Graph Navigation & Vector Directional Parsing</h4>
         <p>
-            Created a node-based navigation system ensuring precise DDR pad controls:
+          Standard physics and Character Movement components were discarded in
+          favor of a responsive, deterministic
+          <strong>Discrete Graph Navigation System</strong> using custom
+          <code>AMovementNode</code> actors:
         </p>
         <ul>
-            <li>Custom <strong>MovementNode</strong> class for traversal</li>
-            <li>Automatic node connection validation for collision-free paths</li>
-            <li>Dynamic camera alignment for next-node visibility</li>
+          <li>
+            <strong>Dot-Product Directional Filtering:</strong> When a player
+            inputs a movement or turn command, the character calculates the
+            vector dot product between the player's facing direction and all
+            connected graph nodes, validating moves within a tight angular cone
+            (<code>ForwardVectorMatchThreshold = 0.707f</code>, corresponding to
+            $45^\circ$).
+          </li>
+          <li>
+            <strong>Look-Ahead Corner Pre-Rotation:</strong> To eliminate
+            jarring, angular stops at 90-degree junctions, the movement
+            algorithm checks ahead for the <em>next</em> connected corridor
+            (<code>NextForwardNode</code>). While the pawn is still in transit
+            to its immediate target, it dynamically blends its rotation
+            (<code>TargetForwardRotation</code>) into the upcoming corner using
+            an eased blend factor.
+          </li>
+          <li>
+            <strong>Quaternion SLERP & Non-Linear Easing:</strong> Rotations are
+            smoothly interpolated via spherical linear interpolation
+            (<code>FQuat::Slerp</code>) alongside custom exponential easing
+            curves (<code>InterpEaseInOut</code>), ensuring crisp and
+            predictable visual feedback.
+          </li>
         </ul>
 
         <figure>
-            <video controls>
-                <source src="./Videos/NodeMovementRotation.mp4" type="video/mp4">
-                Your browser does not support the video tag.
-            </video>
-            <figcaption>Demonstration of grid-based movement and rotation mechanics</figcaption>
+          <video controls>
+            <source src="./Videos/NodeMovementRotation.mp4" type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+          <figcaption>
+            Demonstration of discrete grid-based movement and predictive
+            rotation mechanics
+          </figcaption>
         </figure>
 
         <figure>
-            <video controls>
-                <source src="./Videos/NextNodeVisibility.mp4" type="video/mp4">
-                Your browser does not support the video tag.
-            </video>
-            <figcaption>Demonstration of rotation for next-node visibility</figcaption>
+          <video controls>
+            <source src="./Videos/NextNodeVisibility.mp4" type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+          <figcaption>
+            Demonstration of dynamic camera rotation and look-ahead node
+            visibility
+          </figcaption>
         </figure>
 
-        <h4>Splitscreen & Input Management</h4>
+        <h4>2. Automated Level-Design Floor Snapping Tooling</h4>
         <p>
-            Engineered unconventional control scheme supporting two DDR pads through single keyboard input:
+          To eliminate tedious manual Z-axis alignment and prevent floating or
+          clipping nodes across uneven maze geometry, each
+          <code>AMovementNode</code> performs an automated vertical surface
+          alignment on initialization:
         </p>
         <ul>
-            <li>Controller mapping workaround for simultaneous pad use</li>
-            <li>State management to prevent controller duplication bugs</li>
-            <li>Dynamic camera viewport allocation</li>
+          <li>
+            <strong>Runtime Ground Trace:</strong> During
+            <code>BeginPlay()</code>, the node fires a 10,000-unit downward line
+            trace on the <code>ECC_Visibility</code> collision channel.
+          </li>
+          <li>
+            <strong>Automatic Z-Height Normalization:</strong> Upon striking
+            walkable geometry, the node dynamically snaps its position to
+            <code>Hit.Location.Z + 102.15f</code>, providing guaranteed ground
+            clearance for player capsules without manual level adjustments.
+          </li>
         </ul>
 
-        <figure>
-            <a href="./Images/SpawnPlayers.png" class="lightbox-trigger">
-                <img src="./Images/SpawnPlayers.png"
-                     alt="Blueprint for spawning players"
-                     class="enlargeable-image" onerror="this.onerror=null; this.src='./Images/SpawnPlayers.png'; this.style.objectFit='contain';">
-            </a>
-            <figcaption>Spawning players and hooking up controls for splitscreen (Click image to enlarge)</figcaption> </figure>
-
-        <h4>Procedural Item Spawning</h4>
-        <p>
-            Implemented randomized collectible system with:
-        </p>
-        <ul>
-            <li>Node-based position validation</li>
-            <li>Anti-overlap collision checks</li>
-            <li>Animated floating collectibles</li>
-        </ul>
-
-        
-            <figure class="code-figure"> 
-                <div class="code-container">
-                    <pre><code class="language-cpp">bool ACakeChaseGameMode::AttemptSpawnSingleCake()
+        <figure class="code-figure">
+          <div class="code-container">
+            <pre><code class="language-cpp">// Automatic vertical raycast alignment for graph nodes
+void AMovementNode::BeginPlay()
 {
-    if (CurrentAmountCakes &gt;= MaximumCakes)
+    Super::BeginPlay();
+
+    FHitResult Hit;
+    FVector Start = GetActorLocation();
+    FVector End = Start - FVector(0.f, 0.f, 10000.f);
+    FCollisionQueryParams Params;
+
+    if (GetWorld()->LineTraceSingleByChannel(Hit, Start, End, ECC_Visibility, Params))
     {
-        return false; // Already at max
+        float DesiredHeight = Hit.Location.Z + 102.15f;
+        FVector NewLocation = GetActorLocation();
+        NewLocation.Z = DesiredHeight;
+        SetActorLocation(NewLocation);
     }
+}</code></pre>
+          </div>
+          <figcaption>
+            Automated Z-axis floor snapping on node initialization
+            (MovementNode.cpp)
+          </figcaption>
+        </figure>
 
-    if (!CakeBP)
-    {
-        return false;
-    }
+        <h4>3. Data-Driven Spatial Item Spawning & Count Reconciliation</h4>
+        <p>
+          Collectibles and power-ups are managed centrally by
+          <code>ACakeChaseGameMode</code>, ensuring fair and collision-free
+          spawning across active gameplay nodes:
+        </p>
+        <ul>
+          <li>
+            <strong>Configurable Power-Up Definitions:</strong> Handled via a
+            structured configuration array (<code>FPowerUpSpawnConfig</code>),
+            exposing per-interval spawn probabilities, concurrent entity limits,
+            and polymorphic class hierarchies.
+          </li>
+          <li>
+            <strong>Multi-Channel Anti-Overlap Validation:</strong> Before
+            spawning an item, the GameMode performs a multi-channel spherical
+            overlap query (<code>SphereOverlapActors</code> querying
+            <code>WorldStatic</code>, <code>WorldDynamic</code>,
+            <code>Pawn</code>, and <code>PhysicsBody</code>) with a 50-unit
+            radius to filter out occupied graph nodes.
+          </li>
+          <li>
+            <strong>Self-Healing Count Reconciliation:</strong> Includes active
+            world-sweep routines (<code>UpdateActualCakeCount</code>,
+            <code>UpdateActualPowerUpCounts</code>) to ensure internal capacity
+            limits remain accurate even if actors are destroyed or collected
+            asynchronously.
+          </li>
+        </ul>
 
-    AActor* SpawnedActor = AttemptSpawnActorAtRandomNode(CakeBP);
-
-    if (SpawnedActor)
-    {
-        CurrentAmountCakes++; // Increment count ONLY on successful spawn
-        return true;
-    }
-}
-
+        <figure class="code-figure">
+          <div class="code-container">
+            <pre><code class="language-cpp">// Multi-channel spatial anti-overlap validation for actor spawning
 AActor* ACakeChaseGameMode::AttemptSpawnActorAtRandomNode(TSubclassOf&lt;AActor&gt; ActorClassToSpawn)
 {
-    if (!ActorClassToSpawn)
+    if (!ActorClassToSpawn || MovementNodes.Num() == 0)
     {
         return nullptr;
     }
 
-    if (MovementNodes.Num() == 0)
-    {
-    return nullptr;
-    }
-
-    // Find Available Nodes (Nodes without any actor overlapping nearby)
     TArray&lt;AActor*&gt; AvailableNodes;
-    const float CheckRadius = 50.0f; // Radius around node center to check for obstructions
+    const float CheckRadius = 50.0f;
     TArray&lt;AActor*&gt; OverlappingActors;
     
     TArray&lt;TEnumAsByte&lt;EObjectTypeQuery&gt;&gt; ObjectTypes;
+    ObjectTypes.Add(UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_WorldStatic));
     ObjectTypes.Add(UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_WorldDynamic));
     ObjectTypes.Add(UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_Pawn));
+    ObjectTypes.Add(UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_PhysicsBody));
 
     for (AActor* Node : MovementNodes)
     {
         if (!Node) continue;
 
-        FVector NodeLocation = Node-&gt;GetActorLocation();
+        FVector NodeLocation = Node->GetActorLocation();
         OverlappingActors.Empty();
 
         bool bIsOccupied = UKismetSystemLibrary::SphereOverlapActors(
@@ -190,7 +345,6 @@ AActor* ACakeChaseGameMode::AttemptSpawnActorAtRandomNode(TSubclassOf&lt;AActor&
             OverlappingActors
         );
 
-        // Check if spot is available
         if (!bIsOccupied)
         {
             AvailableNodes.Add(Node);
@@ -199,189 +353,389 @@ AActor* ACakeChaseGameMode::AttemptSpawnActorAtRandomNode(TSubclassOf&lt;AActor&
     
     if (AvailableNodes.Num() == 0)
     {
-        // No free spot
-        return nullptr; 
+        return nullptr; // No valid unoccupied spot available
     }
 
     int32 RandomNodeIndex = FMath::RandRange(0, AvailableNodes.Num() - 1);
     AActor* ChosenNode = AvailableNodes[RandomNodeIndex];
 
-    FVector Location = ChosenNode-&gt;GetActorLocation();
-    FRotator Rotation = ChosenNode-&gt;GetActorRotation();
+    FVector Location = ChosenNode->GetActorLocation();
+    FRotator Rotation = ChosenNode->GetActorRotation();
 
-    // Spawn the actor
-    AActor* SpawnedActor = GetWorld()-&gt;SpawnActor&lt;AActor&gt;(ActorClassToSpawn, Location, Rotation);
+    return GetWorld()->SpawnActor&lt;AActor&gt;(ActorClassToSpawn, Location, Rotation);
+}</code></pre>
+          </div>
+          <figcaption>
+            Dynamic spawn candidate selection with 4-channel anti-overlap
+            validation (CakeChaseGameMode.cpp)
+          </figcaption>
+        </figure>
 
-    if (SpawnedActor)
-    {
-        // Succeeded with spawning
-        return SpawnedActor;
-    }
-    else
-    {
-        // Failed to spawn at location
-        return nullptr;
-    }
-}
-                </code></pre>
-            </div>
-                <figcaption>Random spawn with anti-overlap validation (C++ Snippet)</figcaption>
-            </figure>
+        <h4>4. Polymorphic Power-Ups & Clean Input Redirection</h4>
+        <p>
+          Power-up effects are structured modularly using an extensible class
+          hierarchy:
+        </p>
+        <ul>
+          <li>
+            <strong>Extensible Base Architecture:</strong>
+            <code>APowerUp</code> serves as an abstract base actor combining a
+            <code>USphereComponent</code> trigger, a visual
+            <code>UStaticMeshComponent</code>, and a custom
+            <code>UPickupComponent</code>, exposing a
+            <code>BlueprintNativeEvent</code> (<code>ApplyEffect</code>) for
+            modular gameplay logic.
+          </li>
+          <li>
+            <strong>Clean Input Inversion Mechanics:</strong> To implement
+            disorienting trap effects (such as reversed steering), the character
+            uses a dynamic input router (<code>bHasInvertedInput</code>) that
+            remaps forward to 180-degree turns and swaps left/right triggers in
+            place, bypassing the need to reallocate Enhanced Input Mapping
+            Contexts at runtime.
+          </li>
+        </ul>
+
+        <h4>5. Splitscreen Multi-Controller Setup</h4>
+        <p>
+          To support two simultaneous players on physical DDR dance pads,
+          players are dynamically spawned and bound to dedicated viewports and
+          input routing structures.
+        </p>
+
+        <figure>
+          <a href="./Images/SpawnPlayers.png" class="lightbox-trigger">
+            <img
+              src="./Images/SpawnPlayers.png"
+              alt="Blueprint for spawning players"
+              class="enlargeable-image"
+              onerror="
+                this.onerror = null;
+                this.src = './Images/SpawnPlayers.png';
+                this.style.objectFit = 'contain';
+              "
+            />
+          </a>
+          <figcaption>
+            Spawning players and hooking up controls for splitscreen (Click
+            image to enlarge)
+          </figcaption>
+        </figure>
 
         <h3>Key Challenges Overcome</h3>
         <div class="challenge-solution">
-            <p class="challenge">🕹️ DDR Pad Input Limitations:</p>
-            <p class="solution">Created custom input mapping layer to translate dance pad signals into standard keyboard events</p>
-            
-            <p class="challenge">🎥 Camera Alignment:</p>
-            <p class="solution">Implemented dynamic rotation system that previews next movement direction</p>
-            
-            <p class="challenge">🧭 Navigation Precision:</p>
-            <p class="solution">Developed node connection validation system preventing pathfinding errors</p>
+          <p class="challenge">🕹️ Discrete DDR Input vs. Free Movement:</p>
+          <p class="solution">
+            Standard continuous CharacterMovement caused players on dance pads
+            to easily overshoot corners. Replacing it with a graph-based
+            dot-product navigation system gave players tactile, deterministic
+            control over every step and pivot.
+          </p>
+
+          <p class="challenge">🎥 Camera Corner Snapping & Motion Sickness:</p>
+          <p class="solution">
+            Instant discrete 90-degree pivots caused disorientation in
+            first-person splitscreen. Implementing predictive look-ahead
+            rotation and Quaternion SLERP easing created smooth, anticipatory
+            cornering.
+          </p>
+
+          <p class="challenge">📦 Item Overlap Contention:</p>
+          <p class="solution">
+            Periodic spawning in a confined grid caused cakes and power-ups to
+            occasionally spawn on top of active players or existing items.
+            Enforcing a 4-channel spherical overlap query across all static,
+            dynamic, pawn, and physics bodies guaranteed single-occupancy nodes.
+          </p>
         </div>
 
         <h3>Project Outcome</h3>
-        <p>
-            Despite tight time constraints, we delivered a fully functional competitive experience showcasing:
-        </p>
+        <p>Delivered in just 5 days, the game achieved:</p>
         <ul>
-            <li>Novel use of DDR hardware in non-rhythm context</li>
-            <li>Robust splitscreen implementation</li>
-            <li>Complex input system workarounds</li>
-            <li>Positive player feedback on strategic movement mechanics</li>
+          <li>
+            A clean, highly responsive discrete node navigation engine in C++
+          </li>
+          <li>
+            Robust splitscreen multiplayer with dynamic item and power-up
+            spawning
+          </li>
+          <li>
+            Positive feedback during playtests for its fluid, anticipatory
+            corner transitions and competitive game feel
+          </li>
         </ul>
 
         <figure>
-            <video controls>
-                <source src="./Videos/FinalGameplay.mp4" type="video/mp4">
-                Your browser does not support the video tag.
-            </video>
-            <figcaption>Full gameplay showcase with UI elements</figcaption>
+          <video controls>
+            <source src="./Videos/FinalGameplay.mp4" type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+          <figcaption>
+            Full gameplay showcase with splitscreen UI and power-up collection
+          </figcaption>
         </figure>
-    </div>
+      </div>
 
-    <div class="project-detail-links">
-        <a href="https://github.com/XirevGH/FOMO-GameJam" class="btn btn-primary" target="_blank" rel="noopener noreferrer">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-            View Source Code
+      <div class="project-detail-links">
+        <a
+          href="https://github.com/XirevGH/FOMO-GameJam"
+          class="btn btn-primary"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <polygon points="5 3 19 12 5 21 5 3" />
+          </svg>
+          View Source Code
         </a>
         <a href="index.html#projects" class="btn btn-secondary">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
-            Back to Projects
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="m12 19-7-7 7-7" />
+            <path d="M19 12H5" />
+          </svg>
+          Back to Projects
         </a>
-    </div>
-</section>
+      </div>
+    </section>
 
     <footer>
-         <div class="footer-content">
-             <div class="footer-about">
-                 <a href="index.html" class="footer-logo">David<span> da Costa</span></a>
-                 <p class="footer-description">Passionate game developer specializing in Unreal Engine and Unity. Building immersive worlds and engaging gameplay experiences.</p>
-                  <div class="social-links">
-                      <a href="https://www.linkedin.com/in/david-da-costa-4701831a5/" class="social-link" aria-label="LinkedIn Profile" target="_blank" rel="noopener noreferrer"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><path d="M2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg></a>
-                      <a href="https://github.com/XirevGH" class="social-link" aria-label="GitHub Profile" target="_blank" rel="noopener noreferrer"><svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"><title>GitHub</title><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg></a>
-                      <a href="https://x.com/xirevwow" class="social-link" aria-label="X (Twitter) Profile" target="_blank" rel="noopener noreferrer"><svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"><title>X</title><path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z"/></svg></a>
-                  </div>
-             </div>
-              <div class="footer-links-group">
-                  <h4 class="footer-title">Quick Links</h4>
-                  <ul class="footer-links">
-                      <li><a href="index.html#home"><span>Home</span></a></li>
-                      <li><a href="index.html#projects"><span>Projects</span></a></li>
-                      <li><a href="index.html#skills"><span>Skills</span></a></li>
-                      <li><a href="index.html#about"><span>About</span></a></li>
-                      <li><a href="index.html#contact"><span>Contact</span></a></li>
-                  </ul>
-              </div>
-              <div class="footer-links-group">
-                <h4 class="footer-title">Contact</h4>
-                <ul class="footer-links">
-                     <li><a href="mailto:david.dacosta.dev@outlook.com"><span>Email Me</span></a></li>
-                     <li><a href="#"><span>Request CV</span></a></li> 
-                     <li><a href="privacy-policy.html"><span>Privacy Policy</span></a></li> 
-                </ul>
-            </div>
+      <div class="footer-content">
+        <div class="footer-about">
+          <a href="index.html" class="footer-logo"
+            >David<span> da Costa</span></a
+          >
+          <p class="footer-description">
+            Passionate game developer specializing in Unreal Engine and Unity.
+            Building immersive worlds and engaging gameplay experiences.
+          </p>
+          <div class="social-links">
+            <a
+              href="https://www.linkedin.com/in/david-da-costa-4701831a5/"
+              class="social-link"
+              aria-label="LinkedIn Profile"
+              target="_blank"
+              rel="noopener noreferrer"
+              ><svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                stroke="none"
+              >
+                <path
+                  d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"
+                />
+                <path d="M2 9h4v12H2z" />
+                <circle cx="4" cy="4" r="2" /></svg
+            ></a>
+            <a
+              href="https://github.com/XirevGH"
+              class="social-link"
+              aria-label="GitHub Profile"
+              target="_blank"
+              rel="noopener noreferrer"
+              ><svg
+                role="img"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                fill="currentColor"
+              >
+                <title>GitHub</title>
+                <path
+                  d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"
+                /></svg
+            ></a>
+            <a
+              href="https://x.com/xirevwow"
+              class="social-link"
+              aria-label="X (Twitter) Profile"
+              target="_blank"
+              rel="noopener noreferrer"
+              ><svg
+                role="img"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                fill="black"
+              >
+                <title>X</title>
+                <path
+                  d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z"
+                /></svg
+            ></a>
+          </div>
         </div>
-         <div class="copyright">
-             © <span id="currentYear"></span> David da Costa. All rights reserved.
-         </div>
-     </footer>
+        <div class="footer-links-group">
+          <h4 class="footer-title">Quick Links</h4>
+          <ul class="footer-links">
+            <li>
+              <a href="index.html#home"><span>Home</span></a>
+            </li>
+            <li>
+              <a href="index.html#projects"><span>Projects</span></a>
+            </li>
+            <li>
+              <a href="index.html#skills"><span>Skills</span></a>
+            </li>
+            <li>
+              <a href="index.html#about"><span>About</span></a>
+            </li>
+            <li>
+              <a href="index.html#contact"><span>Contact</span></a>
+            </li>
+          </ul>
+        </div>
+        <div class="footer-links-group">
+          <h4 class="footer-title">Contact</h4>
+          <ul class="footer-links">
+            <li>
+              <a href="mailto:david.dacosta.dev@outlook.com"
+                ><span>Email Me</span></a
+              >
+            </li>
+            <li>
+              <a href="#"><span>Request CV</span></a>
+            </li>
+            <li>
+              <a href="privacy-policy.html"><span>Privacy Policy</span></a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="copyright">
+        © <span id="currentYear"></span> David da Costa. All rights reserved.
+      </div>
+    </footer>
 
-    <button class="back-to-top" id="backToTopBtn" aria-label="Scroll back to top">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 7-7 7 7"/><path d="M12 19V5"/></svg>
+    <button
+      class="back-to-top"
+      id="backToTopBtn"
+      aria-label="Scroll back to top"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path d="m5 12 7-7 7 7" />
+        <path d="M12 19V5" />
+      </svg>
     </button>
 
-    <script src="./js/script.js"></script>
     <div id="lightbox-overlay" class="lightbox-overlay">
-        <span class="lightbox-close" id="lightbox-close" title="Close">&times;</span>
-        <img src="" alt="Enlarged image" id="lightbox-image" class="lightbox-image">
-        <div class="lightbox-caption" id="lightbox-caption"></div> </div>
+      <span class="lightbox-close" id="lightbox-close" title="Close"
+        >&times;</span
+      >
+      <img
+        src=""
+        alt="Enlarged image"
+        id="lightbox-image"
+        class="lightbox-image"
+      />
+      <div class="lightbox-caption" id="lightbox-caption"></div>
+    </div>
+
     <script src="./js/script.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const lightboxOverlay = document.getElementById('lightbox-overlay');
-            const lightboxImage = document.getElementById('lightbox-image');
-            const lightboxCaption = document.getElementById('lightbox-caption'); // Get caption element
-            const lightboxClose = document.getElementById('lightbox-close');
-            const imageTriggers = document.querySelectorAll('.enlargeable-image'); // Select images directly
+      document.addEventListener("DOMContentLoaded", () => {
+        const lightboxOverlay = document.getElementById("lightbox-overlay");
+        const lightboxImage = document.getElementById("lightbox-image");
+        const lightboxCaption = document.getElementById("lightbox-caption");
+        const lightboxClose = document.getElementById("lightbox-close");
+        const imageTriggers = document.querySelectorAll(".enlargeable-image");
 
-            if (!lightboxOverlay || !lightboxImage || !lightboxClose || !lightboxCaption) {
-                console.warn('Lightbox elements not found. Enlargement disabled.');
-                return;
+        if (
+          !lightboxOverlay ||
+          !lightboxImage ||
+          !lightboxClose ||
+          !lightboxCaption
+        ) {
+          return;
+        }
+
+        imageTriggers.forEach((img) => {
+          img.style.cursor = "zoom-in";
+          img.addEventListener("click", (event) => {
+            event.preventDefault();
+
+            const imageElement = event.currentTarget;
+            const figureElement = imageElement.closest("figure");
+            const captionElement = figureElement
+              ? figureElement.querySelector("figcaption")
+              : null;
+
+            lightboxImage.src = imageElement.src;
+            lightboxImage.alt = imageElement.alt;
+
+            if (captionElement) {
+              lightboxCaption.textContent = captionElement.textContent;
+              lightboxCaption.style.display = "block";
+            } else {
+              lightboxCaption.style.display = "none";
             }
 
-            imageTriggers.forEach(img => {
-                img.style.cursor = 'zoom-in';
-                img.addEventListener('click', (event) => {
-                    event.preventDefault();
-
-                    const imageElement = event.currentTarget;
-                    const figureElement = imageElement.closest('figure');
-                    const captionElement = figureElement ? figureElement.querySelector('figcaption') : null;
-
-                    lightboxImage.src = imageElement.src;
-                    lightboxImage.alt = imageElement.alt;
-
-                    if (captionElement) {
-                        lightboxCaption.textContent = captionElement.textContent;
-                        lightboxCaption.style.display = 'block';
-                    } else {
-                        lightboxCaption.style.display = 'none';
-                    }
-
-                    lightboxOverlay.style.display = 'flex';
-                    console.log('Lightbox opened');
-                });
-            });
-
-            lightboxClose.addEventListener('click', () => {
-                lightboxOverlay.style.display = 'none';
-                lightboxImage.src = '';
-                lightboxImage.alt = '';
-                lightboxCaption.textContent = '';
-                console.log('Lightbox closed via button');
-            });
-
-            lightboxOverlay.addEventListener('click', (event) => {
-                if (event.target === lightboxOverlay) {
-                    lightboxOverlay.style.display = 'none';
-                    lightboxImage.src = '';
-                    lightboxImage.alt = '';
-                    lightboxCaption.textContent = '';
-                    console.log('Lightbox closed via overlay click');
-                }
-            });
-
-            document.addEventListener('keydown', (event) => {
-                if (event.key === 'Escape' && lightboxOverlay.style.display === 'flex') {
-                    lightboxOverlay.style.display = 'none';
-                    lightboxImage.src = '';
-                    lightboxImage.alt = '';
-                    lightboxCaption.textContent = '';
-                    console.log('Lightbox closed via Escape key');
-                }
-            });
+            lightboxOverlay.style.display = "flex";
+          });
         });
+
+        lightboxClose.addEventListener("click", () => {
+          lightboxOverlay.style.display = "none";
+          lightboxImage.src = "";
+          lightboxImage.alt = "";
+          lightboxCaption.textContent = "";
+        });
+
+        lightboxOverlay.addEventListener("click", (event) => {
+          if (event.target === lightboxOverlay) {
+            lightboxOverlay.style.display = "none";
+            lightboxImage.src = "";
+            lightboxImage.alt = "";
+            lightboxCaption.textContent = "";
+          }
+        });
+
+        document.addEventListener("keydown", (event) => {
+          if (
+            event.key === "Escape" &&
+            lightboxOverlay.style.display === "flex"
+          ) {
+            lightboxOverlay.style.display = "none";
+            lightboxImage.src = "";
+            lightboxImage.alt = "";
+            lightboxCaption.textContent = "";
+          }
+        });
+      });
     </script>
-    </body>
+  </body>
 </html>
