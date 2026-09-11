@@ -348,7 +348,7 @@
 
     <div class="project-banner" style="background-color: #0b2512">
       <img
-        src="https://placehold.co/1600x500/0b2512/00ff00?text=Othello+AI+%26+Algorithmic+Visualizer"
+        src="Images/othello-banner.png"
         alt="Othello AI Visualizer Banner"
         style="object-fit: cover"
       />
@@ -363,12 +363,11 @@
 
     <section class="project-detail-main-content" id="project-detail">
       <div class="project-detail-tags">
-        <span class="project-detail-tag">HTML5 / Canvas</span>
-        <span class="project-detail-tag">ES6 JavaScript</span>
-        <span class="project-detail-tag">64-Bit Bitboard emulation</span>
-        <span class="project-detail-tag">Minimax & Alpha-Beta Pruning</span>
-        <span class="project-detail-tag">Algorithm Visualization</span>
-        <span class="project-detail-tag">Zero Dependencies</span>
+        <span class="project-tag">Solo Project</span>
+        <span class="project-tag">Time: 2 Weeks</span>
+        <span class="project-tag">Java</span>
+        <span class="project-tag">64-Bit Bitboard</span>
+        <span class="project-tag">Minimax & Pruning</span>
       </div>
 
       <div class="project-detail-info">
@@ -387,93 +386,6 @@
           chains, and 64-bit parallel shifts occurring inside the execution
           stack of both engines [1].
         </p>
-
-        <!-- PLAYABLE WEB INTEGRATION OF THE PROJECT -->
-        <h3 id="interactive-app">
-          Playable Game & Live Algorithmic Visualizer
-        </h3>
-        <p>
-          Experience both AI architectures directly in your browser [1]. Play
-          against the AI in <strong>Interactive Mode</strong>, or toggle
-          <strong>Visualizer Mode</strong> to run the exact step-by-step
-          debugger overlays designed for the Java Swing engine [1].
-        </p>
-
-        <div class="othello-container">
-          <div class="board-wrapper">
-            <div class="othello-board" id="board"></div>
-            <canvas class="overlay-canvas" id="canvas"></canvas>
-          </div>
-          <div class="control-panel">
-            <div class="panel-group">
-              <div class="panel-title">System Mode</div>
-              <div class="flex-row">
-                <label class="switch-container">
-                  <input type="checkbox" id="vizToggle" style="display: none" />
-                  <div class="custom-switch"></div>
-                  <span id="modeLabel" style="font-weight: bold; color: #fff"
-                    >Interactive Game</span
-                  >
-                </label>
-              </div>
-              <div id="gameControls">
-                <p style="font-size: 0.85rem; color: #aaa; margin-bottom: 10px">
-                  Click on any highlighted cell to place a Black disc. The AI
-                  (White) will immediately calculate its response.
-                </p>
-                <button
-                  class="vcr-btn"
-                  id="restartGameBtn"
-                  style="width: 100%; font-weight: bold"
-                >
-                  Restart Game
-                </button>
-              </div>
-            </div>
-
-            <div class="panel-group" id="visualizerPanel" style="display: none">
-              <div class="panel-title">Visualizer Diagnostics</div>
-              <div class="flex-row" style="justify-content: space-between">
-                <span>Active Engine:</span>
-                <div class="engine-radio-group">
-                  <div class="engine-btn active" id="engineBit">Bitboard</div>
-                  <div class="engine-btn" id="engineOO">Object-Oriented</div>
-                </div>
-              </div>
-              <div>
-                <div class="slider-label">
-                  <span>Simulation Speed</span>
-                  <span id="speedVal">1000ms</span>
-                </div>
-                <input
-                  type="range"
-                  id="speedSlider"
-                  min="100"
-                  max="2000"
-                  value="1000"
-                />
-              </div>
-              <div class="vcr-controls">
-                <button class="vcr-btn" id="btnPrev" title="Previous Frame">
-                  ⏮
-                </button>
-                <button class="vcr-btn" id="btnPlay" title="Play / Pause">
-                  ▶
-                </button>
-                <button class="vcr-btn" id="btnNext" title="Next Frame">
-                  ⏭
-                </button>
-              </div>
-            </div>
-
-            <div class="panel-group">
-              <div class="panel-title">Console Readout</div>
-              <div class="console-output" id="console">
-                Othello Engine Initialized. Select a move to begin.
-              </div>
-            </div>
-          </div>
-        </div>
 
         <h3>Core Technical Implementation</h3>
 
