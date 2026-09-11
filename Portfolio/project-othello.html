@@ -1,0 +1,2538 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Othello AI & Visualizer | Portfolio</title>
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M 8 3 Q 4 7, 5 12 Q 4 17, 8 21' stroke='%238A2BE2'/><path d='M 16 3 Q 20 7, 19 12 Q 20 17, 16 21' stroke='%2300BFFF'/></svg>"
+    />
+    <link rel="stylesheet" href="./css/style.css" />
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlightjs-line-numbers.js/2.8.0/highlightjs-line-numbers.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+    <style>
+      /* Integrated Othello Widget Styles */
+      .othello-container {
+        display: grid;
+        grid-template-columns: 1.1fr 0.9fr;
+        gap: 30px;
+        background: #151515;
+        border: 1px solid #333;
+        border-radius: 12px;
+        padding: 30px;
+        margin: 40px 0;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      }
+      @media (max-width: 900px) {
+        .othello-container {
+          grid-template-columns: 1fr;
+        }
+      }
+      .board-wrapper {
+        position: relative;
+        aspect-ratio: 1;
+        width: 100%;
+        max-width: 480px;
+        margin: 0 auto;
+        border-radius: 8px;
+        overflow: hidden;
+        border: 4px solid #111;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+      }
+      .othello-board {
+        display: grid;
+        grid-template-columns: repeat(8, 1fr);
+        grid-template-rows: repeat(8, 1fr);
+        width: 100%;
+        height: 100%;
+        background: #003200;
+      }
+      .board-cell {
+        background: #228b22;
+        border: 1px solid #004d00;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: background 0.2s;
+        user-select: none;
+      }
+      .board-cell:hover {
+        background: #29a329;
+      }
+      .disc {
+        width: 82%;
+        height: 82%;
+        border-radius: 50%;
+        position: relative;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+        transition:
+          transform 0.3s ease,
+          background 0.3s;
+      }
+      .disc.black {
+        background: radial-gradient(circle at 30% 30%, #333, #000 70%);
+      }
+      .disc.white {
+        background: radial-gradient(circle at 30% 30%, #fff, #ccc 70%);
+      }
+      .disc.hint {
+        width: 25%;
+        height: 25%;
+        background: rgba(0, 0, 0, 0.25);
+        box-shadow: none;
+      }
+      .overlay-canvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 10;
+      }
+      .control-panel {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        gap: 20px;
+      }
+      .panel-group {
+        background: #1c1c1c;
+        border: 1px solid #2a2a2a;
+        padding: 20px;
+        border-radius: 8px;
+      }
+      .panel-title {
+        font-size: 1.1rem;
+        color: #00bfff;
+        margin-bottom: 15px;
+        font-weight: 600;
+        border-bottom: 1px solid #2a2a2a;
+        padding-bottom: 8px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+      .flex-row {
+        display: flex;
+        gap: 15px;
+        align-items: center;
+        margin-bottom: 15px;
+      }
+      .engine-radio-group {
+        display: flex;
+        background: #111;
+        border-radius: 6px;
+        overflow: hidden;
+        border: 1px solid #333;
+      }
+      .engine-btn {
+        flex: 1;
+        text-align: center;
+        padding: 10px 15px;
+        cursor: pointer;
+        font-size: 0.9rem;
+        font-weight: bold;
+        color: #888;
+        transition: all 0.2s;
+        border-right: 1px solid #222;
+      }
+      .engine-btn:last-child {
+        border-right: none;
+      }
+      .engine-btn.active {
+        background: #8a2be2;
+        color: #fff;
+      }
+      .vcr-controls {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+        margin-top: 10px;
+      }
+      .vcr-btn {
+        background: #252525;
+        border: 1px solid #3a3a3a;
+        color: #fff;
+        border-radius: 6px;
+        padding: 8px 16px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s;
+      }
+      .vcr-btn:hover:not(:disabled) {
+        background: #333;
+        border-color: #555;
+      }
+      .vcr-btn:disabled {
+        opacity: 0.3;
+        cursor: not-allowed;
+      }
+      .console-output {
+        background: #0d0d0d;
+        border: 1px solid #222;
+        border-radius: 6px;
+        padding: 15px;
+        font-family: "Courier New", Courier, monospace;
+        font-size: 0.9rem;
+        color: #00ff00;
+        height: 120px;
+        overflow-y: auto;
+        white-space: pre-wrap;
+        box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.8);
+      }
+      .switch-container {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        cursor: pointer;
+      }
+      .custom-switch {
+        width: 50px;
+        height: 26px;
+        background: #333;
+        border-radius: 13px;
+        position: relative;
+        transition: background 0.2s;
+      }
+      .custom-switch::after {
+        content: "";
+        position: absolute;
+        top: 3px;
+        left: 3px;
+        width: 20px;
+        height: 20px;
+        background: #fff;
+        border-radius: 50%;
+        transition: transform 0.2s;
+      }
+      input[type="checkbox"]:checked + .custom-switch {
+        background: #8a2be2;
+      }
+      input[type="checkbox"]:checked + .custom-switch::after {
+        transform: translateX(24px);
+      }
+      .slider-label {
+        font-size: 0.85rem;
+        color: #aaa;
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 5px;
+      }
+      input[type="range"] {
+        width: 100%;
+        accent-color: #8a2be2;
+      }
+    </style>
+  </head>
+  <body class="project-detail-page">
+    <nav id="navbar">
+      <div class="navbar-contact">
+        <a
+          href="https://www.linkedin.com/in/david-da-costa-4701831a5/"
+          class="social-link"
+          aria-label="LinkedIn Profile"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="black"
+            stroke="none"
+          >
+            <path
+              d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"
+            />
+            <path d="M2 9h4v12H2z" />
+            <circle cx="4" cy="4" r="2" />
+          </svg>
+        </a>
+        <a
+          href="https://github.com/XirevGH"
+          class="social-link"
+          aria-label="GitHub Profile"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <svg
+            role="img"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            fill="black"
+          >
+            <title>GitHub</title>
+            <path
+              d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"
+            />
+          </svg>
+        </a>
+        <a
+          href="https://x.com/xirevwow"
+          class="social-link"
+          aria-label="X (Twitter) Profile"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <svg
+            role="img"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            fill="black"
+          >
+            <title>X</title>
+            <path
+              d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z"
+            />
+          </svg>
+        </a>
+        <a class="email-text">david.dacosta.dev@outlook.com</a>
+      </div>
+
+      <div class="logo-container">
+        <a href="index.html#home" class="logo"
+          >David<span>da Costa</span> | Game <span>Programmer</span></a
+        >
+        <a class="mobile-email">david.dacosta.dev@outlook.com</a>
+      </div>
+
+      <ul class="nav-links" id="navLinks">
+        <li><a href="index.html#home" class="nav-link">Home</a></li>
+        <li><a href="index.html#projects" class="nav-link">Projects</a></li>
+        <li><a href="index.html#skills" class="nav-link">Skills</a></li>
+        <li><a href="index.html#about" class="nav-link">About</a></li>
+      </ul>
+
+      <button
+        class="menu-btn"
+        id="menuBtn"
+        aria-label="Toggle navigation menu"
+        aria-expanded="false"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          class="lucide lucide-menu-icon lucide-menu"
+        >
+          <line x1="4" x2="20" y1="12" y2="12" />
+          <line x1="4" x2="20" y1="6" y2="6" />
+          <line x1="4" x2="20" y1="18" y2="18" />
+        </svg>
+      </button>
+    </nav>
+
+    <div class="project-banner" style="background-color: #0b2512">
+      <img
+        src="https://placehold.co/1600x500/0b2512/00ff00?text=Othello+AI+%26+Algorithmic+Visualizer"
+        alt="Othello AI Visualizer Banner"
+        style="object-fit: cover"
+      />
+    </div>
+
+    <div class="project-detail-header">
+      <h1 class="project-detail-title">Othello AI & Visualizer</h1>
+      <p class="project-detail-subtitle">
+        High-Performance AI & Algorithmic State Visualizer
+      </p>
+    </div>
+
+    <section class="project-detail-main-content" id="project-detail">
+      <div class="project-detail-tags">
+        <span class="project-detail-tag">HTML5 / Canvas</span>
+        <span class="project-detail-tag">ES6 JavaScript</span>
+        <span class="project-detail-tag">64-Bit Bitboard emulation</span>
+        <span class="project-detail-tag">Minimax & Alpha-Beta Pruning</span>
+        <span class="project-detail-tag">Algorithm Visualization</span>
+        <span class="project-detail-tag">Zero Dependencies</span>
+      </div>
+
+      <div class="project-detail-info">
+        <h3>Project Overview</h3>
+        <p>
+          This project is a high-performance Othello (Reversi) Game & AI State
+          Visualizer designed to compare and contrast two fundamentally
+          different software architecture patterns:
+          <strong>Object-Oriented frontier modeling</strong> and
+          <strong>64-bit Bitboard math</strong> [1].
+        </p>
+        <p>
+          Beyond standard gameplay, the system includes a frame-by-frame
+          algorithmic visualizer. This debug-overlay system visually traces the
+          sequential array scans, frontier expansions, recursive opponent
+          chains, and 64-bit parallel shifts occurring inside the execution
+          stack of both engines [1].
+        </p>
+
+        <!-- PLAYABLE WEB INTEGRATION OF THE PROJECT -->
+        <h3 id="interactive-app">
+          Playable Game & Live Algorithmic Visualizer
+        </h3>
+        <p>
+          Experience both AI architectures directly in your browser [1]. Play
+          against the AI in <strong>Interactive Mode</strong>, or toggle
+          <strong>Visualizer Mode</strong> to run the exact step-by-step
+          debugger overlays designed for the Java Swing engine [1].
+        </p>
+
+        <div class="othello-container">
+          <div class="board-wrapper">
+            <div class="othello-board" id="board"></div>
+            <canvas class="overlay-canvas" id="canvas"></canvas>
+          </div>
+          <div class="control-panel">
+            <div class="panel-group">
+              <div class="panel-title">System Mode</div>
+              <div class="flex-row">
+                <label class="switch-container">
+                  <input type="checkbox" id="vizToggle" style="display: none" />
+                  <div class="custom-switch"></div>
+                  <span id="modeLabel" style="font-weight: bold; color: #fff"
+                    >Interactive Game</span
+                  >
+                </label>
+              </div>
+              <div id="gameControls">
+                <p style="font-size: 0.85rem; color: #aaa; margin-bottom: 10px">
+                  Click on any highlighted cell to place a Black disc. The AI
+                  (White) will immediately calculate its response.
+                </p>
+                <button
+                  class="vcr-btn"
+                  id="restartGameBtn"
+                  style="width: 100%; font-weight: bold"
+                >
+                  Restart Game
+                </button>
+              </div>
+            </div>
+
+            <div class="panel-group" id="visualizerPanel" style="display: none">
+              <div class="panel-title">Visualizer Diagnostics</div>
+              <div class="flex-row" style="justify-content: space-between">
+                <span>Active Engine:</span>
+                <div class="engine-radio-group">
+                  <div class="engine-btn active" id="engineBit">Bitboard</div>
+                  <div class="engine-btn" id="engineOO">Object-Oriented</div>
+                </div>
+              </div>
+              <div>
+                <div class="slider-label">
+                  <span>Simulation Speed</span>
+                  <span id="speedVal">1000ms</span>
+                </div>
+                <input
+                  type="range"
+                  id="speedSlider"
+                  min="100"
+                  max="2000"
+                  value="1000"
+                />
+              </div>
+              <div class="vcr-controls">
+                <button class="vcr-btn" id="btnPrev" title="Previous Frame">
+                  ⏮
+                </button>
+                <button class="vcr-btn" id="btnPlay" title="Play / Pause">
+                  ▶
+                </button>
+                <button class="vcr-btn" id="btnNext" title="Next Frame">
+                  ⏭
+                </button>
+              </div>
+            </div>
+
+            <div class="panel-group">
+              <div class="panel-title">Console Readout</div>
+              <div class="console-output" id="console">
+                Othello Engine Initialized. Select a move to begin.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <h3>Core Technical Implementation</h3>
+
+        <h4>64-Bit Parallel Bitboards</h4>
+        <p>
+          Rather than representing the $8 \times 8$ board as an array of objects
+          or integers, the Bitboard engine models the entire state as two 64-bit
+          unsigned integers (<code>unsigned long</code> in C++, or
+          <code>long</code> in Java) [4]. Each bit represents one cell on the
+          board [4].
+        </p>
+        <p>
+          This enables the engine to calculate valid moves and flip discs across
+          all 64 spaces simultaneously using bitwise shift operators (e.g.,
+          <code>&lt;&lt; 1</code> for East, <code>&gt;&gt; 8</code> for North)
+          [4] and parallel logical operations [4], completely bypassing the
+          nested coordinate traversal loops required in traditional game loops
+          [1].
+        </p>
+
+        <figure class="code-figure">
+          <div class="code-container">
+            <pre><code class="language-java">// Highly optimized, branchless move generator using 64-bit parallel shifts
+public long getValidMovesBitboard(long playerBoard, long opponentBoard) {
+    long validMoves = 0L;
+    long empty = ~(playerBoard | opponentBoard);
+
+    for (int dir : DIR_SHIFTS) {
+        long temp = shift(playerBoard, dir) & opponentBoard;
+        while (temp != 0) {
+            long nextShift = shift(temp, dir);
+            validMoves |= empty & nextShift;   // Valid move if next cell is empty
+            temp = nextShift & opponentBoard;  // Propagate along opponent's line
+        }
+    }
+    return validMoves;
+}</code></pre>
+          </div>
+          <figcaption>
+            Java Bitboard implementation displaying shift-based move generation
+            across all 64 tiles [1, 4]
+          </figcaption>
+        </figure>
+
+        <h4>Object-Oriented Frontier Expansion</h4>
+        <p>
+          To serve as a comparative benchmark, the Object-Oriented engine models
+          the board as a flat 64-element primitive array [1]. Instead of
+          iterating $0 \dots 63$ redundantly [1], it implements a localized
+          **Frontier Expansion Search**:
+        </p>
+        <ul>
+          <li>
+            <strong>Discs Scanning:</strong> It scans the board looking strictly
+            for the opponent's active discs [1].
+          </li>
+          <li>
+            <strong>Radial Traversal:</strong> When an opponent disc is located,
+            it scans radially outwards in all 8 directions to identify empty
+            adjacent neighbor cells [1].
+          </li>
+          <li>
+            <strong>Direct Validation:</strong> It targets only those discovered
+            empty neighbors, evaluating their line paths on the fly [1]. This
+            minimizes the search space from 64 slots down to a tiny, active
+            boundary frontier [1].
+          </li>
+        </ul>
+
+        <h4>Backtracking & Garbage Collection Optimizations</h4>
+        <p>
+          During deep recursive tree searches, allocating and de-allocating
+          memory objects in Java triggers frequent, unpredictable garbage
+          collection (GC) pauses [3]. To solve this, the OO engine utilizes an
+          optimized **stack-allocated undo array** [1, 2]:
+        </p>
+        <ul>
+          <li>
+            <strong>No Object Allocations:</strong> A single, flat board array
+            is shared across the entire depth of the minimax search tree [1, 2].
+          </li>
+          <li>
+            <strong>Pre-Allocated Undo Stack:</strong> At each search depth, the
+            engine writes disc flips directly to the active board, logging the
+            coordinates inside a pre-allocated `UndoState` stack [1, 2].
+          </li>
+          <li>
+            <strong>Backtracking:</strong> Upon completing a branch evaluation,
+            the engine unwinds the stack to restore the board to its exact
+            previous configuration [1, 2]. This enables thousands of deep-ply
+            simulations with **zero object allocations** per node, avoiding GC
+            overhead [2, 3].
+          </li>
+        </ul>
+
+        <h3>Key Challenges Overcome</h3>
+        <div class="challenge-solution">
+          <p class="challenge">🔒 Thread Safety & UI Progress Ticking:</p>
+          <p class="solution">
+            Running depth-15 minimax searches freezes the main UI thread. I
+            implemented a robust, decoupled thread architecture using a
+            dedicated SwingWorker thread. To keep the live UI node progress
+            counter ticking smoothly, I wrapped the node counter in a shared
+            volatile, thread-safe memory state, allowing the UI thread to read
+            live metrics while the background thread computes in isolation.
+          </p>
+
+          <p class="challenge">⚡ Cache Misses & Memory Alignment:</p>
+          <p class="solution">
+            Object pointer dereferencing in complex nested nodes creates immense
+            CPU cache misses. By aligning all OO search variables into tight,
+            contiguous primitive arrays, the entire 8x8 game block fits
+            perfectly inside a single L1 Cache line (64 ints = 256 bytes),
+            achieving instant memory reads and bypassing slow RAM lookups.
+          </p>
+
+          <p class="challenge">🐜 Visualizer Reference Aliasing:</p>
+          <p class="solution">
+            An elusive bug caused evaluated search targets to retrospectively
+            show up as "Valid" or "Invalid" in early visualizer frames before
+            they were ever evaluated. I identified the cause as 2D array pointer
+            aliasing (the working state array reference was leaking into
+            previous visualizer states). I completely resolved this by
+            implementing strict deep-copy setters inside our visualization
+            framing state, maintaining perfectly isolated frames.
+          </p>
+        </div>
+
+        <h3>Challenges and Learning Outcomes</h3>
+        <p>
+          Developing this system offered deep insights into low-level memory
+          performance, thread handling, and high-performance algorithms:
+        </p>
+        <ul>
+          <li>
+            <strong>Bit-Level Thinking:</strong> Building custom bitwise
+            algorithms taught me how to compress complex board queries into
+            branchless, parallel CPU math [4].
+          </li>
+          <li>
+            <strong>Garbage Collection Mitigation:</strong> I mastered memory
+            recycling techniques and pre-allocated stacks, allowing high-ply
+            recursive game engines to execute with a flat memory footprint [2,
+            3].
+          </li>
+          <li>
+            <strong>Visual Debugging:</strong> Designing the algorithmic
+            debugger proved that exposing a complex system's inner variables
+            graphically is the single most effective way to locate and correct
+            edge-case bugs.
+          </li>
+        </ul>
+      </div>
+
+      <div class="project-detail-links">
+        <a
+          href="https://github.com/XirevGH"
+          class="btn btn-primary"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <polygon points="5 3 19 12 5 21 5 3" />
+          </svg>
+          View Source Code
+        </a>
+        <a href="index.html#projects" class="btn btn-secondary">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="m12 19-7-7 7-7" />
+            <path d="M19 12H5" />
+          </svg>
+          Back to Projects
+        </a>
+      </div>
+    </section>
+
+    <footer>
+      <div class="footer-content">
+        <div class="footer-about">
+          <a href="index.html" class="footer-logo"
+            >David<span> da Costa</span></a
+          >
+          <p class="footer-description">
+            Passionate game developer specializing in Unreal Engine and Unity.
+            Building immersive worlds and engaging gameplay experiences.
+          </p>
+          <div class="social-links">
+            <a
+              href="https://www.linkedin.com/in/david-da-costa-4701831a5/"
+              class="social-link"
+              aria-label="LinkedIn Profile"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                stroke="none"
+              >
+                <path
+                  d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"
+                />
+                <path d="M2 9h4v12H2z" />
+                <circle cx="4" cy="4" r="2" />
+              </svg>
+            </a>
+            <a
+              href="https://github.com/XirevGH"
+              class="social-link"
+              aria-label="GitHub Profile"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <svg
+                role="img"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                fill="currentColor"
+              >
+                <title>GitHub</title>
+                <path
+                  d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"
+                />
+              </svg>
+            </a>
+            <a
+              href="https://x.com/xirevwow"
+              class="social-link"
+              aria-label="X (Twitter) Profile"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <svg
+                role="img"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                fill="currentColor"
+              >
+                <title>X</title>
+                <path
+                  d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z"
+                />
+              </svg>
+            </a>
+          </div>
+        </div>
+        <div class="footer-links-group">
+          <h4 class="footer-title">Quick Links</h4>
+          <ul class="footer-links">
+            <li>
+              <a href="index.html#home"><span>Home</span></a>
+            </li>
+            <li>
+              <a href="index.html#projects"><span>Projects</span></a>
+            </li>
+            <li>
+              <a href="index.html#skills"><span>Skills</span></a>
+            </li>
+            <li>
+              <a href="index.html#about"><span>About</span></a>
+            </li>
+            <li>
+              <a href="index.html#contact"><span>Contact</span></a>
+            </li>
+          </ul>
+        </div>
+        <div class="footer-links-group">
+          <h4 class="footer-title">Contact</h4>
+          <ul class="footer-links">
+            <li>
+              <a href="mailto:david.dacosta.dev@outlook.com"
+                ><span>Email Me</span></a
+              >
+            </li>
+            <li>
+              <a href="#"><span>Request CV</span></a>
+            </li>
+            <li>
+              <a href="privacy-policy.html"><span>Privacy Policy</span></a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="copyright">
+        © <span id="currentYear"></span> David da Costa. All rights reserved.
+      </div>
+    </footer>
+
+    <button
+      class="back-to-top"
+      id="backToTopBtn"
+      aria-label="Scroll back to top"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path d="m5 12 7-7 7 7" />
+        <path d="M12 19V5" />
+      </svg>
+    </button>
+
+    <script src="./js/script.js"></script>
+
+    <!-- INTERACTIVE OTHELLO CORE SIMULATOR SCRIPT -->
+    <script>
+      // Global game engine and state definitions
+      const BLACK = 1;
+      const WHITE = 2;
+      const EMPTY = 0;
+
+      // Clockwise directions starting from East
+      const DR = [0, 1, 1, 1, 0, -1, -1, -1];
+      const DC = [1, 1, 0, -1, -1, -1, 0, 1];
+      const DIR_NAMES = [
+        "East",
+        "South-East",
+        "South",
+        "South-West",
+        "West",
+        "North-West",
+        "North",
+        "North-East",
+      ];
+      const DIR_ARROWS = ["→", "↘", "↓", "↙", "←", "↖", "↑", "↗"];
+
+      const STATIC_WEIGHTS = [
+        4, -3, 2, 2, 2, 2, -3, 4, -3, -4, -1, -1, -1, -1, -4, -3, 2, -1, 1, 0,
+        0, 1, -1, 2, 2, -1, 0, 1, 1, 0, -1, 2, 2, -1, 0, 1, 1, 0, -1, 2, 2, -1,
+        1, 0, 0, 1, -1, 2, -3, -4, -1, -1, -1, -1, -4, -3, 4, -3, 2, 2, 2, 2,
+        -3, 4,
+      ];
+
+      // Game Variables
+      let board = new Array(64).fill(EMPTY);
+      let currentPlayer = BLACK;
+      let visualizerMode = false;
+      let useBitboardEngine = true;
+      let isProcessing = false;
+      let isAutoPlaying = false;
+      let visualizerSpeedMs = 1000;
+      let autoPlayTimer = null;
+
+      // Visualizer variables
+      let vizHistory = [];
+      let historyIndex = -1;
+      let persistentValids = Array.from({ length: 8 }, () =>
+        Array(8).fill(false),
+      );
+      let persistentInvalids = Array.from({ length: 8 }, () =>
+        Array(8).fill(false),
+      );
+      let debugHighlights = Array.from({ length: 8 }, () => Array(8).fill(0));
+
+      const boardElement = document.getElementById("board");
+      const canvas = document.getElementById("canvas");
+      const ctx = canvas.getContext("2d");
+      const consoleElement = document.getElementById("console");
+
+      // State History Container definition
+      class VizState {
+        constructor(
+          r,
+          c,
+          dir,
+          step,
+          valids,
+          invalids,
+          highlights,
+          explanation,
+        ) {
+          this.r = r;
+          this.c = c;
+          this.dir = dir;
+          this.step = step;
+          this.explanation = explanation;
+          this.arrows = [];
+          this.wallHits = [];
+          this.markers = Array.from({ length: 8 }, () => Array(8).fill(""));
+          this.tileTexts = Array.from({ length: 8 }, () => Array(8).fill(""));
+
+          this.persistentValids = valids.map((row) => [...row]);
+          this.persistentInvalids = invalids.map((row) => [...row]);
+          this.highlights = highlights.map((row) => [...row]);
+        }
+
+        setTileTexts(src) {
+          for (let r = 0; r < 8; r++) {
+            for (let c = 0; c < 8; c++) {
+              this.tileTexts[r][c] = src[r][c];
+            }
+          }
+        }
+
+        setMarkers(src) {
+          for (let r = 0; r < 8; r++) {
+            for (let c = 0; c < 8; c++) {
+              this.markers[r][c] = src[r][c];
+            }
+          }
+        }
+      }
+
+      // Set up Canvas Resolution dynamically
+      function resizeCanvas() {
+        const dpr = window.devicePixelRatio || 1;
+        const rect = canvas.getBoundingClientRect();
+        canvas.width = rect.width * dpr;
+        canvas.height = rect.height * dpr;
+        ctx.scale(dpr, dpr);
+        drawOverlays();
+      }
+
+      window.addEventListener("resize", resizeCanvas);
+
+      // Initialize Board Grid Cells
+      function initBoardDOM() {
+        boardElement.innerHTML = "";
+        for (let r = 0; r < 8; r++) {
+          for (let c = 0; c < 8; c++) {
+            const cell = document.createElement("div");
+            cell.className = "board-cell";
+            cell.dataset.row = r;
+            cell.dataset.col = c;
+            cell.addEventListener("click", () => handleCellClick(r, c));
+            boardElement.appendChild(cell);
+          }
+        }
+        resizeCanvas();
+      }
+
+      function updateBoardDOM() {
+        const cells = boardElement.children;
+        const validMoves = getValidMoves(board, currentPlayer);
+
+        for (let i = 0; i < 64; i++) {
+          const r = Math.floor(i / 8);
+          const c = i % 8;
+          const cell = cells[i];
+          const val = board[i];
+
+          // Clear previous child elements
+          cell.innerHTML = "";
+          cell.style.backgroundColor = ""; // Reset background highlight
+
+          if (val === BLACK) {
+            const d = document.createElement("div");
+            d.className = "disc black";
+            cell.appendChild(d);
+          } else if (val === WHITE) {
+            const d = document.createElement("div");
+            d.className = "disc white";
+            cell.appendChild(d);
+          } else if (
+            !visualizerMode &&
+            !isProcessing &&
+            validMoves.includes(i)
+          ) {
+            const d = document.createElement("div");
+            d.className = "disc hint";
+            cell.appendChild(d);
+          }
+        }
+      }
+
+      function writeConsole(text) {
+        consoleElement.textContent = text;
+        consoleElement.scrollTop = consoleElement.scrollHeight;
+      }
+
+      // GAME BOARD CORE MECHANICS
+      function getValidMoves(currentBoard, player) {
+        const moves = [];
+        const opponent = player === BLACK ? WHITE : BLACK;
+        for (let i = 0; i < 64; i++) {
+          if (currentBoard[i] !== EMPTY) continue;
+          if (isValidMove1D(currentBoard, i, player, opponent)) {
+            moves.push(i);
+          }
+        }
+        return moves;
+      }
+
+      function isValidMove1D(currentBoard, index, player, opponent) {
+        const r = Math.floor(index / 8);
+        const c = index % 8;
+        for (let d = 0; d < 8; d++) {
+          const dr = DR[d];
+          const dc = DC[d];
+          let currR = r + dr;
+          let currC = c + dc;
+          let count = 0;
+
+          while (
+            currR >= 0 &&
+            currR < 8 &&
+            currC >= 0 &&
+            currC < 8 &&
+            currentBoard[currR * 8 + currC] === opponent
+          ) {
+            count++;
+            currR += dr;
+            currC += dc;
+          }
+
+          if (
+            count > 0 &&
+            currR >= 0 &&
+            currR < 8 &&
+            currC >= 0 &&
+            currC < 8 &&
+            currentBoard[currR * 8 + currC] === player
+          ) {
+            return true;
+          }
+        }
+        return false;
+      }
+
+      function executeMove(currentBoard, index, player) {
+        const opponent = player === BLACK ? WHITE : BLACK;
+        currentBoard[index] = player;
+        const r = Math.floor(index / 8);
+        const c = index % 8;
+
+        for (let d = 0; d < 8; d++) {
+          const dr = DR[d];
+          const dc = DC[d];
+          let currR = r + dr;
+          let currC = c + dc;
+          let count = 0;
+
+          while (
+            currR >= 0 &&
+            currR < 8 &&
+            currC >= 0 &&
+            currC < 8 &&
+            currentBoard[currR * 8 + currC] === opponent
+          ) {
+            count++;
+            currR += dr;
+            currC += dc;
+          }
+
+          if (
+            count > 0 &&
+            currR >= 0 &&
+            currR < 8 &&
+            currC >= 0 &&
+            currC < 8 &&
+            currentBoard[currR * 8 + currC] === player
+          ) {
+            let scanR = r + dr;
+            let scanC = c + dc;
+            for (let i = 0; i < count; i++) {
+              currentBoard[scanR * 8 + scanC] = player;
+              scanR += dr;
+              scanC += dc;
+            }
+          }
+        }
+      }
+
+      // GREEDY HEURISTIC AI FOR PLAYABLE COMPONENT
+      function getBestAIMove(currentBoard, player) {
+        const validMoves = getValidMoves(currentBoard, player);
+        if (validMoves.length === 0) return -1;
+
+        let bestScore = -Infinity;
+        let bestMove = -1;
+
+        for (const move of validMoves) {
+          const boardCopy = [...currentBoard];
+          executeMove(boardCopy, move, player);
+
+          // Calculate positional and material score
+          let score = 0;
+          for (let i = 0; i < 64; i++) {
+            if (boardCopy[i] === player) score += STATIC_WEIGHTS[i];
+            else if (boardCopy[i] !== EMPTY) score -= STATIC_WEIGHTS[i];
+          }
+
+          if (score > bestScore) {
+            bestScore = score;
+            bestMove = move;
+          }
+        }
+        return bestMove;
+      }
+
+      function handleCellClick(r, c) {
+        if (visualizerMode || isProcessing || currentPlayer !== BLACK) return;
+
+        const index = r * 8 + c;
+        const validMoves = getValidMoves(board, BLACK);
+
+        if (validMoves.includes(index)) {
+          executeMove(board, index, BLACK);
+          updateBoardDOM();
+          currentPlayer = WHITE;
+          writeConsole(
+            "User placed Black disc at " +
+              indexToAlgebraic(index) +
+              ". AI Calculating response...",
+          );
+
+          if (getValidMoves(board, WHITE).length > 0) {
+            isProcessing = true;
+            setTimeout(() => {
+              const aiMove = getBestAIMove(board, WHITE);
+              if (aiMove !== -1) {
+                executeMove(board, aiMove, WHITE);
+                writeConsole(
+                  "AI placed White disc at " + indexToAlgebraic(aiMove) + ".",
+                );
+              }
+              currentPlayer = BLACK;
+              isProcessing = false;
+              checkGameOver();
+              updateBoardDOM();
+            }, 600);
+          } else {
+            writeConsole("AI has no valid moves. Turn passes back to User.");
+            currentPlayer = BLACK;
+            checkGameOver();
+            updateBoardDOM();
+          }
+        }
+      }
+
+      function checkGameOver() {
+        if (
+          getValidMoves(board, BLACK).length === 0 &&
+          getValidMoves(board, WHITE).length === 0
+        ) {
+          let blacks = board.filter((v) => v === BLACK).length;
+          let whites = board.filter((v) => v === WHITE).length;
+          let resultStr = `Game Over! Final score -> Black: ${blacks} | White: ${whites}. `;
+          if (blacks === whites) resultStr += "It's a draw!";
+          else
+            resultStr += blacks > whites ? "David da Costa Wins!" : "AI Wins!";
+          writeConsole(resultStr);
+        }
+      }
+
+      function indexToAlgebraic(index) {
+        const r = Math.floor(index / 8) + 1;
+        const c = String.fromCharCode(65 + (index % 8));
+        return c + r;
+      }
+
+      // HELPER FUNCTION: DEEP ARRAY COPIER
+      function clone2DArray(arr) {
+        return arr.map((row) => [...row]);
+      }
+
+      // SYSTEM-LEVEL VISUALIZER OVERLAYS DRAWING (HTML5 CANVAS)
+      function drawArrowLine(x1, y1, x2, y2, color) {
+        ctx.strokeStyle = color;
+        ctx.fillStyle = color;
+        ctx.lineWidth = 4;
+        ctx.lineCap = "round";
+
+        let dx = x2 - x1,
+          dy = y2 - y1;
+        let D = Math.sqrt(dx * dx + dy * dy);
+        if (D < 1) return;
+
+        // Pull coordinates slightly inwards
+        let pad = 12;
+        let x1_adj = x1 + (dx / D) * pad;
+        let y1_adj = y1 + (dy / D) * pad;
+        let x2_adj = x2 - (dx / D) * pad;
+        let y2_adj = y2 - (dy / D) * pad;
+
+        let dx_adj = x2_adj - x1_adj;
+        let dy_adj = y2_adj - y1_adj;
+        let D_adj = Math.sqrt(dx_adj * dx_adj + dy_adj * dy_adj);
+
+        let d = 14,
+          h = 6;
+        let xm = D_adj - d;
+        let sin = dy_adj / D_adj,
+          cos = dx_adj / D_adj;
+
+        let x_base = xm * cos + x1_adj;
+        let y_base = xm * sin + y1_adj;
+
+        // Draw Line
+        ctx.beginPath();
+        ctx.moveTo(x1_adj, y1_adj);
+        ctx.lineTo(x_base, y_base);
+        ctx.stroke();
+
+        // Draw arrowhead
+        let x_m_rot = xm * cos - h * sin + x1_adj;
+        let y_m_rot = xm * sin + h * cos + y1_adj;
+        let x_n_rot = xm * cos - -h * sin + x1_adj;
+        let y_n_rot = xm * sin + -h * cos + y1_adj;
+
+        ctx.beginPath();
+        ctx.moveTo(x2_adj, y2_adj);
+        ctx.lineTo(x_m_rot, y_m_rot);
+        ctx.lineTo(x_n_rot, y_n_rot);
+        ctx.closePath();
+        ctx.fill();
+      }
+
+      function drawCrossSymbol(cx, cy, size) {
+        ctx.strokeStyle = "#ff3232";
+        ctx.lineWidth = 4;
+        ctx.lineCap = "round";
+        let r = size / 2;
+
+        ctx.beginPath();
+        ctx.moveTo(cx - r, cy - r);
+        ctx.lineTo(cx + r, cy + r);
+        ctx.moveTo(cx + r, cy - r);
+        ctx.lineTo(cx - r, cy + r);
+        ctx.stroke();
+      }
+
+      // Draw Checkmark Symbol
+      function drawCheckmarkSymbol(cx, cy, size) {
+        ctx.strokeStyle = "#00ff00";
+        ctx.lineWidth = 4;
+        ctx.lineCap = "round";
+
+        ctx.beginPath();
+        ctx.moveTo(cx - size / 2, cy);
+        ctx.lineTo(cx - size / 8, cy + size / 3);
+        ctx.lineTo(cx + size / 2, cy - size / 2);
+        ctx.stroke();
+      }
+
+      function drawOverlays() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        if (
+          !visualizerMode ||
+          historyIndex < 0 ||
+          historyIndex >= vizHistory.length
+        )
+          return;
+
+        const state = vizHistory[historyIndex];
+        const cells = boardElement.children;
+        const rect = boardElement.getBoundingClientRect();
+        const w = rect.width / 8;
+        const h = rect.height / 8;
+
+        // Apply highlights and text labels onto the DOM cells
+        for (let r = 0; r < 8; r++) {
+          for (let c = 0; c < 8; c++) {
+            const cellIdx = r * 8 + c;
+            const cell = cells[cellIdx];
+            const hl = state.highlights[r][c];
+            const text = state.tileTexts[r][c];
+            const pVal = state.persistentValids[r][c];
+            const pInval = state.persistentInvalids[r][c];
+
+            // Clean existing style
+            cell.style.backgroundColor = "";
+
+            if (hl !== 0) {
+              if (hl === 1)
+                cell.style.backgroundColor = "rgba(0, 191, 255, 0.5)"; // Blue
+              else if (hl === 2)
+                cell.style.backgroundColor = "rgba(255, 215, 0, 0.5)"; // Yellow
+              else if (hl === 3)
+                cell.style.backgroundColor = "rgba(50, 205, 50, 0.5)"; // Green
+              else if (hl === 4)
+                cell.style.backgroundColor = "rgba(220, 20, 60, 0.5)"; // Red
+              else if (hl === 5)
+                cell.style.backgroundColor = "rgba(255, 140, 0, 0.5)"; // Orange
+              else if (hl === 6)
+                cell.style.backgroundColor = "rgba(160, 32, 240, 0.5)"; // Purple
+            } else if (pVal) {
+              cell.style.backgroundColor = "rgba(50, 205, 50, 0.25)";
+            } else if (pInval) {
+              cell.style.backgroundColor = "rgba(220, 20, 60, 0.15)";
+            }
+
+            // Draw Texts
+            let labelText = text || "";
+            if (!labelText && pVal) labelText = "Valid";
+            if (!labelText && pInval) labelText = "Invalid";
+
+            if (labelText) {
+              const labelDiv = document.createElement("div");
+              labelDiv.textContent = labelText;
+              labelDiv.style.position = "absolute";
+              labelDiv.style.top = "15%";
+              labelDiv.style.width = "100%";
+              labelDiv.style.textAlign = "center";
+              labelDiv.style.fontSize = "0.75rem";
+              labelDiv.style.fontWeight = "bold";
+              labelDiv.style.color =
+                labelText === "Valid"
+                  ? "#00ff00"
+                  : labelText === "Invalid" || labelText === "End of board"
+                    ? "#ff3232"
+                    : "#ffffff";
+              labelDiv.style.textShadow = "1px 1px 2px black";
+              cell.appendChild(labelDiv);
+            }
+          }
+        }
+
+        // Draw Arrows (Symmetrically Opaque)
+        state.arrows.forEach((arrow) => {
+          const startR = arrow[0],
+            startC = arrow[1],
+            endR = arrow[2],
+            endC = arrow[3],
+            type = arrow[4];
+          const x1 = startC * w + w / 2;
+          const y1 = startR * h + h / 2;
+          const x2 = endC * w + w / 2;
+          const y2 = endR * h + h / 2;
+          const color =
+            type === 2 ? "#ff3232" : type === 3 ? "#00ff00" : "#ffeb00";
+          drawArrowLine(x1, y1, x2, y2, color);
+        });
+
+        // Draw Wall Hits
+        state.wallHits.forEach((wh) => {
+          const startR = wh[0],
+            startC = wh[1],
+            edgeR = wh[2],
+            edgeC = wh[3],
+            offR = wh[4],
+            offC = wh[5];
+          const x1 = startC * w + w / 2;
+          const y1 = startR * h + h / 2;
+
+          // Calculate midpoint towards the virtual offscreen point
+          const edgeX = edgeC * w + w / 2 + (offC - edgeC) * w * 0.45;
+          const edgeY = edgeR * h + h / 2 + (offR - edgeR) * h * 0.45;
+
+          drawArrowLine(x1, y1, edgeX, edgeY, "#ff3232");
+          drawCrossSymbol(edgeX, edgeY, 14);
+        });
+
+        // Draw Markers (✓ / X / ?)
+        for (let r = 0; r < 8; r++) {
+          for (let c = 0; c < 8; c++) {
+            const marker = state.markers[r][c];
+            if (!marker) continue;
+            const cx = c * w + w / 2;
+            const cy = r * h + h / 2 + 13;
+
+            if (marker === "✓") {
+              drawCheckmarkSymbol(cx, cy, 14);
+            } else if (marker === "X") {
+              drawCrossSymbol(cx, cy, 12);
+            } else if (marker === "?") {
+              ctx.font = "bold 16px Arial";
+              ctx.textAlign = "center";
+              ctx.textBaseline = "middle";
+              ctx.fillStyle = "black";
+              ctx.fillText("?", cx + 1, cy + 1);
+              ctx.fillStyle = "white";
+              ctx.fillText("?", cx, cy);
+            } else {
+              // Numerical order
+              const midY = r * h + h / 2 + 6;
+              ctx.font = "bold 13px Arial";
+              ctx.textAlign = "center";
+              ctx.textBaseline = "middle";
+              ctx.fillStyle = "black";
+              ctx.fillText(marker, cx + 1, midY + 1);
+              ctx.fillStyle = "#ffeb00";
+              ctx.fillText(marker, cx, midY);
+            }
+          }
+        }
+      }
+
+      // OBJECT ORIENTED HISTORY GENERATION (Dynamically sweeping and neighbor evaluation)
+      function generateOOHistory() {
+        vizHistory = [];
+        historyIndex = -1;
+
+        let localValids = Array.from({ length: 8 }, () => Array(8).fill(false));
+        let localInvalids = Array.from({ length: 8 }, () =>
+          Array(8).fill(false),
+        );
+        let evaluated = Array.from({ length: 8 }, () => Array(8).fill(false));
+        let checked = Array.from({ length: 8 }, () => Array(8).fill(false));
+        let curHighlights = Array.from({ length: 8 }, () => Array(8).fill(0));
+
+        const opponent = currentPlayer === BLACK ? WHITE : BLACK;
+
+        // Mapping search candidates dynamically as they are discovered
+        const willBeExplored = Array.from({ length: 8 }, () =>
+          Array(8).fill(false),
+        );
+        for (let r = 0; r < 8; r++) {
+          for (let c = 0; c < 8; c++) {
+            if (board[r * 8 + c] === opponent) {
+              for (let d = 0; d < 8; d++) {
+                const nr = r + DR[d],
+                  nc = c + DC[d];
+                if (
+                  nr >= 0 &&
+                  nr < 8 &&
+                  nc >= 0 &&
+                  nc < 8 &&
+                  board[nr * 8 + nc] === EMPTY
+                ) {
+                  willBeExplored[nr][nc] = true;
+                }
+              }
+            }
+          }
+        }
+
+        // Sequential Traversal Sweep Simulation
+        for (let r = 0; r < 8; r++) {
+          for (let c = 0; c < 8; c++) {
+            const cellIndex = r * 8 + c;
+            const pieceAtCell = board[cellIndex];
+            const cellName = indexToAlgebraic(cellIndex);
+
+            // Clean slate for cursor frame
+            curHighlights = Array.from({ length: 8 }, () => Array(8).fill(0));
+            applyOOCandidateHighlights(
+              curHighlights,
+              null,
+              null,
+              evaluated,
+              localValids,
+              localInvalids,
+              -1,
+              -1,
+              false,
+            );
+            curHighlights[r][c] = 2; // Yellow active sweep cursor
+
+            let explanation = "";
+            if (pieceAtCell === EMPTY) {
+              explanation = `Scanning board sequentially: cell ${cellName} is empty. Skipping.`;
+            } else if (pieceAtCell === currentPlayer) {
+              explanation = `Scanning board sequentially: cell ${cellName} is own friendly piece. Skipping.`;
+            } else {
+              explanation = `Scanning board sequentially: cell ${cellName} contains an OPPONENT piece! Halting sweep to evaluate neighbors.`;
+            }
+
+            const sweepState = new VizState(
+              -1,
+              -1,
+              -1,
+              0,
+              localValids,
+              localInvalids,
+              curHighlights,
+              explanation,
+            );
+            const sweepTexts = Array.from({ length: 8 }, () =>
+              Array(8).fill(""),
+            );
+            const sweepMarkers = Array.from({ length: 8 }, () =>
+              Array(8).fill(""),
+            );
+            applyOOCandidateHighlights(
+              curHighlights,
+              sweepTexts,
+              sweepMarkers,
+              evaluated,
+              localValids,
+              localInvalids,
+              -1,
+              -1,
+              false,
+            );
+            curHighlights[r][c] = 2;
+            sweepState.setTileTexts(sweepTexts);
+            sweepState.setMarkers(sweepMarkers);
+            vizHistory.push(sweepState);
+
+            if (pieceAtCell !== opponent) continue;
+
+            // Frontier checking
+            for (let d = 0; d < 8; d++) {
+              const nr = r + DR[d],
+                nc = c + DC[d];
+              if (nr < 0 || nr >= 8 || nc < 0 || nc >= 8) continue;
+
+              const neighborPiece = board[nr * 8 + nc];
+              if (neighborPiece !== EMPTY || checked[nr][nc]) continue;
+
+              checked[nr][nc] = true;
+              const posName = indexToAlgebraic(nr * 8 + nc);
+
+              const currentSquareArrows = [];
+              const currentSquareMarkers = Array.from({ length: 8 }, () =>
+                Array(8).fill(""),
+              );
+              const currentSquareTexts = Array.from({ length: 8 }, () =>
+                Array(8).fill(""),
+              );
+
+              curHighlights = Array.from({ length: 8 }, () => Array(8).fill(0));
+              applyOOCandidateHighlights(
+                curHighlights,
+                currentSquareTexts,
+                currentSquareMarkers,
+                evaluated,
+                localValids,
+                localInvalids,
+                nr,
+                nc,
+                true,
+              );
+
+              const neighborState = new VizState(
+                nr,
+                nc,
+                -1,
+                0,
+                localValids,
+                localInvalids,
+                curHighlights,
+                `Found empty adjacent neighbor ${posName}. Commencing validation scan...`,
+              );
+              neighborState.setTileTexts(currentSquareTexts);
+              neighborState.setMarkers(currentSquareMarkers);
+              vizHistory.push(neighborState);
+
+              let cellIsIndeedValid = false;
+
+              for (let scanDir = 0; scanDir < 8; scanDir++) {
+                if (cellIsIndeedValid) break;
+
+                const sdr = DR[scanDir],
+                  sdc = DC[scanDir],
+                  scanDirName = DIR_NAMES[scanDir];
+                let currR = nr + sdr,
+                  currC = nc + sdc,
+                  step = 1;
+                const scannedOpponents = [];
+                const currentDirArrows = [];
+
+                while (
+                  currR >= 0 &&
+                  currR < 8 &&
+                  currC >= 0 &&
+                  currC < 8 &&
+                  board[currR * 8 + currC] === opponent
+                ) {
+                  scannedOpponents.push([currR, currC]);
+                  curHighlights = Array.from({ length: 8 }, () =>
+                    Array(8).fill(0),
+                  );
+                  applyOOCandidateHighlights(
+                    curHighlights,
+                    currentSquareTexts,
+                    currentSquareMarkers,
+                    evaluated,
+                    localValids,
+                    localInvalids,
+                    nr,
+                    nc,
+                    true,
+                  );
+
+                  scannedOpponents.forEach((p) => {
+                    curHighlights[p[0]][p[1]] = 2;
+                  });
+
+                  const state = new VizState(
+                    nr,
+                    nc,
+                    scanDir,
+                    step,
+                    localValids,
+                    localInvalids,
+                    curHighlights,
+                    `[${scanDirName}] Opponent piece found at ${indexToAlgebraic(currR * 8 + currC)}`,
+                  );
+                  copyStringArray(currentSquareMarkers, state.markers);
+                  copyStringArray(currentSquareTexts, state.tileTexts);
+
+                  state.tileTexts[nr][nc] = "Evaluating";
+                  state.markers[nr][nc] = "?";
+                  scannedOpponents.forEach((p, idx) => {
+                    state.markers[p[0]][p[1]] = String(idx + 1);
+                  });
+
+                  currentDirArrows.push([
+                    currR - sdr,
+                    currC - sdc,
+                    currR,
+                    currC,
+                    1,
+                  ]);
+                  state.arrows = [...currentSquareArrows, ...currentDirArrows];
+                  vizHistory.push(state);
+
+                  currR += sdr;
+                  currC += sdc;
+                  step++;
+                }
+
+                if (
+                  currR >= 0 &&
+                  currR < 8 &&
+                  currC >= 0 &&
+                  currC < 8 &&
+                  board[currR * 8 + currC] === currentPlayer
+                ) {
+                  if (step > 1) {
+                    cellIsIndeedValid = true;
+                    evaluated[nr][nc] = true;
+                    localValids[nr][nc] = true;
+
+                    curHighlights = Array.from({ length: 8 }, () =>
+                      Array(8).fill(0),
+                    );
+                    applyOOCandidateHighlights(
+                      curHighlights,
+                      currentSquareTexts,
+                      currentSquareMarkers,
+                      evaluated,
+                      localValids,
+                      localInvalids,
+                      nr,
+                      nc,
+                      false,
+                    );
+
+                    scannedOpponents.forEach((p) => {
+                      curHighlights[p[0]][p[1]] = 3;
+                    });
+                    curHighlights[currR][currC] = 3;
+
+                    const state = new VizState(
+                      nr,
+                      nc,
+                      scanDir,
+                      step,
+                      localValids,
+                      localInvalids,
+                      curHighlights,
+                      `[${scanDirName}] Valid line confirmed with friendly anchor at ${indexToAlgebraic(currR * 8 + currC)}!`,
+                    );
+                    currentSquareMarkers[nr][nc] = "✓";
+                    currentSquareTexts[nr][nc] = "Valid";
+                    state.setMarkers(currentSquareMarkers);
+                    state.setTileTexts(currentSquareTexts);
+
+                    currentDirArrows.forEach((arr) => {
+                      arr[4] = 3;
+                    });
+                    currentSquareArrows.push(...currentDirArrows);
+
+                    let tempR = nr,
+                      tempC = nc;
+                    while (tempR !== currR || tempC !== currC) {
+                      currentSquareArrows.push([
+                        tempR,
+                        tempC,
+                        tempR + sdr,
+                        tempC + sdc,
+                        3,
+                      ]);
+                      tempR += sdr;
+                      tempC += sdc;
+                    }
+
+                    state.arrows = cloneArrows(currentSquareArrows);
+                    vizHistory.push(state);
+                  } else {
+                    curHighlights = Array.from({ length: 8 }, () =>
+                      Array(8).fill(0),
+                    );
+                    applyOOCandidateHighlights(
+                      curHighlights,
+                      currentSquareTexts,
+                      currentSquareMarkers,
+                      evaluated,
+                      localValids,
+                      localInvalids,
+                      nr,
+                      nc,
+                      true,
+                    );
+                    curHighlights[currR][currC] = 4;
+
+                    const state = new VizState(
+                      nr,
+                      nc,
+                      scanDir,
+                      step,
+                      localValids,
+                      localInvalids,
+                      curHighlights,
+                      `[${scanDirName}] Friendly piece at ${indexToAlgebraic(currR * 8 + currC)} is directly adjacent. Scanning aborted.`,
+                    );
+                    currentSquareArrows.push([nr, nc, currR, currC, 2]);
+                    currentSquareMarkers[currR][currC] = "X";
+
+                    copyStringArray(currentSquareMarkers, state.markers);
+                    copyStringArray(currentSquareTexts, state.tileTexts);
+                    state.tileTexts[nr][nc] = "Evaluating";
+                    state.markers[nr][nc] = "?";
+                    state.arrows = cloneArrows(currentSquareArrows);
+                    vizHistory.push(state);
+                  }
+                } else {
+                  if (scannedOpponents.length > 0) {
+                    curHighlights = Array.from({ length: 8 }, () =>
+                      Array(8).fill(0),
+                    );
+                    applyOOCandidateHighlights(
+                      curHighlights,
+                      currentSquareTexts,
+                      currentSquareMarkers,
+                      evaluated,
+                      localValids,
+                      localInvalids,
+                      nr,
+                      nc,
+                      true,
+                    );
+                    scannedOpponents.forEach((p) => {
+                      curHighlights[p[0]][p[1]] = 4;
+                    });
+
+                    const hitWall =
+                      currR < 0 || currR >= 8 || currC < 0 || currC >= 8;
+                    let failR = currR,
+                      failC = currC;
+                    currentDirArrows.forEach((arr) => {
+                      arr[4] = 2;
+                    });
+                    currentSquareArrows.push(...currentDirArrows);
+
+                    if (hitWall) {
+                      failR = currR - sdr;
+                      failC = currC - sdc;
+                      const state = new VizState(
+                        nr,
+                        nc,
+                        scanDir,
+                        step,
+                        localValids,
+                        localInvalids,
+                        curHighlights,
+                        `[${scanDirName}] Scan failed: Boundary wall reached.`,
+                      );
+                      currentSquareMarkers[failR][failC] = "X";
+                      currentSquareTexts[failR][failC] = "End of board";
+
+                      let tempR = nr,
+                        tempC = nc;
+                      while (tempR !== failR || tempC !== failC) {
+                        currentSquareArrows.push([
+                          tempR,
+                          tempC,
+                          tempR + sdr,
+                          tempC + sdc,
+                          2,
+                        ]);
+                        tempR += sdr;
+                        tempC += sdc;
+                      }
+
+                      copyStringArray(currentSquareMarkers, state.markers);
+                      copyStringArray(currentSquareTexts, state.tileTexts);
+                      state.tileTexts[nr][nc] = "Evaluating";
+                      state.markers[nr][nc] = "?";
+                      state.arrows = cloneArrows(currentSquareArrows);
+                      vizHistory.push(state);
+                    } else {
+                      const state = new VizState(
+                        nr,
+                        nc,
+                        scanDir,
+                        step,
+                        localValids,
+                        localInvalids,
+                        curHighlights,
+                        `[${scanDirName}] Scan failed: Hit empty square at ${indexToAlgebraic(currR * 8 + currC)}.`,
+                      );
+                      if (localValids[currR][currC]) {
+                        currentSquareMarkers[currR][currC] = "✓";
+                      } else {
+                        currentSquareMarkers[currR][currC] = "X";
+                      }
+
+                      let tempR = nr,
+                        tempC = nc;
+                      while (tempR !== currR || tempC !== currC) {
+                        currentSquareArrows.push([
+                          tempR,
+                          tempC,
+                          tempR + sdr,
+                          tempC + sdc,
+                          2,
+                        ]);
+                        tempR += sdr;
+                        tempC += sdc;
+                      }
+
+                      copyStringArray(currentSquareMarkers, state.markers);
+                      copyStringArray(currentSquareTexts, state.tileTexts);
+                      state.tileTexts[nr][nc] = "Evaluating";
+                      state.markers[nr][nc] = "?";
+                      state.arrows = cloneArrows(currentSquareArrows);
+                      vizHistory.push(state);
+                    }
+                  }
+                }
+              }
+
+              if (!cellIsIndeedValid) {
+                evaluated[nr][nc] = true;
+                localInvalids[nr][nc] = true;
+
+                curHighlights = Array.from({ length: 8 }, () =>
+                  Array(8).fill(0),
+                );
+                applyOOCandidateHighlights(
+                  curHighlights,
+                  currentSquareTexts,
+                  currentSquareMarkers,
+                  evaluated,
+                  localValids,
+                  localInvalids,
+                  nr,
+                  nc,
+                  false,
+                );
+
+                const state = new VizState(
+                  nr,
+                  nc,
+                  -1,
+                  0,
+                  localValids,
+                  localInvalids,
+                  curHighlights,
+                  `Neighbor ${posName} fully evaluated: No legal play found.`,
+                );
+                currentSquareTexts[nr][nc] = "Invalid";
+                currentSquareMarkers[nr][nc] = "X";
+                state.setTileTexts(currentSquareTexts);
+                state.setMarkers(currentSquareMarkers);
+                state.arrows = cloneArrows(currentSquareArrows);
+                vizHistory.push(state);
+              }
+            }
+          }
+        }
+
+        // Final summary state
+        curHighlights = Array.from({ length: 8 }, () => Array(8).fill(0));
+        const finalMarkers = Array.from({ length: 8 }, () => Array(8).fill(""));
+        const finalTexts = Array.from({ length: 8 }, () => Array(8).fill(""));
+
+        for (let r = 0; r < 8; r++) {
+          for (let c = 0; c < 8; c++) {
+            if (board[r * 8 + c] === EMPTY) {
+              if (localValids[r][c]) {
+                curHighlights[r][c] = 3;
+                finalMarkers[r][c] = "✓";
+                finalTexts[r][c] = "Valid";
+              } else if (checked[r][c]) {
+                curHighlights[r][c] = 4;
+                finalMarkers[r][c] = "X";
+                finalTexts[r][c] = "Invalid";
+              }
+            }
+          }
+        }
+
+        const finalState = new VizState(
+          -1,
+          -1,
+          -1,
+          0,
+          localValids,
+          localInvalids,
+          curHighlights,
+          "OO Evaluation complete! All play spots identified.",
+        );
+        finalState.setTileTexts(finalTexts);
+        finalState.setMarkers(finalMarkers);
+        vizHistory.push(finalState);
+      }
+
+      function applyOOCandidateHighlights(
+        curHighlights,
+        tileTexts,
+        markers,
+        evaluated,
+        persistentValids,
+        persistentInvalids,
+        nr,
+        nc,
+        isEvaluating,
+      ) {
+        for (let r = 0; r < 8; r++) {
+          for (let c = 0; c < 8; c++) {
+            if (r === nr && c === nc && isEvaluating) {
+              curHighlights[r][c] = 1; // Turquoise
+              if (tileTexts) tileTexts[r][c] = "Evaluating";
+              if (markers) markers[r][c] = "?";
+            } else if (evaluated[r][c]) {
+              if (persistentValids[r][c]) {
+                curHighlights[r][c] = 3; // Green
+                if (tileTexts) tileTexts[r][c] = "Valid";
+                if (markers) markers[r][c] = "✓";
+              } else if (persistentInvalids[r][c]) {
+                curHighlights[r][c] = 4; // Red
+                if (tileTexts) tileTexts[r][c] = "Invalid";
+                if (markers) markers[r][c] = "X";
+              }
+            }
+          }
+        }
+      }
+
+      // HIGH-FIDELITY BITBOARD HISTORY GENERATION (BigInt-based emulation)
+      function generateBitboardHistory() {
+        vizHistory = [];
+        historyIndex = -1;
+
+        let persistentValids = Array.from({ length: 8 }, () =>
+          Array(8).fill(false),
+        );
+        let persistentInvalids = Array.from({ length: 8 }, () =>
+          Array(8).fill(false),
+        );
+        let checked = Array.from({ length: 8 }, () => Array(8).fill(false));
+
+        const opponent = currentPlayer === BLACK ? WHITE : BLACK;
+
+        // BigInt equivalents of the Bitboard boards
+        let playerBoard = 0n;
+        let opponentBoard = 0n;
+        for (let i = 0; i < 64; i++) {
+          if (board[i] === currentPlayer) playerBoard |= 1n << BigInt(i);
+          if (board[i] === opponent) opponentBoard |= 1n << BigInt(i);
+        }
+
+        // Emulate Step-By-Step Bitwise Shifting for all 8 Directions
+        for (let d = 0; d < 8; d++) {
+          const dr = DR[d],
+            dc = DC[d],
+            dirName = DIR_NAMES[d];
+          const dirInvalids = Array.from({ length: 8 }, () =>
+            Array(8).fill(false),
+          );
+
+          // Precompute immediate invalid empty cells right next to friendly pieces in direction d
+          for (let r = 0; r < 8; r++) {
+            for (let c = 0; c < 8; c++) {
+              if (board[r * 8 + c] === EMPTY) {
+                const pr = r - dr,
+                  pc = c - dc;
+                if (pr >= 0 && pr < 8 && pc >= 0 && pc < 8) {
+                  if (board[pr * 8 + pc] === currentPlayer)
+                    dirInvalids[r][c] = true;
+                }
+              }
+            }
+          }
+
+          // Step 0: Highlight source pieces (Purple) and possible candidates (Evaluating)
+          let curHighlights = Array.from({ length: 8 }, () => Array(8).fill(0));
+          const s0Texts = Array.from({ length: 8 }, () => Array(8).fill(""));
+          const s0Markers = Array.from({ length: 8 }, () => Array(8).fill(""));
+
+          for (let r = 0; r < 8; r++) {
+            for (let c = 0; c < 8; c++) {
+              if (board[r * 8 + c] === currentPlayer) curHighlights[r][c] = 6; // Purple source
+              const isCand =
+                isPotentialBitboardTarget(r, c, currentPlayer, d) ||
+                dirInvalids[r][c];
+              if (isCand) {
+                curHighlights[r][c] = 1;
+                if (persistentValids[r][c]) {
+                  s0Texts[r][c] = "Valid";
+                  s0Markers[r][c] = "✓";
+                } else {
+                  s0Texts[r][c] = "Evaluating";
+                  s0Markers[r][c] = "?";
+                }
+              } else {
+                if (persistentValids[r][c]) {
+                  curHighlights[r][c] = 3;
+                  s0Texts[r][c] = "Valid";
+                  s0Markers[r][c] = "✓";
+                } else if (persistentInvalids[r][c]) {
+                  curHighlights[r][c] = 4;
+                  s0Texts[r][c] = "Invalid";
+                  s0Markers[r][c] = "X";
+                }
+              }
+            }
+          }
+
+          const s0State = new VizState(
+            -1,
+            -1,
+            d,
+            0,
+            persistentValids,
+            persistentInvalids,
+            curHighlights,
+            `[Bitboard] Step 0: Identify friendly pieces and evaluation candidates in direction ${dirName}`,
+          );
+          s0State.setTileTexts(s0Texts);
+          s0State.setMarkers(s0Markers);
+          vizHistory.push(s0State);
+
+          // Step 1: Shift friendly board by 1 & Mark immediate empty spaces as Invalid
+          curHighlights = Array.from({ length: 8 }, () => Array(8).fill(0));
+          const s1Texts = Array.from({ length: 8 }, () => Array(8).fill(""));
+          const s1Markers = Array.from({ length: 8 }, () => Array(8).fill(""));
+          const s1Arrows = [];
+
+          for (let r = 0; r < 8; r++) {
+            for (let c = 0; c < 8; c++) {
+              if (board[r * 8 + c] === currentPlayer) curHighlights[r][c] = 6;
+              const isCand =
+                isPotentialBitboardTarget(r, c, currentPlayer, d) ||
+                dirInvalids[r][c];
+              if (isCand && !dirInvalids[r][c]) {
+                if (persistentValids[r][c]) {
+                  curHighlights[r][c] = 1;
+                  s1Texts[r][c] = "Valid";
+                  s1Markers[r][c] = "✓";
+                } else {
+                  curHighlights[r][c] = 1;
+                  s1Texts[r][c] = "Evaluating";
+                  s1Markers[r][c] = "?";
+                }
+              } else if (!isCand) {
+                if (persistentValids[r][c]) {
+                  curHighlights[r][c] = 3;
+                  s1Texts[r][c] = "Valid";
+                  s1Markers[r][c] = "✓";
+                } else if (persistentInvalids[r][c]) {
+                  curHighlights[r][c] = 4;
+                  s1Texts[r][c] = "Invalid";
+                  s1Markers[r][c] = "X";
+                }
+              }
+            }
+          }
+
+          for (let r = 0; r < 8; r++) {
+            for (let c = 0; c < 8; c++) {
+              const pr = r - dr,
+                pc = c - dc;
+              if (pr >= 0 && pr < 8 && pc >= 0 && pc < 8) {
+                if (board[pr * 8 + pc] === currentPlayer) {
+                  const dest = board[r * 8 + c];
+                  if (dest === EMPTY) {
+                    if (persistentValids[r][c]) {
+                      curHighlights[r][c] = 4;
+                      s1Texts[r][c] = "Valid";
+                      s1Markers[r][c] = "✓";
+                    } else {
+                      curHighlights[r][c] = 4;
+                      s1Texts[r][c] = "Invalid";
+                      s1Markers[r][c] = "X";
+                    }
+                    s1Arrows.push([pr, pc, r, c, 2]);
+                    checked[r][c] = true;
+                  } else if (dest === opponent) {
+                    curHighlights[r][c] = 5;
+                    s1Markers[r][c] = "✓";
+                    s1Arrows.push([pr, pc, r, c, 1]);
+                  }
+                }
+              }
+            }
+          }
+
+          const s1State = new VizState(
+            -1,
+            -1,
+            d,
+            1,
+            persistentValids,
+            persistentInvalids,
+            curHighlights,
+            `[Bitboard] Step 1: Shift board horizontally ${dirName}. Checked direct fail spots marked Red.`,
+          );
+          s1State.setTileTexts(s1Texts);
+          s1State.setMarkers(s1Markers);
+          s1State.arrows = s1Arrows;
+          vizHistory.push(s1State);
+
+          // Step 2: Mask opponent pieces recursively in a chain
+          curHighlights = Array.from({ length: 8 }, () => Array(8).fill(0));
+          const s2Texts = Array.from({ length: 8 }, () => Array(8).fill(""));
+          const s2Markers = Array.from({ length: 8 }, () => Array(8).fill(""));
+          const s2Arrows = [];
+
+          for (let r = 0; r < 8; r++) {
+            for (let c = 0; c < 8; c++) {
+              if (board[r * 8 + c] === currentPlayer) curHighlights[r][c] = 6;
+              if (dirInvalids[r][c]) {
+                if (persistentValids[r][c]) {
+                  curHighlights[r][c] = 4;
+                  s2Texts[r][c] = "Valid";
+                  s2Markers[r][c] = "✓";
+                } else {
+                  curHighlights[r][c] = 4;
+                  s2Texts[r][c] = "Invalid";
+                  s2Markers[r][c] = "X";
+                }
+              } else {
+                const isCand = isPotentialBitboardTarget(
+                  r,
+                  c,
+                  currentPlayer,
+                  d,
+                );
+                if (isCand) {
+                  if (persistentValids[r][c]) {
+                    curHighlights[r][c] = 1;
+                    s2Texts[r][c] = "Valid";
+                    s2Markers[r][c] = "✓";
+                  } else {
+                    curHighlights[r][c] = 1;
+                    s2Texts[r][c] = "Evaluating";
+                    s2Markers[r][c] = "?";
+                  }
+                } else {
+                  if (persistentValids[r][c]) {
+                    curHighlights[r][c] = 3;
+                    s2Texts[r][c] = "Valid";
+                    s2Markers[r][c] = "✓";
+                  } else if (persistentInvalids[r][c]) {
+                    curHighlights[r][c] = 4;
+                    s2Texts[r][c] = "Invalid";
+                    s2Markers[r][c] = "X";
+                  }
+                }
+              }
+            }
+          }
+
+          for (let r = 0; r < 8; r++) {
+            for (let c = 0; c < 8; c++) {
+              if (board[r * 8 + c] !== currentPlayer) continue;
+              let cr = r + dr,
+                cc = c + dc,
+                step = 1;
+              const scanOpps = [];
+              while (
+                cr >= 0 &&
+                cr < 8 &&
+                cc >= 0 &&
+                cc < 8 &&
+                board[cr * 8 + cc] === opponent
+              ) {
+                scanOpps.push([cr, cc]);
+                cr += dr;
+                cc += dc;
+                step++;
+              }
+              if (scanOpps.length > 0) {
+                scanOpps.forEach((p, idx) => {
+                  curHighlights[p[0]][p[1]] = 2;
+                  s2Markers[p[0]][p[1]] = String(idx + 1);
+                });
+                s2Arrows.push([
+                  scanOpps[0][0],
+                  scanOpps[0][1],
+                  scanOpps[scanOpps.length - 1][0],
+                  scanOpps[scanOpps.length - 1][1],
+                  1,
+                ]);
+              }
+            }
+          }
+
+          const s2State = new VizState(
+            -1,
+            -1,
+            d,
+            2,
+            persistentValids,
+            persistentInvalids,
+            curHighlights,
+            `[Bitboard] Step 2: Propagate shifted registers recursively along opponent's line.`,
+          );
+          s2State.setTileTexts(s2Texts);
+          s2State.setMarkers(s2Markers);
+          s2State.arrows = s2Arrows;
+          vizHistory.push(s2State);
+
+          // Step 3: Find empty spaces that come after a chain of opponent pieces (Mark as Valid)
+          curHighlights = Array.from({ length: 8 }, () => Array(8).fill(0));
+          const s3Texts = Array.from({ length: 8 }, () => Array(8).fill(""));
+          const s3Markers = Array.from({ length: 8 }, () => Array(8).fill(""));
+          const s3Arrows = [];
+          const s3WallHits = [];
+
+          for (let r = 0; r < 8; r++) {
+            for (let c = 0; c < 8; c++) {
+              if (board[r * 8 + c] === currentPlayer) curHighlights[r][c] = 6;
+              if (dirInvalids[r][c]) {
+                if (persistentValids[r][c]) {
+                  curHighlights[r][c] = 4;
+                  s3Texts[r][c] = "Valid";
+                  s3Markers[r][c] = "✓";
+                } else {
+                  curHighlights[r][c] = 4;
+                  s3Texts[r][c] = "Invalid";
+                  s3Markers[r][c] = "X";
+                }
+              } else {
+                const isCand = isPotentialBitboardTarget(
+                  r,
+                  c,
+                  currentPlayer,
+                  d,
+                );
+                if (isCand) {
+                  if (persistentValids[r][c]) {
+                    curHighlights[r][c] = 1;
+                    s3Texts[r][c] = "Valid";
+                    s3Markers[r][c] = "✓";
+                  } else {
+                    curHighlights[r][c] = 1;
+                    s3Texts[r][c] = "Evaluating";
+                    s3Markers[r][c] = "?";
+                  }
+                } else {
+                  if (persistentValids[r][c]) {
+                    curHighlights[r][c] = 3;
+                    s3Texts[r][c] = "Valid";
+                    s3Markers[r][c] = "✓";
+                  } else if (persistentInvalids[r][c]) {
+                    curHighlights[r][c] = 4;
+                    s3Texts[r][c] = "Invalid";
+                    s3Markers[r][c] = "X";
+                  }
+                }
+              }
+            }
+          }
+
+          for (let r = 0; r < 8; r++) {
+            for (let c = 0; c < 8; c++) {
+              if (board[r * 8 + c] !== currentPlayer) continue;
+              let cr = r + dr,
+                cc = c + dc,
+                cnt = 0;
+              while (
+                cr >= 0 &&
+                cr < 8 &&
+                cc >= 0 &&
+                cc < 8 &&
+                board[cr * 8 + cc] === opponent
+              ) {
+                cnt++;
+                cr += dr;
+                cc += dc;
+              }
+              if (cnt > 0) {
+                const nextR = cr,
+                  nextC = cc;
+                const lastOppR = cr - dr,
+                  lastOppC = cc - dc;
+                if (nextR < 0 || nextR >= 8 || nextC < 0 || nextC >= 8) {
+                  curHighlights[lastOppR][lastOppC] = 4;
+                  s3WallHits.push([r, c, lastOppR, lastOppC, nextR, nextC]);
+                  s3Texts[lastOppR][lastOppC] = "End of board";
+                } else {
+                  const nextPiece = board[nextR * 8 + nextC];
+                  if (nextPiece === EMPTY) {
+                    curHighlights[nextR][nextC] = 3;
+                    persistentValids[nextR][nextC] = true;
+                    s3Markers[nextR][nextC] = "✓";
+                    s3Texts[nextR][nextC] = "Valid";
+                    s3Arrows.push([r, c, nextR, nextC, 3]);
+                    checked[nextR][nextC] = true;
+                  } else if (nextPiece === currentPlayer) {
+                    if (persistentValids[nextR][nextC]) {
+                      curHighlights[nextR][nextC] = 4;
+                      s3Texts[nextR][nextC] = "Valid";
+                      s3Markers[nextR][nextC] = "✓";
+                    } else {
+                      curHighlights[nextR][nextC] = 4;
+                      s3Markers[nextR][nextC] = "X";
+                    }
+                    s3Arrows.push([r, c, nextR, nextC, 2]);
+                  }
+                }
+              }
+            }
+          }
+
+          const s3State = new VizState(
+            -1,
+            -1,
+            d,
+            3,
+            persistentValids,
+            persistentInvalids,
+            curHighlights,
+            `[Bitboard] Step 3: Mask parallel shifted board with empty cells to find Valid play nodes.`,
+          );
+          s3State.setTileTexts(s3Texts);
+          s3State.setMarkers(s3Markers);
+          s3State.arrows = s3Arrows;
+          s3State.wallHits = s3WallHits;
+          vizHistory.push(s3State);
+        }
+
+        // Final Complete State Frame
+        curHighlights = Array.from({ length: 8 }, () => Array(8).fill(0));
+        const finalMarkers = Array.from({ length: 8 }, () => Array(8).fill(""));
+        const finalTexts = Array.from({ length: 8 }, () => Array(8).fill(""));
+
+        for (let r = 0; r < 8; r++) {
+          for (let c = 0; c < 8; c++) {
+            if (board[r * 8 + c] === EMPTY) {
+              if (persistentValids[r][c]) {
+                curHighlights[r][c] = 3;
+                finalMarkers[r][c] = "✓";
+                finalTexts[r][c] = "Valid";
+              } else if (checked[r][c]) {
+                curHighlights[r][c] = 4;
+                finalMarkers[r][c] = "X";
+                finalTexts[r][c] = "Invalid";
+              }
+            }
+          }
+        }
+
+        const finalState = new VizState(
+          -1,
+          -1,
+          -1,
+          0,
+          persistentValids,
+          persistentInvalids,
+          curHighlights,
+          "Bitboard evaluation complete! Dynamic shifting complete across all 8 directions.",
+        );
+        finalState.setTileTexts(finalTexts);
+        finalState.setMarkers(finalMarkers);
+        vizHistory.push(finalState);
+      }
+
+      function cloneArrows(source) {
+        return source.map((arr) => [...arr]);
+      }
+
+      function copyStringArray(src, dest) {
+        for (let r = 0; r < 8; r++) {
+          for (let c = 0; c < 8; c++) {
+            dest[r][c] = src[r][c];
+          }
+        }
+      }
+
+      // VCR AUTOPLAY CONTROLLER LOGIC
+      function updateVisualizerControls() {
+        document.getElementById("btnPrev").disabled =
+          historyIndex <= 0 || isAutoPlaying;
+        document.getElementById("btnNext").disabled =
+          historyIndex >= vizHistory.length - 1 || isAutoPlaying;
+        document.getElementById("btnPlay").textContent = isAutoPlaying
+          ? "■"
+          : "▶";
+        document.getElementById("btnPlay").style.color = isAutoPlaying
+          ? "#ff3232"
+          : "#32cd32";
+      }
+
+      function playNextFrame() {
+        if (historyIndex < vizHistory.length - 1) {
+          historyIndex++;
+          updateBoardDOM();
+          drawOverlays();
+          writeConsole(vizHistory[historyIndex].explanation);
+          updateVisualizerControls();
+        } else {
+          stopAutoplay();
+        }
+      }
+
+      function playPrevFrame() {
+        if (historyIndex > 0) {
+          historyIndex--;
+          updateBoardDOM();
+          drawOverlays();
+          writeConsole(vizHistory[historyIndex].explanation);
+          updateVisualizerControls();
+        }
+      }
+
+      function toggleAutoplay() {
+        if (isAutoPlaying) {
+          stopAutoplay();
+        } else {
+          startAutoplay();
+        }
+      }
+
+      function startAutoplay() {
+        isAutoPlaying = true;
+        updateVisualizerControls();
+        if (historyIndex >= vizHistory.length - 1) historyIndex = 0;
+
+        autoPlayTimer = setInterval(playNextFrame, visualizerSpeedMs);
+      }
+
+      function stopAutoplay() {
+        isAutoPlaying = false;
+        if (autoPlayTimer) clearInterval(autoPlayTimer);
+        updateVisualizerControls();
+      }
+
+      // MAIN INITIALIZER
+      function restartGame() {
+        board.fill(EMPTY);
+        board[3 * 8 + 4] = BLACK;
+        board[4 * 8 + 3] = BLACK;
+        board[3 * 8 + 3] = WHITE;
+        board[4 * 8 + 4] = WHITE;
+
+        currentPlayer = BLACK;
+        isProcessing = false;
+        stopAutoplay();
+
+        if (visualizerMode) {
+          if (useBitboardEngine) generateBitboardHistory();
+          else generateOOHistory();
+          historyIndex = 0;
+          writeConsole(vizHistory[0].explanation);
+          updateVisualizerControls();
+        } else {
+          writeConsole("Interactive Game Mode active. Black's turn.");
+        }
+
+        updateBoardDOM();
+        drawOverlays();
+      }
+
+      // EVENT BINDINGS
+      document
+        .getElementById("restartGameBtn")
+        .addEventListener("click", restartGame);
+      document
+        .getElementById("btnPrev")
+        .addEventListener("click", playPrevFrame);
+      document
+        .getElementById("btnNext")
+        .addEventListener("click", playNextFrame);
+      document
+        .getElementById("btnPlay")
+        .addEventListener("click", toggleAutoplay);
+
+      document.getElementById("speedSlider").addEventListener("input", (e) => {
+        visualizerSpeedMs = 2100 - parseInt(e.target.value);
+        document.getElementById("speedVal").textContent =
+          visualizerSpeedMs + "ms";
+        if (isAutoPlaying) {
+          clearInterval(autoPlayTimer);
+          autoPlayTimer = setInterval(playNextFrame, visualizerSpeedMs);
+        }
+      });
+
+      document.getElementById("engineBit").addEventListener("click", () => {
+        if (isProcessing || isAutoPlaying || !useBitboardEngine) {
+          if (isProcessing || isAutoPlaying) return;
+          useBitboardEngine = true;
+          document.getElementById("engineBit").classList.add("active");
+          document.getElementById("engineOO").classList.remove("active");
+          generateBitboardHistory();
+          historyIndex = 0;
+          updateBoardDOM();
+          drawOverlays();
+          writeConsole(vizHistory[0].explanation);
+          updateVisualizerControls();
+        }
+      });
+
+      document.getElementById("engineOO").addEventListener("click", () => {
+        if (isProcessing || isAutoPlaying || useBitboardEngine) {
+          if (isProcessing || isAutoPlaying) return;
+          useBitboardEngine = false;
+          document.getElementById("engineOO").classList.add("active");
+          document.getElementById("engineBit").classList.remove("active");
+          generateOOHistory();
+          historyIndex = 0;
+          updateBoardDOM();
+          drawOverlays();
+          writeConsole(vizHistory[0].explanation);
+          updateVisualizerControls();
+        }
+      });
+
+      document.getElementById("vizToggle").addEventListener("change", (e) => {
+        visualizerMode = e.target.checked;
+        document.getElementById("modeLabel").textContent = visualizerMode
+          ? "Algorithm Debugger"
+          : "Interactive Game";
+        document.getElementById("modeLabel").style.color = visualizerMode
+          ? "#8A2BE2"
+          : "#fff";
+        document.getElementById("gameControls").style.display = visualizerMode
+          ? "none"
+          : "block";
+        document.getElementById("visualizerPanel").style.display =
+          visualizerMode ? "block" : "none";
+
+        restartGame();
+      });
+
+      // Launch Engine
+      initBoardDOM();
+      restartGame();
+    </script>
+  </body>
+</html>

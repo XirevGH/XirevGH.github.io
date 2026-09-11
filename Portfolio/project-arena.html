@@ -1,15 +1,16 @@
-﻿<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Survival on the Dancefloor | Portfolio</title>
+    <title>A.R.E.N.A | Portfolio</title>
     <link
       rel="icon"
       type="image/svg+xml"
       href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M 8 3 Q 4 7, 5 12 Q 4 17, 8 21' stroke='%238A2BE2'/><path d='M 16 3 Q 20 7, 19 12 Q 20 17, 16 21' stroke='%2300BFFF'/></svg>"
     />
     <link rel="stylesheet" href="./css/style.css" />
+
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css"
@@ -129,372 +130,359 @@
 
     <div class="project-banner">
       <img
-        src="./Images/sotd.png"
-        alt="Disco Game Documentation Banner"
-        onerror="this.onerror=null; this.src='https://placehold.co/1600x500/1a1a1a/8A2BE2?text=Disco+Game+Documentation'; this.style.objectFit='contain';"
+        src="./Images/arena-banner.png"
+        alt="Action Arena Gameplay Banner"
+        onerror="
+          this.onerror = null;
+          this.src =
+            'https://placehold.co/1600x500/1a1a1a/8A2BE2?text=Multiplayer+Arena+Project';
+          this.style.objectFit = 'contain';
+        "
       />
     </div>
 
     <div class="project-detail-header">
-      <h1 class="project-detail-title">Survival on the Dancefloor</h1>
+      <h1 class="project-detail-title">A.R.E.N.A</h1>
       <p class="project-detail-subtitle">
-        A Rhythm Based Survivor-like Game - 7 Weeks Project
+        A Team-Based Arena Game - 2 months project
       </p>
     </div>
 
     <section class="project-detail-main-content" id="project-detail">
       <div class="project-detail-tags">
-        <span class="project-detail-tag">Team Size: 6</span>
-        <span class="project-detail-tag">Time: 7 Weeks</span>
-        <span class="project-detail-tag">Unity</span>
-        <span class="project-detail-tag">C#</span>
-        <span class="project-tag">Roguelite</span>
-        <span class="project-tag">Procedural</span>
+        <span class="project-detail-tag">Unreal Engine 5</span>
+        <span class="project-detail-tag">C++ & Blueprints</span>
+        <span class="project-detail-tag">Multiplayer / Networking</span>
+        <span class="project-detail-tag">Epic Online Services (EOS)</span>
+        <span class="project-detail-tag">Gameplay Ability System (GAS)</span>
+        <span class="project-detail-tag">UMG / UI</span>
       </div>
 
       <div class="project-detail-info">
-        <h3>Concept of the Game</h3>
+        <h3>Project Overview</h3>
         <p>
-          The game was conceived as an homage to titles reminiscent of Vampire
-          Survivors, but with a twist—integrating the beat and rhythm of music
-          to affect gameplay. The musical tempo would influence how fast attacks
-          were executed, blending rhythmic elements with dynamic action. Set
-          against a disco backdrop, every detail—from the vibrant,
-          color-shifting dancefloor to the lively light effects—reinforced the
-          festive atmosphere. The game features dynamic enemy spawns, multiple
-          unique attack types, and an evolving upgrade system that challenges
-          players while immersing them in an engaging audiovisual experience.
+          This project is a team-based multiplayer combat game focusing on
+          robust networking, dynamic UI, and ability-driven combat using Unreal
+          Engine's Gameplay Ability System (GAS). Initially developed using
+          Steam matchmaking, the project was later migrated to Epic Online
+          Services (EOS) to overcome Steam's AppID testing limitations.
         </p>
 
         <figure>
           <video controls>
-            <source src="./Videos/GameplaySotD.mp4" type="video/mp4" />
-            Your browser does not support the video tag.
-          </video>
-          <figcaption>Video of highly upgraded gameplay</figcaption>
-        </figure>
-
-        <h3>Goals and Solutions</h3>
-
-        <h4>A. Creating the Disco Dancefloor</h4>
-        <p>
-          <strong>Goal:</strong> Develop a dynamic floor that resembles a disco
-          dancefloor where players can move freely in all directions. The floor
-          needed randomized, harmonious color transitions to evoke a nightclub
-          ambiance.
-        </p>
-        <p>
-          <strong>Solution:</strong> I designed a white tile with black borders
-          that was later programmatically colored. Using Unity’s tilemap system,
-          I created a custom tile palette and wrote a script to iterate through
-          the camera’s visible boundaries. Each tile was assigned one of seven
-          color options with weighted random probabilities, ensuring that shades
-          of purple and other dynamic hues dominated the scene. Enhanced with
-          shadows and a soft inner glow, the floor truly popped on screen.
-        </p>
-
-        <h4>B. Implementing Dynamic Enemy Spawning and Movement</h4>
-        <p>
-          <strong>Goal:</strong> Ensure the game environment felt alive by
-          spawning enemies dynamically based on the player’s view, with enemies
-          entering from beyond the camera bounds and moving toward the player.
-        </p>
-        <p>
-          <strong>Solution:</strong> Initially, enemy spawns were based on tile
-          positions visible to the camera. Later, I refined this by using
-          colliders as designated spawn zones outside the camera’s range. This
-          allowed enemies to emerge evenly from all edges and move toward the
-          player seamlessly. I also ensured that once defeated, enemies would
-          stop moving to optimize performance and prevent erratic behavior.
-        </p>
-
-        <figure>
-          <img
-            src="./Images/generatingDancefloor.gif"
-            alt="Dynamic disco dancefloor with spawning enemies"
-            class="enlargeable-image"
-          />
-          <figcaption>
-            Dynamic disco dancefloor with randomized color tiles and enhanced
-            lighting effects with enemies spawning at the borders.
-          </figcaption>
-        </figure>
-
-        <h4>C. Designing and Refining Attack Mechanics</h4>
-        <p>
-          <strong>Goal:</strong> Create responsive attack animations that
-          interact with multiple enemies while ensuring damage is applied only
-          once per attack cycle.
-        </p>
-        <p>
-          <strong>Solution:</strong> I developed an animated swinging
-          attack—initially conceptualized as a bass guitar swing—that included
-          dynamic collision detection via a HashSet. This system tracked enemies
-          already hit during an animation cycle and reset once the swing
-          returned to idle. I also incorporated particle effects and animated
-          damage numbers to visually communicate impact.
-        </p>
-
-        <figure class="code-figure">
-          <div class="code-container">
-            <pre><code class="language-csharp">private void OnTriggerStay2D(Collider2D other)
-{
-    bool isCurrentlySwinging = anim.GetCurrentAnimatorStateInfo(0).IsName("BassGuitarSwing");
-    bool isEnemyAlreadyHit = colliders.Contains(other);
-    bool isEnemy = other.gameObject.CompareTag("Enemy");
-
-    if (isCurrentlySwinging && isEnemy && !isEnemyAlreadyHit)
-    {
-        colliders.Add(other);
-        
-        DealDamage(other);
-    }
-
-    bool isCurrentlyIdle = anim.GetCurrentAnimatorStateInfo(0).IsName("BassGuitarIdle");
-
-    if (isCurrentlyIdle)
-    {
-        colliders.Clear();
-    }
-}
-            </code></pre>
-          </div>
-          <figcaption>
-            C# snippet of preventing multiple hits per swing.
-          </figcaption>
-        </figure>
-
-        <h4>D. Implementing a Force Lightning Mechanic</h4>
-        <p>
-          <strong>Goal:</strong> Develop an attack ability that simulates force
-          lightning, targeting enemies dynamically based on proximity.
-        </p>
-        <p>
-          <strong>Solution:</strong> I implemented an algorithm that gathered
-          nearby enemies via a circular collider and sorted them by distance
-          using a SortedSet with a custom comparer. This allowed the attack to
-          consistently target the nearest enemies, with the number of targets
-          adjustable according to upgrades.
-        </p>
-
-        <figure>
-          <video controls>
-            <source src="./Videos/ElectricGuitar.mp4" type="video/mp4" />
+            <source src="./Videos/GameplayAction.mp4" type="video/mp4" />
             Your browser does not support the video tag.
           </video>
           <figcaption>
-            Video of Electric Guitar targeting nearest enemies.
+            Early testing of Steam matchmaking and overhead UI elements
           </figcaption>
         </figure>
 
-        <figure class="code-figure">
-          <div class="code-container">
-            <pre><code class="language-csharp">public override void Attack()
-{
-    if (gameObject.activeSelf)
-    {
-        if(enemies.Count != 0)
-        {
-            SoundManager.Instance.PlaySFX(attackSound, 1);
-            GameObject[] targetEnemies = GetClosestEnemies(AdjustTargetOverflow(amountOfTethers));
-            for (int i = 0; i &lt; targetEnemies.Length; i++)
-            {
-                GameObject clone = Instantiate(bolt);
-                clone.GetComponent&lt;ElectricBolt&gt;().SetPlayerObject(gameObject);
-                clone.GetComponent&lt;ElectricBolt&gt;().SetTargetUnit(targetEnemies[i]);
-                clone.SetActive(true);
-            }
-        }
-    } 
-}
+        <h3>Core Technical Implementation</h3>
 
-protected int AdjustTargetOverflow(int amountOfTethers)
-{
-    if (enemies.Count &lt; amountOfTethers)
-    {
-        return enemies.Count;
-    }
-    else
-    {
-        return amountOfTethers;
-    }
-}
-
-protected GameObject[] GetClosestEnemies(int amountOfTethers)
-{
-    SortedSet&lt;GameObject&gt; sortedEnemies = new SortedSet&lt;GameObject&gt;(new GameObjectComparer());
-    foreach (GameObject enemy in enemies)
-    {
-        sortedEnemies.Add(enemy);
-    }
-    return sortedEnemies.Take(amountOfTethers).ToArray();
-}
-            </code></pre>
-          </div>
-          <figcaption>Code for force lightning type ability.</figcaption>
-        </figure>
-
-        <h4>E. Integrating Dynamic Joysticks and UI Elements</h4>
+        <h4>Networking & The "TeamID" Challenge</h4>
         <p>
-          <strong>Goal:</strong> Ensure on‑screen controls function smoothly
-          across devices while maintaining a consistent UI experience.
+          One of the biggest hurdles was managing team assignments across
+          different multiplayer sessions. In our lobby system, players join a
+          host, and the host's Unique Net ID becomes the <code>TeamID</code>.
+          When two teams find a match, they are merged into a new match session.
+          This transition caused players to lose their original TeamIDs.
         </p>
-        <p>
-          <strong>Solution:</strong> After testing Unity’s new Input System
-          package and encountering lag, I reverted to a more reliable input
-          handling method. I adjusted the joystick hierarchy and configured
-          dynamic scaling for UI elements such as the health bar, guaranteeing
-          consistent usability and appearance on all screen sizes.
-        </p>
-
-        <h4>F. Developing an Extensive Upgrade and Meta-Upgrade System</h4>
-        <p>
-          <strong>Goal:</strong> Create an upgrade system that allowed players
-          to improve weapons and abilities in real time and persist these
-          changes across sessions.
-        </p>
-        <p>
-          <strong>Solution:</strong> I built a hierarchical upgrade system where
-          all items inherited from a common abstract class. Using reflection, I
-          enabled dynamic method calls to update item attributes and stored
-          these upgrade levels in a JSON file. This system managed both in-game,
-          immediate upgrades and meta-upgrades in the main menu, offering deep
-          progression and replay value.
-        </p>
-
-        <figure>
-          <img
-            src="./Images/hierarchy.png"
-            alt="Dynamic disco dancefloor with spawning enemies"
-            class="enlargeable-image"
-          />
-          <figcaption>
-            Hierarchy of items in the game, this eventually grew further.
-          </figcaption>
-        </figure>
-
-        <figure>
-          <video controls>
-            <source src="./Videos/UpgradeSystem.mp4" type="video/mp4" />
-            Your browser does not support the video tag.
-          </video>
-          <figcaption>
-            Video of meta upgrade system in the main menu and in-game upgrades.
-          </figcaption>
-        </figure>
-
-        <h4>G. Handling Transitions and Scene Management</h4>
-        <p>
-          <strong>Goal:</strong> Create seamless transitions between game scenes
-          and menus for a polished user experience.
-        </p>
-        <p>
-          <strong>Solution:</strong> I integrated LeanTween to manage smooth UI
-          transitions and created chained animations that controlled the scaling
-          and positioning of UI elements. A crossfade effect using a fading
-          black overlay further enhanced scene transitions.
-        </p>
-
-        <h4>H. Fine-Tuning Visual Effects (VFX) and Particle Systems</h4>
-        <p>
-          <strong>Goal:</strong> Enhance the game’s visual appeal with dynamic
-          particle effects, trailing animations, and responsive VFX.
-        </p>
-        <p>
-          <strong>Solution:</strong> I refined various particle systems by
-          adjusting simulation parameters such as lifetime, emission rates, and
-          simulation spaces. The effects were tailored to accentuate attacks,
-          movement, and environmental lighting, all while integrating
-          post‑processing effects like bloom and vignette.
-        </p>
-
-        <h4>I. Performance and Bug Fixing</h4>
-        <p>
-          <strong>Goal:</strong> Optimize performance, manage memory
-          effectively, and resolve numerous bugs that arose from increasing
-          complexity.
-        </p>
-        <p>
-          <strong>Solution:</strong> Through careful playtesting and profiling,
-          I identified and fixed performance bottlenecks. Improvements included
-          adjusting tilemap generation boundaries, refining singleton
-          management, and implementing fail-safe collision and animation logic.
-          This systematic approach greatly stabilized the final game build.
-        </p>
-
-        <h3>My Role</h3>
-        <p>I held a multifaceted role throughout the project:</p>
+        <p>To solve this, I designed a robust replication flow:</p>
         <ul>
           <li>
-            <strong>Technical Development:</strong> I authored the majority of
-            the overall codebase, focusing on key systems such as dynamic
-            tilemap generation, enemy spawning, attack animations, upgrading
-            systems, visual effects, post-process effects, lighting etc.
+            <strong>GameInstance:</strong> Stores the
+            <code>TeamID</code> locally so it survives session transitions.
           </li>
           <li>
-            <strong>Problem Solving:</strong> I resolved challenges ranging from
-            collision detection to performance optimization, refining gameplay
-            mechanics through iterative testing.
+            <strong>PlayerController:</strong> On <code>BeginPlay</code>, it
+            commands the GameMode to spawn the character chosen in the lobby.
           </li>
           <li>
-            <strong>UI/UX and Visual Effects:</strong> I enhanced on-screen
-            controls, user interface responsiveness, and integrated advanced
-            visual effects and particle systems to enrich the game’s disco
-            atmosphere.
+            <strong>PlayerState:</strong> Once initialized, the client pulls the
+            <code>TeamID</code> from their GameInstance and sends a Server RPC
+            to update the Server's version of the PlayerState.
           </li>
           <li>
-            <strong>Systems Integration and Persistence:</strong> I architected
-            and implemented an upgrade system that maintained player progress
-            via JSON-based persistence, ensuring seamless cross-session
-            continuity.
+            <strong>RepNotify:</strong> The Server replicates this data back
+            down to all clients, triggering an <code>OnRep</code> function that
+            allows clients to locally reconstruct a Map mapping
+            <code>TeamID</code>s to arrays of <code>PlayerState</code>s.
+          </li>
+        </ul>
+
+        <figure>
+          <a
+            href="./Images/TeamID_ReplicationFlow.png"
+            class="lightbox-trigger"
+          >
+            <img
+              src="./Images/TeamID_ReplicationFlow.png"
+              alt="Blueprint flow for TeamID Replication"
+              class="enlargeable-image"
+              onerror="
+                this.onerror = null;
+                this.src =
+                  'https://placehold.co/800x400/1a1a1a/8A2BE2?text=TeamID+Replication+Blueprint';
+                this.style.objectFit = 'contain';
+              "
+            />
+          </a>
+          <figcaption>
+            Client checking for PlayerState readiness and fetching TeamID from
+            GameInstance (Click to enlarge)
+          </figcaption>
+        </figure>
+
+        <h4>Dynamic UI Systems (UMG)</h4>
+        <p>
+          I built a comprehensive UI framework that responds to network events,
+          including overhead nameplates, party frames, and scoreboards:
+        </p>
+        <ul>
+          <li>
+            <strong>Overhead Healthbars & Castbars:</strong> Replicated over the
+            network. Opacity fades if line of sight is broken or if the target
+            is too far away. Friendly healthbars are colored green, while enemy
+            bars are red, calculated by comparing TeamIDs.
           </li>
           <li>
-            <strong>Collaboration:</strong> I worked closely with team members
-            to integrate various features and ensure a coherent final product.
+            <strong>Party & Enemy Frames:</strong> Automatically generated on
+            the side of the screen when players are added to a team. They
+            subscribe to <code>OnHealthUpdated</code> and
+            <code>OnCastStarted</code> events directly from the characters.
+          </li>
+          <li>
+            <strong>Scoreboard:</strong> Tracks Damage Done and Kills. Kills are
+            awarded via a payload sent to <code>OnHealthChanged</code> just
+            before a target dies.
+          </li>
+        </ul>
+
+        <figure>
+          <img
+            src="./Images/PartyFrames.png"
+            alt="Dynamic Party Frames UI"
+            class="enlargeable-image"
+            onerror="
+              this.onerror = null;
+              this.src =
+                'https://placehold.co/800x400/1a1a1a/8A2BE2?text=Dynamic+Party+Frames+UI';
+            "
+          />
+          <figcaption>
+            Dynamically generated Party Frames showing Casts and Health
+          </figcaption>
+        </figure>
+
+        <h4>Gameplay Mechanics & Controls</h4>
+        <p>
+          To mimic traditional MMORPG/Arena controls (like World of Warcraft), I
+          modified the input handling so that:
+        </p>
+        <ul>
+          <li>
+            Holding <strong>Right-Click</strong> rotates both the camera and the
+            character.
+          </li>
+          <li>
+            Holding <strong>Left-Click</strong> rotates only the camera without
+            affecting the character's facing direction.
+          </li>
+          <li>
+            Holding <strong>Both Mouse Buttons</strong> moves the character
+            forward.
+          </li>
+          <li>Added smooth camera interpolation for zooming in and out.</li>
+        </ul>
+
+        <h4>Gameplay Ability System (GAS) & Combat</h4>
+        <p>
+          I utilized GAS for all combat logic. A key feature was implementing
+          critical hits and team-based damage validation:
+        </p>
+        <ul>
+          <li>
+            <strong>Damage Validation:</strong> A "Should Skip Hit" custom node
+            ensures players cannot damage their own teammates by validating
+            TeamIDs before applying Gameplay Effects.
+          </li>
+          <li>
+            <strong>Critical Hits:</strong> Handled in a custom
+            <code>GameplayEffectExecutionCalculation</code> (GEEC). I
+            implemented a 20% chance to score a critical hit, resulting in 50%
+            extra damage. This flags the execution data, which the
+            <code>AttributeSet</code> reads to display red, floating damage
+            numbers for crits, and yellow for normal hits.
+          </li>
+        </ul>
+
+        <figure class="code-figure">
+          <div class="code-container">
+            <pre><code class="language-cpp">// Custom Execution Calculation for Damage and Crits
+void UGEEC_DamageExecution::Execute_Implementation(const FGameplayEffectCustomExecutionParameters& ExecutionParams, FGameplayEffectCustomExecutionOutput& OutExecutionOutput) const
+{
+    float BaseDamage = 0.f;
+    // ... Fetch BaseDamage from attributes ...
+
+    bool bIsCriticalHit = (FMath::FRand() <= 0.20f); // 20% Crit Chance
+    
+    if (bIsCriticalHit)
+    {
+        BaseDamage *= 1.5f; // 50% Crit Multiplier
+    }
+
+    // Set dynamic tag or data for the UI to read the Crit state
+    OutExecutionOutput.AddOutputModifier(FGameplayModifierEvaluatedData(DamageProperty, EGameplayModOp::Additive, BaseDamage));
+}
+                </code></pre>
+          </div>
+          <figcaption>
+            C++ Example of handling critical hit logic within GAS
+          </figcaption>
+        </figure>
+
+        <figure>
+          <video controls>
+            <source src="./Videos/DamageNumbers.mp4" type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+          <figcaption>
+            Demonstration of yellow (normal) and red (critical) floating damage
+            numbers.
+          </figcaption>
+        </figure>
+
+        <h3>Key Challenges Overcome</h3>
+        <div class="challenge-solution">
+          <p class="challenge">⏱️ Network Timing & Race Conditions:</p>
+          <p class="solution">
+            Order of operations across a network is unpredictable. Trying to
+            access <code>PlayerState</code> or <code>GameState</code> on a
+            client before it was fully replicated caused crashes or empty UI
+            frames. I solved this by implementing robust retry-logic and tying
+            UI generation strictly to <code>OnRep</code> notifies rather than
+            local <code>BeginPlay</code> events.
+          </p>
+
+          <p class="challenge">📦 Lobby Resource Management:</p>
+          <p class="solution">
+            Loading full combat characters in the lobby was resource-heavy. I
+            created a lightweight "Mannequin" lobby character that pulls visual
+            data (Skeletal Mesh, AnimBP, Materials) from a
+            <code>DataTable</code>, saving memory and load times.
+          </p>
+
+          <p class="challenge">🔌 Steam AppID Restrictions:</p>
+          <p class="solution">
+            Steam's default AppID (480) stopped broadcasting available sessions
+            reliably, making testing impossible. I made the executive decision
+            to migrate the entire project's matchmaking backend over to Epic
+            Online Services (EOS), which restored our ability to test over the
+            internet.
+          </p>
+        </div>
+        <h3>My Role</h3>
+        <p>
+          As a core programmer on this project, I took responsibility for the
+          networking backbone, UI architecture, and gameplay systems
+          integration. My main contributions included:
+        </p>
+        <ul>
+          <li>
+            <strong>Multiplayer & Network Engineering:</strong> I handled the
+            matchmaking flow, migrating the project from Steam to Epic Online
+            Services (EOS). I engineered the replication logic for
+            <code>PlayerState</code> variables, ensuring custom data like
+            <code>TeamID</code> persisted flawlessly across server transitions
+            from the lobby to the active match.
+          </li>
+          <li>
+            <strong>UI/UX & UMG Framework:</strong> I built the entire dynamic
+            UI system from the ground up. This included WoW-style party and
+            enemy frames that dynamically generate based on replicated network
+            data, overhead nameplates with line-of-sight opacity, floating
+            damage numbers, and a fully functional end-of-match scoreboard.
+          </li>
+          <li>
+            <strong>Combat & Gameplay Ability System (GAS):</strong> I
+            integrated custom execution calculations within GAS to handle
+            critical hits and friendly fire prevention. I also developed the
+            WoW-style camera and movement controls, allowing for independent
+            camera rotation and dual-mouse-button movement.
+          </li>
+          <li>
+            <strong>Project Architecture & Optimization:</strong> I took the
+            initiative to refactor our C++ and Blueprint folder structures for
+            better scalability. Additionally, I optimized the lobby system by
+            creating a "Mannequin" actor driven by a <code>DataTable</code>,
+            bypassing the need to load heavy, combat-ready characters before the
+            match started.
           </li>
         </ul>
 
         <h3>Challenges and Learning Outcomes</h3>
-        <p>This project provided valuable insights:</p>
+        <p>
+          Working on a multiplayer game of this scale introduced several complex
+          problems that deeply improved my understanding of Unreal Engine's
+          networking framework:
+        </p>
         <ul>
           <li>
-            <strong>Managing Complexity:</strong> Addressing intricate code interactions and emphasizing modular design enhanced my approach to building scalable system architectures.
-
+            <strong>Network Order of Operations:</strong> The biggest recurring
+            challenge was race conditions. I learned firsthand that you cannot
+            rely on local <code>BeginPlay</code> events for multiplayer UI or
+            logic. Data takes time to travel, and I had to master the use of
+            <code>OnRep</code> functions and safe-retry logic to ensure
+            <code>PlayerState</code> and <code>GameState</code> were fully
+            initialized on clients before attempting to construct UI elements
+            like Party Frames.
           </li>
           <li>
-            <strong>Dynamic Adaptation:</strong> Implementing runtime methods
-            via reflection deepened my understanding of dynamic system design.
+            <strong>Data Persistence Across Sessions:</strong> Unreal Engine
+            destroys most actors when transitioning between levels or sessions.
+            Learning how to leverage persistent local classes like the
+            <code>GameInstance</code> to temporarily hold data (like Team IDs)
+            and re-inject it into the Server upon connecting to a new map was a
+            major breakthrough.
           </li>
           <li>
-            <strong>Performance Optimization:</strong> Profiling and code
-            optimization techniques became crucial as the project’s complexity
-            grew.
+            <strong>Blueprint vs C++ Replication Quirks:</strong> I learned how
+            to navigate engine-specific limitations, such as the inability to
+            replicate Maps or Sets directly. I solved this by reconstructing the
+            data locally on clients using replicated Structs. I also learned
+            that C++ <code>ReplicatedUsing</code> (RepNotify) variables do not
+            automatically trigger their functions on the Server, requiring
+            manual calls to keep host/client logic synchronized.
           </li>
           <li>
-            <strong>UI/UX Responsiveness:</strong> Adapting interfaces to
-            multiple devices underlined the importance of responsive design.
-          </li>
-          <li>
-            <strong>Collaboration and Integration:</strong> Merging features
-            from different team members highlighted the need for clear coding
-            standards and adaptability.
+            <strong>Agile Problem Solving:</strong> When Steam's default AppID
+            480 stopped broadcasting our sessions, development came to a halt.
+            Deciding to rapidly pivot the entire backend to Epic Online Services
+            taught me how to stay adaptable and implement third-party SDKs under
+            pressure.
           </li>
         </ul>
 
         <h3>Conclusion</h3>
         <p>
-          In summary, this project was an intensive and rewarding learning
-          experience. By blending rhythmic action with a striking disco
-          aesthetic, I developed a unique game that integrated dynamic gameplay,
-          robust upgrade mechanics, and rich visual effects. The challenges
-          overcome during development have sharpened my technical and creative
-          skills, and the solutions implemented have laid a strong foundation
-          for future projects.
+          This project was an incredible deep dive into the complexities of
+          multiplayer game development in Unreal Engine 5. By tackling severe
+          race conditions, migrating networking backends mid-development, and
+          successfully merging UI with the Gameplay Ability System, I gained a
+          profound appreciation for robust, scalable network architecture.
         </p>
+        <p>
+          The challenges I faced with state replication and session management
+          have given me a solid, practical foundation in multiplayer
+          programming, skills that I now carry forward into every system I
+          architect.
+        </p>
+      </div>
 
       <div class="project-detail-links">
         <a
-          href="https://github.com/XirevGH/MAPP-Grupp03"
+          href="https://github.com/XirevGH/PROJ"
           class="btn btn-primary"
           target="_blank"
           rel="noopener noreferrer"
@@ -551,8 +539,7 @@ protected GameObject[] GetClosestEnemies(int amountOfTethers)
               aria-label="LinkedIn Profile"
               target="_blank"
               rel="noopener noreferrer"
-            >
-              <svg
+              ><svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"
                 height="24"
@@ -564,17 +551,15 @@ protected GameObject[] GetClosestEnemies(int amountOfTethers)
                   d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"
                 />
                 <path d="M2 9h4v12H2z" />
-                <circle cx="4" cy="4" r="2" />
-              </svg>
-            </a>
+                <circle cx="4" cy="4" r="2" /></svg
+            ></a>
             <a
               href="https://github.com/XirevGH"
               class="social-link"
               aria-label="GitHub Profile"
               target="_blank"
               rel="noopener noreferrer"
-            >
-              <svg
+              ><svg
                 role="img"
                 viewBox="0 0 24 24"
                 xmlns="http://www.w3.org/2000/svg"
@@ -585,17 +570,15 @@ protected GameObject[] GetClosestEnemies(int amountOfTethers)
                 <title>GitHub</title>
                 <path
                   d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"
-                />
-              </svg>
-            </a>
+                /></svg
+            ></a>
             <a
               href="https://x.com/xirevwow"
               class="social-link"
               aria-label="X (Twitter) Profile"
               target="_blank"
               rel="noopener noreferrer"
-            >
-              <svg
+              ><svg
                 role="img"
                 viewBox="0 0 24 24"
                 xmlns="http://www.w3.org/2000/svg"
@@ -606,9 +589,8 @@ protected GameObject[] GetClosestEnemies(int amountOfTethers)
                 <title>X</title>
                 <path
                   d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z"
-                />
-              </svg>
-            </a>
+                /></svg
+            ></a>
           </div>
         </div>
         <div class="footer-links-group">
@@ -687,7 +669,7 @@ protected GameObject[] GetClosestEnemies(int amountOfTethers)
       />
       <div class="lightbox-caption" id="lightbox-caption"></div>
     </div>
-    <script src="./js/script.js"></script>
+
     <script>
       document.addEventListener("DOMContentLoaded", () => {
         const lightboxOverlay = document.getElementById("lightbox-overlay");
@@ -710,11 +692,13 @@ protected GameObject[] GetClosestEnemies(int amountOfTethers)
           img.style.cursor = "zoom-in";
           img.addEventListener("click", (event) => {
             event.preventDefault();
+
             const imageElement = event.currentTarget;
             const figureElement = imageElement.closest("figure");
             const captionElement = figureElement
               ? figureElement.querySelector("figcaption")
               : null;
+
             lightboxImage.src = imageElement.src;
             lightboxImage.alt = imageElement.alt;
 
@@ -724,6 +708,7 @@ protected GameObject[] GetClosestEnemies(int amountOfTethers)
             } else {
               lightboxCaption.style.display = "none";
             }
+
             lightboxOverlay.style.display = "flex";
           });
         });
