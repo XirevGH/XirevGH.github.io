@@ -153,6 +153,11 @@
 
     <section class="project-detail-main-content" id="project-detail">
       <div class="project-detail-tags">
+        <span
+          class="project-tag"
+          style="font-weight: 600; border-color: #8a2be2"
+          >Role: Gameplay & Systems Programmer</span
+        >
         <span class="project-tag">Team Size: 4</span>
         <span class="project-tag">Time: 5 Days</span>
         <span class="project-tag">Unreal Engine 5</span>
@@ -161,50 +166,81 @@
         <span class="project-tag">Game Jam</span>
       </div>
 
+      <!-- Quick Action Link Above the Fold -->
+      <div
+        class="project-quick-actions"
+        style="
+          margin: 1.25rem 0 2rem 0;
+          display: flex;
+          gap: 1rem;
+          flex-wrap: wrap;
+        "
+      >
+        <a
+          href="https://github.com/XirevGH/FOMO-GameJam"
+          class="btn btn-primary"
+          target="_blank"
+          rel="noopener noreferrer"
+          style="display: inline-flex; align-items: center; gap: 0.5rem"
+        >
+          <svg
+            role="img"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+            width="18"
+            height="18"
+            fill="currentColor"
+          >
+            <path
+              d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"
+            />
+          </svg>
+          View Source Code on GitHub
+        </a>
+      </div>
+
       <div class="project-detail-info">
         <h3>Game Overview</h3>
         <p>
-          Developed during an intensive 5-day game jam in Unreal Engine 5,
+          Developed during a 5-day game jam in Unreal Engine 5,
           <strong>Fool Me Once</strong> is a competitive local multiplayer maze
-          duel designed for physical Dance Dance Revolution (DDR) pads. Two
-          players navigate a futuristic maze arena in splitscreen, racing to
-          collect cakes and deploying unpredictable power-ups and traps to
-          disorient each other.
+          duel built for physical Dance Dance Revolution (DDR) dance pads. Two
+          players navigate a space station in splitscreen, racing to collect
+          cakes and deploying unpredictable power-ups and traps to disorient
+          each other.
         </p>
 
         <h3>Core Technical Implementation</h3>
 
-        <h4>1. Discrete Graph Navigation & Vector Directional Parsing</h4>
+        <h4>1. Node-Based Navigation & Dot-Product Direction Validation</h4>
         <p>
-          Standard physics and Character Movement components were discarded in
-          favor of a responsive, deterministic
-          <strong>Discrete Graph Navigation System</strong> using custom
+          Instead of standard physics and continuous Character Movement
+          components, we built a responsive, deterministic
+          <strong>grid navigation system</strong> using custom
           <code>AMovementNode</code> actors:
         </p>
         <ul>
           <li>
-            <strong>Dot-Product Directional Filtering:</strong> When a player
-            inputs a movement or turn command, the character calculates the
-            vector dot product between the player's facing direction and all
-            connected graph nodes, validating moves within a tight angular cone
-            (<code>ForwardVectorMatchThreshold = 0.707f</code>, corresponding to
-            $45^\circ$).
+            <strong>Dot-Product Direction Validation:</strong> When a player
+            inputs a move or turn command, the character calculates the vector
+            dot product between its facing direction and all connected nodes,
+            confirming valid moves within a 45° forward cone (<code
+              >ForwardVectorMatchThreshold = 0.707f</code
+            >).
           </li>
           <li>
-            <strong>Look-Ahead Corner Pre-Rotation:</strong> To eliminate
-            jarring, angular stops at 90-degree junctions, the movement
-            algorithm checks ahead for the <em>next</em> connected corridor
-            (<code>NextForwardNode</code>). While the pawn is still in transit
-            to its immediate target, it dynamically blends its rotation
+            <strong>Look-Ahead Corner Smoothing:</strong> To eliminate sudden
+            stops at 90-degree turns, the system checks ahead for the next
+            connected corridor (<code>NextForwardNode</code>). While moving
+            toward its current node, the pawn smoothly blends its rotation
             (<code>TargetForwardRotation</code>) into the upcoming corner using
-            an eased blend factor.
+            an easing curve.
           </li>
           <li>
-            <strong>Quaternion SLERP & Non-Linear Easing:</strong> Rotations are
-            smoothly interpolated via spherical linear interpolation
-            (<code>FQuat::Slerp</code>) alongside custom exponential easing
-            curves (<code>InterpEaseInOut</code>), ensuring crisp and
-            predictable visual feedback.
+            <strong>Quaternion SLERP Interpolation:</strong> Rotations use
+            spherical linear interpolation (<code>FQuat::Slerp</code>) alongside
+            custom easing curves (<code>InterpEaseInOut</code>) to keep camera
+            and character turning smooth and predictable.
           </li>
         </ul>
 
@@ -230,24 +266,26 @@
           </figcaption>
         </figure>
 
-        <h4>2. Automated Level-Design Floor Snapping Tooling</h4>
+        <h4>2. Automated Ground-Snapping Level Tool</h4>
         <p>
-          To eliminate tedious manual Z-axis alignment and prevent floating or
-          clipping nodes across uneven maze geometry, each
-          <code>AMovementNode</code> performs an automated vertical surface
-          alignment on initialization:
+          Because the player pawn moves between node origins by targeting its
+          center pivot, movement nodes must sit at the exact half-height of the
+          character capsule. To eliminate manual height adjustments across
+          uneven maze geometry, each
+          <code>AMovementNode</code> aligns itself automatically on startup:
         </p>
         <ul>
           <li>
-            <strong>Runtime Ground Trace:</strong> During
-            <code>BeginPlay()</code>, the node fires a 10,000-unit downward line
-            trace on the <code>ECC_Visibility</code> collision channel.
+            <strong>Downward Ground Trace:</strong> During
+            <code>BeginPlay()</code>, the node fires a downward line trace on
+            the <code>ECC_Visibility</code> collision channel.
           </li>
           <li>
-            <strong>Automatic Z-Height Normalization:</strong> Upon striking
-            walkable geometry, the node dynamically snaps its position to
-            <code>Hit.Location.Z + 102.15f</code>, providing guaranteed ground
-            clearance for player capsules without manual level adjustments.
+            <strong>Automatic Height Offset:</strong> When it hits walkable
+            floor geometry, the node snaps its position to
+            <code>Hit.Location.Z + 102.15f</code> (the exact capsule center
+            offset), guaranteeing clean ground clearance without manual
+            placement errors.
           </li>
         </ul>
 
@@ -263,47 +301,49 @@ void AMovementNode::BeginPlay()
     FVector End = Start - FVector(0.f, 0.f, 10000.f);
     FCollisionQueryParams Params;
 
+    // Raycast down to find floor surface and offset to character capsule center
     if (GetWorld()->LineTraceSingleByChannel(Hit, Start, End, ECC_Visibility, Params))
     {
-        float DesiredHeight = Hit.Location.Z + 102.15f;
+        const float CapsuleCenterOffset = 102.15f; // Character pivot / half-height
         FVector NewLocation = GetActorLocation();
-        NewLocation.Z = DesiredHeight;
+        NewLocation.Z = Hit.Location.Z + CapsuleCenterOffset;
         SetActorLocation(NewLocation);
     }
 }</code></pre>
           </div>
           <figcaption>
-            Automated Z-axis floor snapping on node initialization
+            Automated Z-axis floor snapping using capsule center offset
             (MovementNode.cpp)
           </figcaption>
         </figure>
 
-        <h4>3. Data-Driven Spatial Item Spawning & Count Reconciliation</h4>
+        <h4>3. Data-Driven Item Spawning & Count Synchronization</h4>
         <p>
           Collectibles and power-ups are managed centrally by
-          <code>ACakeChaseGameMode</code>, ensuring fair and collision-free
-          spawning across active gameplay nodes:
+          <code>ACakeChaseGameMode</code>
+          to ensure fair, collision-free spawning across open gameplay nodes:
         </p>
         <ul>
           <li>
-            <strong>Configurable Power-Up Definitions:</strong> Handled via a
-            structured configuration array (<code>FPowerUpSpawnConfig</code>),
-            exposing per-interval spawn probabilities, concurrent entity limits,
-            and polymorphic class hierarchies.
+            <strong>Configurable Spawn Rules:</strong> Uses a structured
+            configuration array (<code>FPowerUpSpawnConfig</code>) to control
+            spawn intervals, probabilities, max active limits, and actor
+            classes.
           </li>
           <li>
-            <strong>Multi-Channel Anti-Overlap Validation:</strong> Before
-            spawning an item, the GameMode performs a multi-channel spherical
-            overlap query (<code>SphereOverlapActors</code> querying
-            <code>WorldStatic</code>, <code>WorldDynamic</code>,
-            <code>Pawn</code>, and <code>PhysicsBody</code>) with a 50-unit
-            radius to filter out occupied graph nodes.
+            <strong>Anti-Overlap Sphere Checks:</strong> Before spawning an
+            item, the GameMode performs a spherical overlap query (<code
+              >SphereOverlapActors</code
+            >
+            checking <code>WorldStatic</code>, <code>WorldDynamic</code>,
+            <code>Pawn</code>, and <code>PhysicsBody</code>) to filter out
+            occupied nodes.
           </li>
           <li>
-            <strong>Self-Healing Count Reconciliation:</strong> Includes active
-            world-sweep routines (<code>UpdateActualCakeCount</code>,
-            <code>UpdateActualPowerUpCounts</code>) to ensure internal capacity
-            limits remain accurate even if actors are destroyed or collected
+            <strong>Active Count Synchronization:</strong> Runs periodic world
+            checks (<code>UpdateActualCakeCount</code>,
+            <code>UpdateActualPowerUpCounts</code>) to keep active item limits
+            in sync, even when pickups are collected or destroyed
             asynchronously.
           </li>
         </ul>
@@ -366,33 +406,31 @@ AActor* ACakeChaseGameMode::AttemptSpawnActorAtRandomNode(TSubclassOf&lt;AActor&
 }</code></pre>
           </div>
           <figcaption>
-            Dynamic spawn candidate selection with 4-channel anti-overlap
-            validation (CakeChaseGameMode.cpp)
+            Dynamic spawn candidate selection with anti-overlap checks
+            (CakeChaseGameMode.cpp)
           </figcaption>
         </figure>
 
-        <h4>4. Polymorphic Power-Ups & Clean Input Redirection</h4>
+        <h4>4. Modular Power-Ups & Clean Input Redirection</h4>
         <p>
-          Power-up effects are structured modularly using an extensible class
+          Power-up effects are structured cleanly using an extensible class
           hierarchy:
         </p>
         <ul>
           <li>
-            <strong>Extensible Base Architecture:</strong>
-            <code>APowerUp</code> serves as an abstract base actor combining a
-            <code>USphereComponent</code> trigger, a visual
-            <code>UStaticMeshComponent</code>, and a custom
-            <code>UPickupComponent</code>, exposing a
-            <code>BlueprintNativeEvent</code> (<code>ApplyEffect</code>) for
-            modular gameplay logic.
+            <strong>Modular Base Class:</strong> <code>APowerUp</code> serves as
+            an abstract base actor combining a trigger sphere, a static mesh,
+            and a custom <code>UPickupComponent</code>. It exposes a
+            <code>BlueprintNativeEvent</code> (<code>ApplyEffect</code>) so
+            designers can easily build new trap effects in Blueprints.
           </li>
           <li>
-            <strong>Clean Input Inversion Mechanics:</strong> To implement
-            disorienting trap effects (such as reversed steering), the character
-            uses a dynamic input router (<code>bHasInvertedInput</code>) that
-            remaps forward to 180-degree turns and swaps left/right triggers in
-            place, bypassing the need to reallocate Enhanced Input Mapping
-            Contexts at runtime.
+            <strong>Input Inversion Trap:</strong> To implement disorienting
+            trap effects (such as reversed steering), the character uses an
+            internal input router (<code>bHasInvertedInput</code>) that remaps
+            forward moves to 180-degree turns and swaps left/right triggers in
+            place, bypassing the need to reallocate Input Mapping Contexts at
+            runtime.
           </li>
         </ul>
 
@@ -400,7 +438,7 @@ AActor* ACakeChaseGameMode::AttemptSpawnActorAtRandomNode(TSubclassOf&lt;AActor&
         <p>
           To support two simultaneous players on physical DDR dance pads,
           players are dynamically spawned and bound to dedicated viewports and
-          input routing structures.
+          separate controller inputs.
         </p>
 
         <figure>
@@ -424,28 +462,36 @@ AActor* ACakeChaseGameMode::AttemptSpawnActorAtRandomNode(TSubclassOf&lt;AActor&
 
         <h3>Key Challenges Overcome</h3>
         <div class="challenge-solution">
-          <p class="challenge">🕹️ Discrete DDR Input vs. Free Movement:</p>
+          <p class="challenge">
+            <b>Physical DDR Locomotion vs. Continuous Movement:</b>
+          </p>
           <p class="solution">
-            Standard continuous CharacterMovement caused players on dance pads
-            to easily overshoot corners. Replacing it with a graph-based
-            dot-product navigation system gave players tactile, deterministic
-            control over every step and pivot.
+            When our faculty provided two DDR mats for the jam, we chose to
+            subvert expectations by building a physical maze-runner rather than
+            a rhythm game. However, standard continuous CharacterMovement caused
+            players stepping on floor pads to easily overshoot corners.
+            Replacing it with a deterministic node-based navigation system gave
+            players tactile, step-by-step control as if physically walking the
+            maze.
           </p>
 
-          <p class="challenge">🎥 Camera Corner Snapping & Motion Sickness:</p>
+          <p class="challenge">
+            <b>Camera Corner Snapping & Motion Sickness:</b>
+          </p>
           <p class="solution">
-            Instant discrete 90-degree pivots caused disorientation in
-            first-person splitscreen. Implementing predictive look-ahead
-            rotation and Quaternion SLERP easing created smooth, anticipatory
-            cornering.
+            Instant 90-degree pivots caused disorientation in first-person
+            splitscreen. Implementing predictive look-ahead rotation and
+            Quaternion SLERP easing created smooth, natural cornering.
           </p>
 
-          <p class="challenge">📦 Item Overlap Contention:</p>
+          <p class="challenge">
+            <b>Item Overlap Contention:</b>
+          </p>
           <p class="solution">
-            Periodic spawning in a confined grid caused cakes and power-ups to
+            Spawning pickups on a confined grid caused cakes and power-ups to
             occasionally spawn on top of active players or existing items.
-            Enforcing a 4-channel spherical overlap query across all static,
-            dynamic, pawn, and physics bodies guaranteed single-occupancy nodes.
+            Enforcing a spherical overlap query across all static, dynamic,
+            pawn, and physics bodies guaranteed that the nodes would be empty.
           </p>
         </div>
 
@@ -460,8 +506,8 @@ AActor* ACakeChaseGameMode::AttemptSpawnActorAtRandomNode(TSubclassOf&lt;AActor&
             spawning
           </li>
           <li>
-            Positive feedback during playtests for its fluid, anticipatory
-            corner transitions and competitive game feel
+            Positive feedback during playtests for its fluid corner transitions
+            and competitive game feel
           </li>
         </ul>
 
@@ -484,25 +530,25 @@ AActor* ACakeChaseGameMode::AttemptSpawnActorAtRandomNode(TSubclassOf&lt;AActor&
           rel="noopener noreferrer"
         >
           <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
+            role="img"
             viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            fill="currentColor"
+            style="margin-right: 0.5rem"
           >
-            <polygon points="5 3 19 12 5 21 5 3" />
+            <path
+              d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"
+            />
           </svg>
           View Source Code
         </a>
         <a href="index.html#projects" class="btn btn-secondary">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
+            width="20"
+            height="20"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
