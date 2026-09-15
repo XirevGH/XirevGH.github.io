@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+﻿<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -17,6 +17,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlightjs-line-numbers.js/2.8.0/highlightjs-line-numbers.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script>
+      hljs.highlightAll();
+    </script>
   </head>
   <body class="project-detail-page">
     <nav id="navbar">
@@ -130,40 +133,82 @@
     <div class="project-banner">
       <img
         src="./Images/sotd.png"
-        alt="Disco Game Documentation Banner"
-        onerror="this.onerror=null; this.src='https://placehold.co/1600x500/1a1a1a/8A2BE2?text=Disco+Game+Documentation'; this.style.objectFit='contain';"
+        alt="Survival on the Dancefloor Banner"
+        onerror="
+          this.onerror = null;
+          this.src =
+            'https://placehold.co/1600x500/1a1a1a/8A2BE2?text=Survival+on+the+Dancefloor';
+          this.style.objectFit = 'contain';
+        "
       />
     </div>
 
     <div class="project-detail-header">
       <h1 class="project-detail-title">Survival on the Dancefloor</h1>
       <p class="project-detail-subtitle">
-        A Rhythm Based Survivor-like Game - 7 Weeks Project
+        Rhythm-Infused Survivor-like Roguelite - 7 Week Team Project
       </p>
     </div>
 
     <section class="project-detail-main-content" id="project-detail">
       <div class="project-detail-tags">
-              <span class="project-tag">Team Size: 6</span>
-              <span class="project-tag">Time: 7 Weeks</span>
-              <span class="project-tag">Unity</span>
-              <span class="project-tag">C#</span>
-              <span class="project-tag">Roguelite</span>
-              <span class="project-tag">Procedural</span>
+        <span
+          class="project-tag"
+          style="font-weight: 600; border-color: #8a2be2"
+          >Role: Lead Gameplay & Systems Programmer</span
+        >
+        <span class="project-tag">Team Size: 6</span>
+        <span class="project-tag">Time: 7 Weeks</span>
+        <span class="project-tag">Unity</span>
+        <span class="project-tag">C#</span>
+        <span class="project-tag">Roguelite</span>
+        <span class="project-tag">Audio & Graphics Architecture</span>
+      </div>
+
+      <!-- Quick Action Link Above the Fold -->
+      <div
+        class="project-quick-actions"
+        style="
+          margin: 1.25rem 0 2rem 0;
+          display: flex;
+          gap: 1rem;
+          flex-wrap: wrap;
+        "
+      >
+        <a
+          href="https://github.com/XirevGH/MAPP-Grupp03"
+          class="btn btn-primary"
+          target="_blank"
+          rel="noopener noreferrer"
+          style="display: inline-flex; align-items: center; gap: 0.5rem"
+        >
+          <svg
+            role="img"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+            width="18"
+            height="18"
+            fill="currentColor"
+          >
+            <path
+              d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"
+            />
+          </svg>
+          View Source Code on GitHub
+        </a>
       </div>
 
       <div class="project-detail-info">
-        <h3>Concept of the Game</h3>
+        <h3>Game Overview</h3>
         <p>
-          The game was conceived as an homage to titles reminiscent of Vampire
-          Survivors, but with a twist—integrating the beat and rhythm of music
-          to affect gameplay. The musical tempo would influence how fast attacks
-          were executed, blending rhythmic elements with dynamic action. Set
-          against a disco backdrop, every detail—from the vibrant,
-          color-shifting dancefloor to the lively light effects—reinforced the
-          festive atmosphere. The game features dynamic enemy spawns, multiple
-          unique attack types, and an evolving upgrade system that challenges
-          players while immersing them in an engaging audiovisual experience.
+          Developed over 7 weeks in Unity (C#) as a 6-person team project,
+          <strong>Survival on the Dancefloor</strong> is a fast-paced
+          survivor-like roguelite set in a retro disco nightclub. Taking
+          inspiration from Vampire Survivors, the core gameplay blends rhythmic
+          tempo with horde combat: the musical BPM directly drives attack
+          execution, while players navigate a procedural dancefloor, defeat
+          enemies for loot drops, and build modular weapons with persistent
+          meta-upgrades.
         </p>
 
         <figure>
@@ -171,42 +216,101 @@
             <source src="./Videos/GameplaySotD.mp4" type="video/mp4" />
             Your browser does not support the video tag.
           </video>
-          <figcaption>Video of highly upgraded gameplay</figcaption>
+          <figcaption>
+            Endgame gameplay showcase with active horde density and visual
+            effects
+          </figcaption>
         </figure>
 
-        <h3>Goals and Solutions</h3>
+        <h3>Core Technical Implementation</h3>
 
-        <h4>A. Creating the Disco Dancefloor</h4>
+        <h4>1. Event-Driven Audio Synchronization & Beat Dispatching</h4>
         <p>
-          <strong>Goal:</strong> Develop a dynamic floor that resembles a disco
-          dancefloor where players can move freely in all directions. The floor
-          needed randomized, harmonious color transitions to evoke a nightclub
-          ambiance.
+          Instead of using unconstrained update timers, combat actions and
+          rhythmic visuals are synchronized directly to the audio track using a
+          centralized event engine (<code>TriggerController</code>):
         </p>
-        <p>
-          <strong>Solution:</strong> I designed a white tile with black borders
-          that was later programmatically colored. Using Unity’s tilemap system,
-          I created a custom tile palette and wrote a script to iterate through
-          the camera’s visible boundaries. Each tile was assigned one of seven
-          color options with weighted random probabilities, ensuring that shades
-          of purple and other dynamic hues dominated the scene. Enhanced with
-          shadows and a soft inner glow, the floor truly popped on screen.
-        </p>
+        <ul>
+          <li>
+            <strong>BPM-Driven Subdivisions:</strong> The controller tracks the
+            track's active playback time and calculates note intervals
+            dynamically, exposing delegate registration for quarter notes, half
+            notes, and whole bars.
+          </li>
+          <li>
+            <strong>Modular Listener Registration:</strong> Weapons, UI note
+            meters, and camera pulsing subscribe their attack methods to
+            specific beat indices via <code>UnityAction</code> listeners
+            directly in code or the inspector.
+          </li>
+          <li>
+            <strong>Original Audio Synthesis:</strong> Synthesized custom 80s
+            synthwave sound effects (level-up chimes and death stings) from
+            scratch using modular synthesis in VCV Rack.
+          </li>
+        </ul>
 
-        <h4>B. Implementing Dynamic Enemy Spawning and Movement</h4>
+        <figure class="code-figure">
+          <div class="code-container">
+            <pre><code class="language-csharp">// Event-driven beat listener registration for rhythm synchronization
+public class TriggerController : MonoBehaviour
+{
+    [SerializeField] public Trigger[] triggers;
+    public UnityEvent[] triggerNumber;
+    private AudioSource onGameMusic;
+
+    // Registers a callback to trigger on a specific musical beat subdivision
+    public void SetTrigger(int triggerNumberIndex, UnityAction action)
+    {
+        triggers[triggerNumberIndex].number = triggerNumberIndex;
+        triggerNumber[triggerNumberIndex].AddListener(action);
+    }
+
+    public void CheckForNewQuarterNoteFloat(float interval)
+    {
+        if (onGameMusic == null) return;
+
+        float currentClipTime = onGameMusic.time;
+        if (Mathf.FloorToInt(currentClipTime / interval) &gt; lastQuoteNote)
+        {
+            lastQuoteNote = Mathf.FloorToInt(currentClipTime / interval);
+            quarterNoteTrigger.Invoke();
+        }
+    }
+}</code></pre>
+          </div>
+          <figcaption>
+            Centralized beat event dispatcher for rhythm-synchronized actions
+            (TriggerController.cs)
+          </figcaption>
+        </figure>
+
+        <h4>2. Multi-Camera Rendering & Selective 2D Bloom Pipeline</h4>
         <p>
-          <strong>Goal:</strong> Ensure the game environment felt alive by
-          spawning enemies dynamically based on the player’s view, with enemies
-          entering from beyond the camera bounds and moving toward the player.
+          To achieve a punchy retro nightclub aesthetic without washing out
+          gameplay elements, the visual pipeline uses a 3-camera architecture
+          with isolated 2D light layers:
         </p>
-        <p>
-          <strong>Solution:</strong> Initially, enemy spawns were based on tile
-          positions visible to the camera. Later, I refined this by using
-          colliders as designated spawn zones outside the camera’s range. This
-          allowed enemies to emerge evenly from all edges and move toward the
-          player seamlessly. I also ensured that once defeated, enemies would
-          stop moving to optimize performance and prevent erratic behavior.
-        </p>
+        <ul>
+          <li>
+            <strong>Isolated Camera Hierarchy:</strong> Scene rendering is split
+            across three dedicated cameras: a <em>Floor Camera</em>, an
+            <em>Objects/Player Camera</em>, and a
+            <em>Screen Space UI Camera</em>.
+          </li>
+          <li>
+            <strong>Selective Post-Processing Volumes:</strong> Dedicated Bloom
+            volumes allow high-intensity, pulsating neon light on the dancefloor
+            without overexposing character sprites, enemies, or UI elements.
+          </li>
+          <li>
+            <strong>Procedural Viewport Tilemap & Shaders:</strong> Built an
+            automated floor generation script that checks camera viewport bounds
+            to recycle tiles dynamically with weighted 7-color palette
+            distributions, complemented by a custom Shader Graph distortion
+            effect for the <code>ChillVibe</code> slow aura.
+          </li>
+        </ul>
 
         <figure>
           <img
@@ -215,109 +319,61 @@
             class="enlargeable-image"
           />
           <figcaption>
-            Dynamic disco dancefloor with randomized color tiles and enhanced
-            lighting effects with enemies spawning at the borders.
+            Dynamic disco dancefloor with randomized color tiles and border
+            enemy spawns
           </figcaption>
         </figure>
 
-        <h4>C. Designing and Refining Attack Mechanics</h4>
+        <h4>
+          3. Combat Hit-Registration & Distance-Sorted Proximity Targeting
+        </h4>
         <p>
-          <strong>Goal:</strong> Create responsive attack animations that
-          interact with multiple enemies while ensuring damage is applied only
-          once per attack cycle.
+          Weapons support both melee hit-validation and dynamic proximity
+          targeting:
         </p>
-        <p>
-          <strong>Solution:</strong> I developed an animated swinging
-          attack—initially conceptualized as a bass guitar swing—that included
-          dynamic collision detection via a HashSet. This system tracked enemies
-          already hit during an animation cycle and reset once the swing
-          returned to idle. I also incorporated particle effects and animated
-          damage numbers to visually communicate impact.
-        </p>
+        <ul>
+          <li>
+            <strong>State-Bound HashSet Hit-Validation:</strong> The Bass Guitar
+            swing uses a <code>HashSet&lt;Collider2D&gt;</code> to record hit
+            enemies during an active swing (<code>BassGuitarSwing</code>),
+            automatically flushing references upon returning to idle
+            (<code>BassGuitarIdle</code>) to prevent duplicate damage ticks per
+            frame.
+          </li>
+          <li>
+            <strong>Proximity Sorting with SortedSet:</strong> The Electric
+            Guitar lightning attack gathers enemies inside a circular trigger
+            and sorts them by distance using a
+            <code>SortedSet&lt;GameObject&gt;</code> with a custom distance
+            comparer (<code>GameObjectComparer</code>), cleanly tethering the
+            closest units via LINQ (<code>Take(amountOfTethers)</code>).
+          </li>
+          <li>
+            <strong>Trajectory Mathematics:</strong> Projectiles utilize
+            quadratic Bezier curve trajectories (<code>WaveTime.cs</code>) for
+            curving disc attacks and 360-degree <code>Mathf.Atan2</code> vector
+            calculations for independent dual-stick aiming.
+          </li>
+        </ul>
 
         <figure class="code-figure">
           <div class="code-container">
-            <pre><code class="language-csharp">private void OnTriggerStay2D(Collider2D other)
+            <pre><code class="language-csharp">// Dynamic lightning tether targeting using SortedSet proximity sorting
+public override void Attack()
 {
-    bool isCurrentlySwinging = anim.GetCurrentAnimatorStateInfo(0).IsName("BassGuitarSwing");
-    bool isEnemyAlreadyHit = colliders.Contains(other);
-    bool isEnemy = other.gameObject.CompareTag("Enemy");
-
-    if (isCurrentlySwinging && isEnemy && !isEnemyAlreadyHit)
+    if (gameObject.activeSelf && enemies.Count != 0)
     {
-        colliders.Add(other);
-        
-        DealDamage(other);
-    }
+        SoundManager.Instance.PlaySFX(attackSound, 1);
+        GameObject[] targetEnemies = GetClosestEnemies(AdjustTargetOverflow(amountOfTethers));
 
-    bool isCurrentlyIdle = anim.GetCurrentAnimatorStateInfo(0).IsName("BassGuitarIdle");
-
-    if (isCurrentlyIdle)
-    {
-        colliders.Clear();
-    }
-}
-            </code></pre>
-          </div>
-          <figcaption>
-            C# snippet of preventing multiple hits per swing.
-          </figcaption>
-        </figure>
-
-        <h4>D. Implementing a Force Lightning Mechanic</h4>
-        <p>
-          <strong>Goal:</strong> Develop an attack ability that simulates force
-          lightning, targeting enemies dynamically based on proximity.
-        </p>
-        <p>
-          <strong>Solution:</strong> I implemented an algorithm that gathered
-          nearby enemies via a circular collider and sorted them by distance
-          using a SortedSet with a custom comparer. This allowed the attack to
-          consistently target the nearest enemies, with the number of targets
-          adjustable according to upgrades.
-        </p>
-
-        <figure>
-          <video controls>
-            <source src="./Videos/ElectricGuitar.mp4" type="video/mp4" />
-            Your browser does not support the video tag.
-          </video>
-          <figcaption>
-            Video of Electric Guitar targeting nearest enemies.
-          </figcaption>
-        </figure>
-
-        <figure class="code-figure">
-          <div class="code-container">
-            <pre><code class="language-csharp">public override void Attack()
-{
-    if (gameObject.activeSelf)
-    {
-        if(enemies.Count != 0)
+        for (int i = 0; i &lt; targetEnemies.Length; i++)
         {
-            SoundManager.Instance.PlaySFX(attackSound, 1);
-            GameObject[] targetEnemies = GetClosestEnemies(AdjustTargetOverflow(amountOfTethers));
-            for (int i = 0; i &lt; targetEnemies.Length; i++)
-            {
-                GameObject clone = Instantiate(bolt);
-                clone.GetComponent&lt;ElectricBolt&gt;().SetPlayerObject(gameObject);
-                clone.GetComponent&lt;ElectricBolt&gt;().SetTargetUnit(targetEnemies[i]);
-                clone.SetActive(true);
-            }
+            GameObject clone = Instantiate(bolt);
+            clone.GetComponent&lt;ElectricBolt&gt;().SetPlayerObject(gameObject);
+            clone.GetComponent&lt;ElectricBolt&gt;().SetTargetUnit(targetEnemies[i]);
+            clone.SetActive(true);
         }
     } 
-}
-
-protected int AdjustTargetOverflow(int amountOfTethers)
-{
-    if (enemies.Count &lt; amountOfTethers)
-    {
-        return enemies.Count;
-    }
-    else
-    {
-        return amountOfTethers;
-    }
 }
 
 protected GameObject[] GetClosestEnemies(int amountOfTethers)
@@ -328,48 +384,68 @@ protected GameObject[] GetClosestEnemies(int amountOfTethers)
         sortedEnemies.Add(enemy);
     }
     return sortedEnemies.Take(amountOfTethers).ToArray();
-}
-            </code></pre>
+}</code></pre>
           </div>
-          <figcaption>Code for force lightning type ability.</figcaption>
+          <figcaption>
+            Proximity-based enemy sorting and dynamic bolt tethering
+            (ElectricGuitar.cs)
+          </figcaption>
         </figure>
 
-        <h4>E. Integrating Dynamic Joysticks and UI Elements</h4>
-        <p>
-          <strong>Goal:</strong> Ensure on‑screen controls function smoothly
-          across devices while maintaining a consistent UI experience.
-        </p>
-        <p>
-          <strong>Solution:</strong> After testing Unity’s new Input System
-          package and encountering lag, I reverted to a more reliable input
-          handling method. I adjusted the joystick hierarchy and configured
-          dynamic scaling for UI elements such as the health bar, guaranteeing
-          consistent usability and appearance on all screen sizes.
-        </p>
+        <figure>
+          <video controls>
+            <source src="./Videos/ElectricGuitar.mp4" type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+          <figcaption>
+            Demonstration of Electric Guitar targeting nearest enemies
+            dynamically
+          </figcaption>
+        </figure>
 
-        <h4>F. Developing an Extensive Upgrade and Meta-Upgrade System</h4>
+        <h4>4. Hierarchical Upgrade Architecture & JSON Persistence</h4>
         <p>
-          <strong>Goal:</strong> Create an upgrade system that allowed players
-          to improve weapons and abilities in real time and persist these
-          changes across sessions.
+          Progression and meta-progression are handled through an extensible OOP
+          hierarchy and reflection-driven stat modifications:
         </p>
-        <p>
-          <strong>Solution:</strong> I built a hierarchical upgrade system where
-          all items inherited from a common abstract class. Using reflection, I
-          enabled dynamic method calls to update item attributes and stored
-          these upgrade levels in a JSON file. This system managed both in-game,
-          immediate upgrades and meta-upgrades in the main menu, offering deep
-          progression and replay value.
-        </p>
+        <ul>
+          <li>
+            <strong>Polymorphic Item Hierarchy:</strong> All items inherit from
+            an abstract <code>Item</code> base class, sub-classed into
+            <code>Weapon</code>, <code>ProjectileWeapon</code>,
+            <code>TetheringWeapon</code>,
+            <code>PermanentProjectileWeapon</code>, and <code>Utility</code>.
+          </li>
+          <li>
+            <strong>Reflection-Driven Modifiers:</strong> C# reflection queries
+            item types and method names at runtime, enabling dynamic in-game
+            upgrades and UI slider bindings without brittle switch-case
+            statements.
+          </li>
+          <li>
+            <strong>Cross-Session JSON Save Data:</strong> Meta-progression
+            ranks, lifetime stats, and currency are serialized to persistent
+            JSON files, allowing seamless progress retention between runs and
+            the main menu meta-shop.
+          </li>
+          <li>
+            <strong>Boss Drop Containers:</strong> Implemented a modular drop
+            system (<code>Purse.cs</code>) where defeated bosses drop loot
+            containers that grant single randomized upgrades extracted from the
+            core upgrade pool.
+          </li>
+        </ul>
 
         <figure>
-          <img
-            src="./Images/hierarchy.png"
-            alt="Dynamic disco dancefloor with spawning enemies"
-            class="enlargeable-image"
-          />
+          <a href="./Images/hierarchy.png" class="lightbox-trigger">
+            <img
+              src="./Images/hierarchy.png"
+              alt="Item and upgrade class hierarchy"
+              class="enlargeable-image"
+            />
+          </a>
           <figcaption>
-            Hierarchy of items in the game, this eventually grew further.
+            Item and upgrade class hierarchy diagram (Click to enlarge)
           </figcaption>
         </figure>
 
@@ -379,118 +455,107 @@ protected GameObject[] GetClosestEnemies(int amountOfTethers)
             Your browser does not support the video tag.
           </video>
           <figcaption>
-            Video of meta upgrade system in the main menu and in-game upgrades.
+            Main menu meta-upgrade shop and in-game level-up progression
           </figcaption>
         </figure>
 
-        <h4>G. Handling Transitions and Scene Management</h4>
+        <h4>
+          5. Custom Editor Tooling, UI Pipeline & Multi-Language Localization
+        </h4>
         <p>
-          <strong>Goal:</strong> Create seamless transitions between game scenes
-          and menus for a polished user experience.
+          To streamline development and support internationalization, custom
+          editor tooling and UI systems were built:
         </p>
-        <p>
-          <strong>Solution:</strong> I integrated LeanTween to manage smooth UI
-          transitions and created chained animations that controlled the scaling
-          and positioning of UI elements. A crossfade effect using a fading
-          black overlay further enhanced scene transitions.
-        </p>
-
-        <h4>H. Fine-Tuning Visual Effects (VFX) and Particle Systems</h4>
-        <p>
-          <strong>Goal:</strong> Enhance the game’s visual appeal with dynamic
-          particle effects, trailing animations, and responsive VFX.
-        </p>
-        <p>
-          <strong>Solution:</strong> I refined various particle systems by
-          adjusting simulation parameters such as lifetime, emission rates, and
-          simulation spaces. The effects were tailored to accentuate attacks,
-          movement, and environmental lighting, all while integrating
-          post‑processing effects like bloom and vignette.
-        </p>
-
-        <h4>I. Performance and Bug Fixing</h4>
-        <p>
-          <strong>Goal:</strong> Optimize performance, manage memory
-          effectively, and resolve numerous bugs that arose from increasing
-          complexity.
-        </p>
-        <p>
-          <strong>Solution:</strong> Through careful playtesting and profiling,
-          I identified and fixed performance bottlenecks. Improvements included
-          adjusting tilemap generation boundaries, refining singleton
-          management, and implementing fail-safe collision and animation logic.
-          This systematic approach greatly stabilized the final game build.
-        </p>
-
-        <h3>My Role</h3>
-        <p>I held a multifaceted role throughout the project:</p>
         <ul>
           <li>
-            <strong>Technical Development:</strong> I authored the majority of
-            the overall codebase, focusing on key systems such as dynamic
-            tilemap generation, enemy spawning, attack animations, upgrading
-            systems, visual effects, post-process effects, lighting etc.
+            <strong
+              >Custom Unity Editor Inspector
+              (`DynamicJoystickEditor.cs`):</strong
+            >
+            Built custom inspector tooling using
+            <code>SerializedProperty</code> to configure screen-split touch
+            zones for movement and aiming.
           </li>
           <li>
-            <strong>Problem Solving:</strong> I resolved challenges ranging from
-            collision detection to performance optimization, refining gameplay
-            mechanics through iterative testing.
+            <strong>Touch Joystick Snap-Back Fix:</strong> Customized dynamic
+            touch controls to automatically reset to their home anchors on
+            release, preventing stuck inputs on mobile devices.
           </li>
           <li>
-            <strong>UI/UX and Visual Effects:</strong> I enhanced on-screen
-            controls, user interface responsiveness, and integrated advanced
-            visual effects and particle systems to enrich the game’s disco
-            atmosphere.
+            <strong>Multi-Language Localization Engine:</strong> Built a custom
+            text parser supporting 4 languages (English, Swedish, Dutch, and
+            Thai), dynamically formatting method names, upgrade stats, and
+            symbols (such as + and %) into UI templates.
           </li>
           <li>
-            <strong>Systems Integration and Persistence:</strong> I architected
-            and implemented an upgrade system that maintained player progress
-            via JSON-based persistence, ensuring seamless cross-session
-            continuity.
-          </li>
-          <li>
-            <strong>Collaboration:</strong> I worked closely with team members
-            to integrate various features and ensure a coherent final product.
+            <strong>LeanTween UI & Haptics:</strong> Programmed modal scale
+            transitions, scroll rect centering on selected items, screen flash
+            feedback, and mobile hardware vibration on player damage.
           </li>
         </ul>
 
-        <h3>Challenges and Learning Outcomes</h3>
-        <p>This project provided valuable insights:</p>
+        <h3>Key Challenges Overcome</h3>
+        <div class="challenge-solution">
+          <p class="challenge">
+            🎨 Post-Processing Overexposure on Layered 2D Sprites:
+          </p>
+          <p class="solution">
+            High-intensity bloom needed for the dancefloor severely overexposed
+            the player sprite and UI. Splitting rendering across a 3-camera
+            architecture with isolated layer volumes allowed the dancefloor to
+            flash vibrantly while characters and UI remained crisp.
+          </p>
+
+          <p class="challenge">
+            🎵 Audio Desynchronization Across Variable Framerates:
+          </p>
+          <p class="solution">
+            Standard delta-time update timers caused weapon attack cadences to
+            drift from the music during frame drops. Building an event-driven
+            <code>TriggerController</code>
+            that polls the audio playback position guaranteed frame-independent
+            beat alignment.
+          </p>
+
+          <p class="challenge">
+            ⚔️ Multi-Hit Trigger Glitches on Continuous Swings:
+          </p>
+          <p class="solution">
+            Melee hitbox colliders caused duplicate damage ticks per frame
+            during active swing animations. Implementing a state-bound
+            <code>HashSet&lt;Collider2D&gt;</code>
+            ensured enemies take damage exactly once per swing cycle and flushed
+            references cleanly on idle.
+          </p>
+
+          <p class="challenge">⚡ Dynamic Proximity Target Selection:</p>
+          <p class="solution">
+            Finding and tethering the closest enemies in dense hordes caused
+            performance hiccups with standard array sorting. Passing targets
+            through a
+            <code>SortedSet&lt;GameObject&gt;</code> with a custom distance
+            comparer allowed clean, efficient extraction of the nearest
+            candidates.
+          </p>
+        </div>
+
+        <h3>Project Outcome</h3>
+        <p>Delivered over the 7-week development cycle, the game achieved:</p>
         <ul>
           <li>
-            <strong>Managing Complexity:</strong> Addressing intricate code interactions and emphasizing modular design enhanced my approach to building scalable system architectures.
-
+            A complete survivor-like roguelite loop with tempo-driven combat and
+            custom audio synthesis
           </li>
           <li>
-            <strong>Dynamic Adaptation:</strong> Implementing runtime methods
-            via reflection deepened my understanding of dynamic system design.
+            A modular C# item hierarchy with persistent JSON meta-progression
+            and 4-language localization
           </li>
           <li>
-            <strong>Performance Optimization:</strong> Profiling and code
-            optimization techniques became crucial as the project’s complexity
-            grew.
-          </li>
-          <li>
-            <strong>UI/UX Responsiveness:</strong> Adapting interfaces to
-            multiple devices underlined the importance of responsive design.
-          </li>
-          <li>
-            <strong>Collaboration and Integration:</strong> Merging features
-            from different team members highlighted the need for clear coding
-            standards and adaptability.
+            A performant multi-camera 2D rendering pipeline with selective
+            post-processing bloom
           </li>
         </ul>
-
-        <h3>Conclusion</h3>
-        <p>
-          In summary, this project was an intensive and rewarding learning
-          experience. By blending rhythmic action with a striking disco
-          aesthetic, I developed a unique game that integrated dynamic gameplay,
-          robust upgrade mechanics, and rich visual effects. The challenges
-          overcome during development have sharpened my technical and creative
-          skills, and the solutions implemented have laid a strong foundation
-          for future projects.
-        </p>
+      </div>
 
       <div class="project-detail-links">
         <a
@@ -500,25 +565,25 @@ protected GameObject[] GetClosestEnemies(int amountOfTethers)
           rel="noopener noreferrer"
         >
           <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
+            role="img"
             viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            fill="currentColor"
+            style="margin-right: 0.5rem"
           >
-            <polygon points="5 3 19 12 5 21 5 3" />
+            <path
+              d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"
+            />
           </svg>
           View Source Code
         </a>
         <a href="index.html#projects" class="btn btn-secondary">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
+            width="20"
+            height="20"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
@@ -601,7 +666,7 @@ protected GameObject[] GetClosestEnemies(int amountOfTethers)
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"
                 height="24"
-                fill="currentColor"
+                fill="black"
               >
                 <title>X</title>
                 <path
@@ -674,7 +739,6 @@ protected GameObject[] GetClosestEnemies(int amountOfTethers)
       </svg>
     </button>
 
-    <script src="./js/script.js"></script>
     <div id="lightbox-overlay" class="lightbox-overlay">
       <span class="lightbox-close" id="lightbox-close" title="Close"
         >&times;</span
@@ -687,6 +751,7 @@ protected GameObject[] GetClosestEnemies(int amountOfTethers)
       />
       <div class="lightbox-caption" id="lightbox-caption"></div>
     </div>
+
     <script src="./js/script.js"></script>
     <script>
       document.addEventListener("DOMContentLoaded", () => {
@@ -702,7 +767,6 @@ protected GameObject[] GetClosestEnemies(int amountOfTethers)
           !lightboxClose ||
           !lightboxCaption
         ) {
-          console.warn("Lightbox elements not found. Enlargement disabled.");
           return;
         }
 
@@ -710,11 +774,13 @@ protected GameObject[] GetClosestEnemies(int amountOfTethers)
           img.style.cursor = "zoom-in";
           img.addEventListener("click", (event) => {
             event.preventDefault();
+
             const imageElement = event.currentTarget;
             const figureElement = imageElement.closest("figure");
             const captionElement = figureElement
               ? figureElement.querySelector("figcaption")
               : null;
+
             lightboxImage.src = imageElement.src;
             lightboxImage.alt = imageElement.alt;
 
@@ -724,6 +790,7 @@ protected GameObject[] GetClosestEnemies(int amountOfTethers)
             } else {
               lightboxCaption.style.display = "none";
             }
+
             lightboxOverlay.style.display = "flex";
           });
         });
