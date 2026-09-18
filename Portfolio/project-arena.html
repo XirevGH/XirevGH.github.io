@@ -18,6 +18,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlightjs-line-numbers.js/2.8.0/highlightjs-line-numbers.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script>
+      hljs.highlightAll();
+    </script>
   </head>
   <body class="project-detail-page">
     <nav id="navbar">
@@ -90,9 +93,9 @@
       </div>
 
       <div class="logo-container">
-        <a href="index.html#home" class="logo"
-          >David<span>da Costa</span> | Game <span>Programmer</span></a
-        >
+        <a href="index.html#home" class="logo">
+          David<span>da Costa</span> | Game <span>Programmer</span>
+        </a>
         <a class="mobile-email">david.dacosta.dev@outlook.com</a>
       </div>
 
@@ -144,339 +147,373 @@
     <div class="project-detail-header">
       <h1 class="project-detail-title">A.R.E.N.A</h1>
       <p class="project-detail-subtitle">
-        A Team-Based Arena Game - 2 months project
+        Networked Sci-Fi Arena Fighter - 7 Week Team Project
       </p>
     </div>
 
     <section class="project-detail-main-content" id="project-detail">
       <div class="project-detail-tags">
+        <span
+          class="project-tag"
+          style="font-weight: 600; border-color: #8a2be2"
+          >Role: Lead Gameplay & Network Programmer</span
+        >
         <span class="project-tag">Team Size: 5</span>
         <span class="project-tag">Time: 7 Weeks</span>
-        <span class="project-tag">UE 5</span>
+        <span class="project-tag">Unreal Engine 5</span>
         <span class="project-tag">C++</span>
+        <span class="project-tag">Gameplay Ability System (GAS)</span>
         <span class="project-tag">Networked Multiplayer</span>
       </div>
 
+      <!-- Quick Action Link Above the Fold -->
+      <div
+        class="project-quick-actions"
+        style="
+          margin: 1.25rem 0 2rem 0;
+          display: flex;
+          gap: 1rem;
+          flex-wrap: wrap;
+        "
+      >
+        <a
+          href="https://github.com/XirevGH/PROJ"
+          class="btn btn-primary"
+          target="_blank"
+          rel="noopener noreferrer"
+          style="display: inline-flex; align-items: center; gap: 0.5rem"
+        >
+          <svg
+            role="img"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+            width="18"
+            height="18"
+            fill="currentColor"
+          >
+            <path
+              d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"
+            />
+          </svg>
+          View Source Code on GitHub
+        </a>
+      </div>
+
       <div class="project-detail-info">
-        <h3>Project Overview</h3>
+        <h3>Game Overview</h3>
         <p>
-          This project is a team-based multiplayer combat game focusing on
-          robust networking, dynamic UI, and ability-driven combat using Unreal
-          Engine's Gameplay Ability System (GAS). Initially developed using
-          Steam matchmaking, the project was later migrated to Epic Online
-          Services (EOS) to overcome Steam's AppID testing limitations.
+          Developed over 7 weeks in Unreal Engine 5 (C++ and Blueprints) as a
+          5-person team project, <strong>A.R.E.N.A</strong> is a competitive
+          sci-fi hero arena fighter featuring 1v1, 2v2, and 3v3 team
+          deathmatches. Inspired by MMORPG arena combat, the game emphasizes
+          low-latency networked replication, MMO-style dual-mouse movement,
+          real-time overhead UI feedback, and modular ability combat driven by
+          the Gameplay Ability System (GAS).
         </p>
 
         <figure>
           <video controls>
-            <source src="./Videos/GameplayAction.mp4" type="video/mp4" />
+            <source src="./Videos/arena-healthbars.mp4" type="video/mp4" />
             Your browser does not support the video tag.
           </video>
-          <figcaption>
-            Early testing of Steam matchmaking and overhead UI elements
-          </figcaption>
+          <figcaption>1v1 multiplayer match</figcaption>
         </figure>
 
         <h3>Core Technical Implementation</h3>
 
-        <h4>Networking & The "TeamID" Challenge</h4>
+        <h4>
+          1. Session-Persistent Team Replication & Custom Replicated Structs
+        </h4>
         <p>
-          One of the biggest hurdles was managing team assignments across
-          different multiplayer sessions. In our lobby system, players join a
-          host, and the host's Unique Net ID becomes the <code>TeamID</code>.
-          When two teams find a match, they are merged into a new match session.
-          This transition caused players to lose their original TeamIDs.
+          When transitioning from pre-match lobbies into dedicated match
+          sessions, Unreal Engine destroys player actors, wiping session
+          identifiers. To preserve team identity and resolve Unreal's network
+          replication limits, a multi-tier replication pipeline was engineered:
         </p>
-        <p>To solve this, I designed a robust replication flow:</p>
         <ul>
           <li>
-            <strong>GameInstance:</strong> Stores the
-            <code>TeamID</code> locally so it survives session transitions.
+            <strong>GameInstance Handoff:</strong> When a lobby matches teams,
+            player controllers store their host-assigned
+            <code>TeamID</code> locally in the <code>GameInstance</code>,
+            bridging data across level transitions.
           </li>
           <li>
-            <strong>PlayerController:</strong> On <code>BeginPlay</code>, it
-            commands the GameMode to spawn the character chosen in the lobby.
+            <strong
+              >Replication of Nested Collections via Wrapper Structs:</strong
+            >
+            Because Unreal Engine cannot natively replicate
+            <code>TMap</code> collections or nested arrays, custom replicated
+            <code>USTRUCT()</code> containers (<code>S_PlayerStateTeams</code>)
+            were engineered to map string team IDs to arrays of
+            <code>PlayerState</code> pointers across the network.
           </li>
           <li>
-            <strong>PlayerState:</strong> Once initialized, the client pulls the
-            <code>TeamID</code> from their GameInstance and sends a Server RPC
-            to update the Server's version of the PlayerState.
-          </li>
-          <li>
-            <strong>RepNotify:</strong> The Server replicates this data back
-            down to all clients, triggering an <code>OnRep</code> function that
-            allows clients to locally reconstruct a Map mapping
-            <code>TeamID</code>s to arrays of <code>PlayerState</code>s.
+            <strong>C++ RepNotify Server Synchronization:</strong> In C++,
+            <code>ReplicatedUsing</code> callback functions (such as
+            <code>OnRep_TeamID</code>) do not trigger automatically on the
+            server/host. The authority pipeline explicitly calls these callbacks
+            server-side on assignment, ensuring client and host team maps remain
+            strictly synchronized.
           </li>
         </ul>
 
-        <figure>
-          <a
-            href="./Images/TeamID_ReplicationFlow.png"
-            class="lightbox-trigger"
-          >
-            <img
-              src="./Images/TeamID_ReplicationFlow.png"
-              alt="Blueprint flow for TeamID Replication"
-              class="enlargeable-image"
-              onerror="
-                this.onerror = null;
-                this.src =
-                  'https://placehold.co/800x400/1a1a1a/8A2BE2?text=TeamID+Replication+Blueprint';
-                this.style.objectFit = 'contain';
-              "
-            />
-          </a>
+        <figure class="code-figure">
+          <div class="code-container">
+            <pre><code class="language-cpp">// Server-side replication setup for TeamID in BasePlayerState.cpp
+void ABasePlayerState::GetLifetimeReplicatedProps(TArray&lt;FLifetimeProperty&gt;&amp; OutLifetimeProps) const
+{
+    Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+    // Replicate TeamID to all simulated proxies
+    DOREPLIFETIME(ABasePlayerState, TeamID);
+}
+
+void ABasePlayerState::SetTeamID(FString NewTeamID)
+{
+    TeamID = NewTeamID;
+    
+    // Explicitly call RepNotify on Server/Host to prevent host-client state divergence
+    OnRep_TeamID();
+}</code></pre>
+          </div>
           <figcaption>
-            Client checking for PlayerState readiness and fetching TeamID from
-            GameInstance (Click to enlarge)
+            Synchronizing replicated properties across Host and Client authority
+            (BasePlayerState.cpp)
           </figcaption>
         </figure>
 
-        <h4>Dynamic UI Systems (UMG)</h4>
+        <h4>2. Gameplay Ability System (GAS), Friendly Fire & Critical Hits</h4>
         <p>
-          I built a comprehensive UI framework that responds to network events,
-          including overhead nameplates, party frames, and scoreboards:
+          All combat abilities, cooldowns, and damage calculations are
+          implemented through Unreal Engine's Gameplay Ability System (GAS):
         </p>
         <ul>
           <li>
-            <strong>Overhead Healthbars & Castbars:</strong> Replicated over the
-            network. Opacity fades if line of sight is broken or if the target
-            is too far away. Friendly healthbars are colored green, while enemy
-            bars are red, calculated by comparing TeamIDs.
+            <strong>Centralized Enum Keybinding (`EAbilityInputID`):</strong>
+            Mapped input actions directly to GAS ability triggers using a custom
+            byte enum, allowing Enhanced Input contexts to activate abilities
+            cleanly.
           </li>
           <li>
-            <strong>Party & Enemy Frames:</strong> Automatically generated on
-            the side of the screen when players are added to a team. They
-            subscribe to <code>OnHealthUpdated</code> and
-            <code>OnCastStarted</code> events directly from the characters.
+            <strong>Team-Based Friendly Fire Filtering:</strong> Created custom
+            validation logic (<code>ShouldSkipHit</code>) on ability actors,
+            comparing caster and target <code>PlayerState</code> team IDs to
+            prevent damage, debuffs, or collision overlap on allies.
           </li>
           <li>
-            <strong>Scoreboard:</strong> Tracks Damage Done and Kills. Kills are
-            awarded via a payload sent to <code>OnHealthChanged</code> just
-            before a target dies.
+            <strong>Critical Hit Execution & Attribute Callbacks:</strong> In
+            <code>CharacterAttributeSet.cpp</code>
+            (<code>PostGameplayEffectExecute</code>), critical hits are
+            calculated with a 20% probability for 1.5x damage. The outcome is
+            packaged into a payload sent to the character, dynamically
+            triggering yellow (normal) or red (critical) floating damage
+            indicators.
+          </li>
+        </ul>
+
+        <figure class="code-figure">
+          <div class="code-container">
+            <pre><code class="language-cpp">// AttributeSet callback handling damage execution and crit dispatching
+void UCharacterAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbackData&amp; Data)
+{
+    Super::PostGameplayEffectExecute(Data);
+
+    if (Data.EvaluatedData.Attribute == GetIncomingDamageAttribute())
+    {
+        float DamageDealt = GetIncomingDamage();
+        SetIncomingDamage(0.0f);
+
+        if (DamageDealt &gt; 0.0f)
+        {
+            bool bIsCrit = (FMath::FRand() &lt;= 0.20f);
+            if (bIsCrit)
+            {
+                DamageDealt *= 1.5f;
+            }
+
+            // Apply health deduction and dispatch damage payload to UI
+            SetHealth(FMath::Clamp(GetHealth() - DamageDealt, 0.0f, GetMaxHealth()));
+
+            if (ACharacterBase* TargetChar = Cast&lt;ACharacterBase&gt;(Data.Target.GetAvatarActor()))
+            {
+                TargetChar-&gt;DisplayDamageNumber(DamageDealt, bIsCrit);
+            }
+        }
+    }
+}</code></pre>
+          </div>
+          <figcaption>
+            Processing damage calculations and crit states in GAS
+            (CharacterAttributeSet.cpp)
+          </figcaption>
+        </figure>
+
+        <h4>
+          3. Dynamic Replicated UI (UMG) & Consecutive Cast Synchronization
+        </h4>
+        <p>
+          I engineered a networked UI framework that reacts in real time to game
+          state changes, including overhead nameplates, party frames, cast bars,
+          and scoreboards:
+        </p>
+        <ul>
+          <li>
+            <strong>Line-of-Sight Overhead Nameplates:</strong> Overhead
+            nameplates query the target's <code>PlayerState</code> for team
+            affiliation (Green for friendly, Red for enemy). Nameplate opacity
+            dynamically fades based on camera distance and line-of-sight
+            raycasts.
+          </li>
+          <li>
+            <strong>Consecutive Cast Notification Hack (`S_CastInfo`):</strong>
+            When players cast the same spell repeatedly, identical replicated
+            variables would fail to trigger <code>OnRep</code> on clients
+            because the data had not changed. To solve this, a custom struct
+            (<code>S_CastInfo</code>) was built with an auto-incrementing
+            integer timestamp, forcing network dirtiness and ensuring every cast
+            bar triggers reliably.
+          </li>
+          <li>
+            <strong>Dynamic Party & Enemy Frames:</strong> Party frames
+            construct dynamically from replicated <code>GameState</code> player
+            arrays, subscribing to live health and cast delegates with safe
+            fallback handling for late-connecting clients.
+          </li>
+          <li>
+            <strong>End-of-Match Scoreboard & Rematch Voting:</strong>
+            Replicated scoreboard entries track kills and damage, exposing
+            player states directly on spawn. When the match concludes, a voting
+            loop tallies player votes in <code>GameState</code> and returns the
+            party to the lobby.
           </li>
         </ul>
 
         <figure>
           <img
-            src="./Images/PartyFrames.png"
+            src="./Images/party-frame.png"
             alt="Dynamic Party Frames UI"
             class="enlargeable-image"
-            onerror="
-              this.onerror = null;
-              this.src =
-                'https://placehold.co/800x400/1a1a1a/8A2BE2?text=Dynamic+Party+Frames+UI';
-            "
           />
           <figcaption>
             Dynamically generated Party Frames showing Casts and Health
           </figcaption>
         </figure>
 
-        <h4>Gameplay Mechanics & Controls</h4>
+        <h4>4. Memory-Optimized Lobby Architecture & DataTable Mannequins</h4>
         <p>
-          To mimic traditional MMORPG/Arena controls (like World of Warcraft), I
-          modified the input handling so that:
+          Loading heavy, combat-ready character Blueprints with full Gameplay
+          Ability System components inside pre-match lobbies caused excessive
+          memory usage and prolonged load times:
         </p>
         <ul>
           <li>
-            Holding <strong>Right-Click</strong> rotates both the camera and the
-            character.
+            <strong>Lightweight Lobby Mannequins:</strong> Created a dedicated
+            preview character (<code>BP_LobbyMannequin</code>) that completely
+            bypasses GAS initialization.
           </li>
           <li>
-            Holding <strong>Left-Click</strong> rotates only the camera without
-            affecting the character's facing direction.
+            <strong>DataTable-Driven Mesh Swapping:</strong> Preview characters
+            query a <code>DataTable</code> (<code>DT_CharacterLobbyData</code>)
+            to dynamically load skeletal meshes, material parameters, and lobby
+            idle animations without allocating combat memory.
           </li>
           <li>
-            Holding <strong>Both Mouse Buttons</strong> moves the character
-            forward.
+            <strong>Match Start Countdown Gates:</strong> Synchronized arena
+            barrier gates (<code>BP_StartGate</code>) that open across all
+            clients when preparation timers elapse.
           </li>
-          <li>Added smooth camera interpolation for zooming in and out.</li>
         </ul>
 
-        <h4>Gameplay Ability System (GAS) & Combat</h4>
+        <h4>5. MMO-Style Controls, Ground Decal Targeting & Debug Tooling</h4>
         <p>
-          I utilized GAS for all combat logic. A key feature was implementing
-          critical hits and team-based damage validation:
+          To deliver responsive, PC-arena controls, custom input mapping and
+          targeting tools were implemented:
         </p>
         <ul>
           <li>
-            <strong>Damage Validation:</strong> A "Should Skip Hit" custom node
-            ensures players cannot damage their own teammates by validating
-            TeamIDs before applying Gameplay Effects.
+            <strong>Dual-Mouse Navigation:</strong> Holding Right-Click rotates
+            both character and camera; holding Left-Click orbits the camera
+            independently; holding Both Mouse Buttons drives movement forward.
           </li>
           <li>
-            <strong>Critical Hits:</strong> Handled in a custom
-            <code>GameplayEffectExecutionCalculation</code> (GEEC). I
-            implemented a 20% chance to score a critical hit, resulting in 50%
-            extra damage. This flags the execution data, which the
-            <code>AttributeSet</code> reads to display red, floating damage
-            numbers for crits, and yellow for normal hits.
+            <strong>Ground Decal Reticle Targeting (`BP_Cast_AOE`):</strong>
+            Ground-targeted abilities project a cursor-snapping decal reticle
+            with cancel recovery logic, keeping the indicator anchored under the
+            mouse until cast confirmation.
+          </li>
+          <li>
+            <strong
+              >In-Game Developer Debug Menu (`WBP_DeveloperOptions`):</strong
+            >
+            Created an in-game developer panel allowing instant runtime
+            modification of <code>TeamID</code> and team arrays for rapid local
+            testing without re-launching multiple game instances.
           </li>
         </ul>
-
-        <figure class="code-figure">
-          <div class="code-container">
-            <pre><code class="language-cpp">// Custom Execution Calculation for Damage and Crits
-void UGEEC_DamageExecution::Execute_Implementation(const FGameplayEffectCustomExecutionParameters& ExecutionParams, FGameplayEffectCustomExecutionOutput& OutExecutionOutput) const
-{
-    float BaseDamage = 0.f;
-    // ... Fetch BaseDamage from attributes ...
-
-    bool bIsCriticalHit = (FMath::FRand() <= 0.20f); // 20% Crit Chance
-    
-    if (bIsCriticalHit)
-    {
-        BaseDamage *= 1.5f; // 50% Crit Multiplier
-    }
-
-    // Set dynamic tag or data for the UI to read the Crit state
-    OutExecutionOutput.AddOutputModifier(FGameplayModifierEvaluatedData(DamageProperty, EGameplayModOp::Additive, BaseDamage));
-}
-                </code></pre>
-          </div>
-          <figcaption>
-            C++ Example of handling critical hit logic within GAS
-          </figcaption>
-        </figure>
-
-        <figure>
-          <video controls>
-            <source src="./Videos/DamageNumbers.mp4" type="video/mp4" />
-            Your browser does not support the video tag.
-          </video>
-          <figcaption>
-            Demonstration of yellow (normal) and red (critical) floating damage
-            numbers.
-          </figcaption>
-        </figure>
 
         <h3>Key Challenges Overcome</h3>
         <div class="challenge-solution">
-          <p class="challenge">⏱️ Network Timing & Race Conditions:</p>
+          <p class="challenge">
+            📦 Replicating Complex Collections Across Sessions:
+          </p>
           <p class="solution">
-            Order of operations across a network is unpredictable. Trying to
-            access <code>PlayerState</code> or <code>GameState</code> on a
-            client before it was fully replicated caused crashes or empty UI
-            frames. I solved this by implementing robust retry-logic and tying
-            UI generation strictly to <code>OnRep</code> notifies rather than
-            local <code>BeginPlay</code> events.
+            Unreal Engine cannot replicate <code>TMap</code> collections or
+            nested arrays natively, and level transitions wipe player state
+            data. Wrapping arrays into custom replicated
+            <code>USTRUCT()</code> containers (<code>S_PlayerStateTeams</code>)
+            and caching team IDs in the local <code>GameInstance</code> enabled
+            seamless team reconstruction across match servers.
           </p>
 
-          <p class="challenge">📦 Lobby Resource Management:</p>
+          <p class="challenge">
+            ⏱️ Consecutive Identical Casts Failing to Trigger OnRep:
+          </p>
           <p class="solution">
-            Loading full combat characters in the lobby was resource-heavy. I
-            created a lightweight "Mannequin" lobby character that pulls visual
-            data (Skeletal Mesh, AnimBP, Materials) from a
-            <code>DataTable</code>, saving memory and load times.
+            Casting the exact same spell twice in a row caused Unreal's
+            replication system to skip sending updates because variable values
+            were identical. Embedding an incremental integer timestamp into the
+            replicated struct (<code>S_CastInfo</code>) forced property
+            dirtiness, guaranteeing cast bars update reliably every single cast.
           </p>
 
-          <p class="challenge">🔌 Steam AppID Restrictions:</p>
+          <p class="challenge">
+            🔄 C++ RepNotify Server/Host Desynchronization:
+          </p>
           <p class="solution">
-            Steam's default AppID (480) stopped broadcasting available sessions
-            reliably, making testing impossible. I made the executive decision
-            to migrate the entire project's matchmaking backend over to Epic
-            Online Services (EOS), which restored our ability to test over the
-            internet.
+            Unlike Blueprints, C++ <code>ReplicatedUsing</code> callback
+            functions do not automatically execute on the server when modified.
+            Explicitly invoking the <code>OnRep</code> callback server-side
+            during property assignment ensured host and client team logic
+            remained in parity.
+          </p>
+
+          <p class="challenge">
+            🔌 Steam AppID Restrictions & Session Broadcasting:
+          </p>
+          <p class="solution">
+            Steam's default testing AppID (480) stopped broadcasting available
+            sessions reliably, halting multiplayer testing. Migrating the
+            project matchmaking backend over to Epic Online Services (EOS)
+            restored reliable worldwide session discovery.
           </p>
         </div>
-        <h3>My Role</h3>
-        <p>
-          As a core programmer on this project, I took responsibility for the
-          networking backbone, UI architecture, and gameplay systems
-          integration. My main contributions included:
-        </p>
+
+        <h3>Project Outcome</h3>
+        <p>Delivered over the 7-week development cycle, the game achieved:</p>
         <ul>
           <li>
-            <strong>Multiplayer & Network Engineering:</strong> I handled the
-            matchmaking flow, migrating the project from Steam to Epic Online
-            Services (EOS). I engineered the replication logic for
-            <code>PlayerState</code> variables, ensuring custom data like
-            <code>TeamID</code> persisted flawlessly across server transitions
-            from the lobby to the active match.
+            A complete 1v1, 2v2, and 3v3 arena combat framework with low-latency
+            replication in C++
           </li>
           <li>
-            <strong>UI/UX & UMG Framework:</strong> I built the entire dynamic
-            UI system from the ground up. This included WoW-style party and
-            enemy frames that dynamically generate based on replicated network
-            data, overhead nameplates with line-of-sight opacity, floating
-            damage numbers, and a fully functional end-of-match scoreboard.
+            Full Gameplay Ability System (GAS) integration with team filtering
+            and critical hit calculations
           </li>
           <li>
-            <strong>Combat & Gameplay Ability System (GAS):</strong> I
-            integrated custom execution calculations within GAS to handle
-            critical hits and friendly fire prevention. I also developed the
-            WoW-style camera and movement controls, allowing for independent
-            camera rotation and dual-mouse-button movement.
-          </li>
-          <li>
-            <strong>Project Architecture & Optimization:</strong> I took the
-            initiative to refactor our C++ and Blueprint folder structures for
-            better scalability. Additionally, I optimized the lobby system by
-            creating a "Mannequin" actor driven by a <code>DataTable</code>,
-            bypassing the need to load heavy, combat-ready characters before the
-            match started.
+            Dynamic, replicated overhead nameplates, cast bars, party frames,
+            and scoreboard UI
           </li>
         </ul>
-
-        <h3>Challenges and Learning Outcomes</h3>
-        <p>
-          Working on a multiplayer game of this scale introduced several complex
-          problems that deeply improved my understanding of Unreal Engine's
-          networking framework:
-        </p>
-        <ul>
-          <li>
-            <strong>Network Order of Operations:</strong> The biggest recurring
-            challenge was race conditions. I learned firsthand that you cannot
-            rely on local <code>BeginPlay</code> events for multiplayer UI or
-            logic. Data takes time to travel, and I had to master the use of
-            <code>OnRep</code> functions and safe-retry logic to ensure
-            <code>PlayerState</code> and <code>GameState</code> were fully
-            initialized on clients before attempting to construct UI elements
-            like Party Frames.
-          </li>
-          <li>
-            <strong>Data Persistence Across Sessions:</strong> Unreal Engine
-            destroys most actors when transitioning between levels or sessions.
-            Learning how to leverage persistent local classes like the
-            <code>GameInstance</code> to temporarily hold data (like Team IDs)
-            and re-inject it into the Server upon connecting to a new map was a
-            major breakthrough.
-          </li>
-          <li>
-            <strong>Blueprint vs C++ Replication Quirks:</strong> I learned how
-            to navigate engine-specific limitations, such as the inability to
-            replicate Maps or Sets directly. I solved this by reconstructing the
-            data locally on clients using replicated Structs. I also learned
-            that C++ <code>ReplicatedUsing</code> (RepNotify) variables do not
-            automatically trigger their functions on the Server, requiring
-            manual calls to keep host/client logic synchronized.
-          </li>
-          <li>
-            <strong>Agile Problem Solving:</strong> When Steam's default AppID
-            480 stopped broadcasting our sessions, development came to a halt.
-            Deciding to rapidly pivot the entire backend to Epic Online Services
-            taught me how to stay adaptable and implement third-party SDKs under
-            pressure.
-          </li>
-        </ul>
-
-        <h3>Conclusion</h3>
-        <p>
-          This project was an incredible deep dive into the complexities of
-          multiplayer game development in Unreal Engine 5. By tackling severe
-          race conditions, migrating networking backends mid-development, and
-          successfully merging UI with the Gameplay Ability System, I gained a
-          profound appreciation for robust, scalable network architecture.
-        </p>
-        <p>
-          The challenges I faced with state replication and session management
-          have given me a solid, practical foundation in multiplayer
-          programming, skills that I now carry forward into every system I
-          architect.
-        </p>
       </div>
 
       <div class="project-detail-links">
@@ -487,25 +524,25 @@ void UGEEC_DamageExecution::Execute_Implementation(const FGameplayEffectCustomEx
           rel="noopener noreferrer"
         >
           <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
+            role="img"
             viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            fill="currentColor"
+            style="margin-right: 0.5rem"
           >
-            <polygon points="5 3 19 12 5 21 5 3" />
+            <path
+              d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"
+            />
           </svg>
           View Source Code
         </a>
         <a href="index.html#projects" class="btn btn-secondary">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
+            width="20"
+            height="20"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
@@ -524,9 +561,9 @@ void UGEEC_DamageExecution::Execute_Implementation(const FGameplayEffectCustomEx
     <footer>
       <div class="footer-content">
         <div class="footer-about">
-          <a href="index.html" class="footer-logo"
-            >David<span> da Costa</span></a
-          >
+          <a href="index.html" class="footer-logo">
+            David<span> da Costa</span>
+          </a>
           <p class="footer-description">
             Passionate game developer specializing in Unreal Engine and Unity.
             Building immersive worlds and engaging gameplay experiences.
@@ -538,7 +575,8 @@ void UGEEC_DamageExecution::Execute_Implementation(const FGameplayEffectCustomEx
               aria-label="LinkedIn Profile"
               target="_blank"
               rel="noopener noreferrer"
-              ><svg
+            >
+              <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"
                 height="24"
@@ -550,15 +588,17 @@ void UGEEC_DamageExecution::Execute_Implementation(const FGameplayEffectCustomEx
                   d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"
                 />
                 <path d="M2 9h4v12H2z" />
-                <circle cx="4" cy="4" r="2" /></svg
-            ></a>
+                <circle cx="4" cy="4" r="2" />
+              </svg>
+            </a>
             <a
               href="https://github.com/XirevGH"
               class="social-link"
               aria-label="GitHub Profile"
               target="_blank"
               rel="noopener noreferrer"
-              ><svg
+            >
+              <svg
                 role="img"
                 viewBox="0 0 24 24"
                 xmlns="http://www.w3.org/2000/svg"
@@ -569,27 +609,30 @@ void UGEEC_DamageExecution::Execute_Implementation(const FGameplayEffectCustomEx
                 <title>GitHub</title>
                 <path
                   d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"
-                /></svg
-            ></a>
+                />
+              </svg>
+            </a>
             <a
               href="https://x.com/xirevwow"
               class="social-link"
               aria-label="X (Twitter) Profile"
               target="_blank"
               rel="noopener noreferrer"
-              ><svg
+            >
+              <svg
                 role="img"
                 viewBox="0 0 24 24"
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"
                 height="24"
-                fill="currentColor"
+                fill="black"
               >
                 <title>X</title>
                 <path
                   d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z"
-                /></svg
-            ></a>
+                />
+              </svg>
+            </a>
           </div>
         </div>
         <div class="footer-links-group">
@@ -616,9 +659,9 @@ void UGEEC_DamageExecution::Execute_Implementation(const FGameplayEffectCustomEx
           <h4 class="footer-title">Contact</h4>
           <ul class="footer-links">
             <li>
-              <a href="mailto:david.dacosta.dev@outlook.com"
-                ><span>Email Me</span></a
-              >
+              <a href="mailto:david.dacosta.dev@outlook.com">
+                <span>Email Me</span>
+              </a>
             </li>
             <li>
               <a href="#"><span>Request CV</span></a>
@@ -655,11 +698,10 @@ void UGEEC_DamageExecution::Execute_Implementation(const FGameplayEffectCustomEx
       </svg>
     </button>
 
-    <script src="./js/script.js"></script>
     <div id="lightbox-overlay" class="lightbox-overlay">
-      <span class="lightbox-close" id="lightbox-close" title="Close"
-        >&times;</span
-      >
+      <span class="lightbox-close" id="lightbox-close" title="Close">
+        &times;
+      </span>
       <img
         src=""
         alt="Enlarged image"
@@ -669,6 +711,7 @@ void UGEEC_DamageExecution::Execute_Implementation(const FGameplayEffectCustomEx
       <div class="lightbox-caption" id="lightbox-caption"></div>
     </div>
 
+    <script src="./js/script.js"></script>
     <script>
       document.addEventListener("DOMContentLoaded", () => {
         const lightboxOverlay = document.getElementById("lightbox-overlay");
@@ -683,7 +726,6 @@ void UGEEC_DamageExecution::Execute_Implementation(const FGameplayEffectCustomEx
           !lightboxClose ||
           !lightboxCaption
         ) {
-          console.warn("Lightbox elements not found. Enlargement disabled.");
           return;
         }
 
