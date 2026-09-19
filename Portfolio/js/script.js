@@ -100,7 +100,6 @@
     const wordsToType = [
       "David da Costa",
       "a Game Developer",
-      "a Gameplay Programmer",
       "a Systems Programmer",
     ];
     let wordIndex = 0;
