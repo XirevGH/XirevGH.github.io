@@ -224,10 +224,7 @@
 
         <figure>
           <video controls>
-            <source
-              src="./Videos/EscapeSequence.mp4"
-              type="video/mp4"
-            />
+            <source src="./Videos/EscapeSequence.mp4" type="video/mp4" />
             Your browser does not support the video tag.
           </video>
           <figcaption>
@@ -691,17 +688,18 @@ AEnemyAI* AEnemySpawner::SpawnEnemy(const TSubclassOf&lt;AEnemyAI&gt;&amp; Enemy
           the wireframe scans in reverse back to black.
         </p>
         <p>
-          Additionally, low-level viewport client fading
-          (<code>CustomGameViewportClient.cpp</code>) executes hardware-level
-          canvas fades during level streaming, while
-          <code>BP_GameInstance</code>
-          ensures seamless background music persistence across sub-level
-          transitions:
+          For seamless level streaming, I engineered a custom viewport client
+          (<code>CustomGameViewportClient.cpp</code>) that draws direct canvas
+          screen fades, paired with a persistent
+          <code>BP_GameInstance</code> audio pipeline that prevents music from
+          restarting or hitching during level loads.
         </p>
 
         <h3>Key Challenges Overcome</h3>
         <div class="challenge-solution">
-          <p class="challenge"><b>High-Latency 3D Volumetric A* Searches:</b></p>
+          <p class="challenge">
+            <b>High-Latency 3D Volumetric A* Searches:</b>
+          </p>
           <p class="solution">
             Profiling with Unreal Insights revealed that long-range 3D voxel
             searches initially cost up to 81.3 ms on the main thread. Porting
@@ -710,42 +708,57 @@ AEnemyAI* AEnemySpawner::SpawnEnemy(const TSubclassOf&lt;AEnemyAI&gt;&amp; Enemy
             overhead by over 70%.
           </p>
 
-          <p class="challenge"><b>Combat Pacing & Trailing AI in Distant Rooms:</b></p>
+          <p class="challenge">
+            <b>Combat Pacing & Trailing AI in Distant Rooms:</b>
+          </p>
           <p class="solution">
-            Enemies spawned in previous areas frequently lagged behind, taking too long to reach
-            the player and leaving combat encounters sparse. To maintain consistent horde intensity,
-            the <code>UEnemySpawnManagerSubsystem</code> maps spawners to spatial room triggers,
-            activating only spawners in the player's immediate sector. Additionally, a recurring timer
-            evaluates <code>DistanceToTargetSquared</code> via the AI blackboard, automatically teleporting
-            trailing enemies to active spawners ahead of the player.
+            Enemies spawned in previous areas frequently lagged behind, taking
+            too long to reach the player and leaving combat encounters sparse.
+            To maintain consistent horde intensity, the
+            <code>UEnemySpawnManagerSubsystem</code> maps spawners to spatial
+            room triggers, activating only spawners in the player's immediate
+            sector. Additionally, a recurring timer evaluates
+            <code>DistanceToTargetSquared</code> via the AI blackboard,
+            automatically teleporting trailing enemies to active spawners ahead
+            of the player.
           </p>
 
-          <p class="challenge"><b>Automated NavLink Jumping & Level Design Tooling:</b></p>
+          <p class="challenge">
+            <b>Automated NavLink Jumping & Level Design Tooling:</b>
+          </p>
           <p class="solution">
-            Manually placing and configuring custom jump trajectories across multi-tiered platforms
-            would have created an enormous workflow bottleneck for level designers. I automated the
-            process by enabling automatic NavLink generation in RecastNavMesh and programming dynamic
-            ballistic jump calculations (<code>SuggestProjectileVelocityCustomArc</code>). Launch
-            velocities and gravity dynamically adjust based on trajectory direction, ensuring spiders
-            automatically clear obstacles whether leaping upward or downward without manual setup.
+            Manually placing and configuring custom jump trajectories across
+            multi-tiered platforms would have created an enormous workflow
+            bottleneck for level designers. I automated the process by enabling
+            automatic NavLink generation in RecastNavMesh and programming
+            dynamic ballistic jump calculations
+            (<code>SuggestProjectileVelocityCustomArc</code>). Launch velocities
+            and gravity dynamically adjust based on trajectory direction,
+            ensuring spiders automatically clear obstacles whether leaping
+            upward or downward without manual setup.
           </p>
 
-          <p class="challenge"><b>AI Navigation Stalls on Multi-Level Geometry:</b></p>
+          <p class="challenge">
+            <b>AI Navigation Stalls on Multi-Level Geometry:</b>
           </p>
           <p class="solution">
             Enemies occasionally became trapped behind dynamic obstacles or
-            steep geometry. Engineered an automated Behavior Tree recovery
-            engine (<code>BTTask_RelocateStuckEnemy</code>) that monitors
+            steep geometry. I Engineered an automated Behavior Tree recovery
+            task (<code>BTTask_RelocateStuckEnemy</code>) that monitors
             stationary timers and recycles trapped actors back into active room
             pools.
           </p>
-          <p class="challenge"><b>Swarm Stacking & Wall Clipping on Target Perimeters:</b></p>
+          <p class="challenge">
+            <b>Swarm Stacking & Wall Clipping on Target Perimeters:</b>
+          </p>
           <p class="solution">
-            Horde enemies seeking a single root pivot collapsed into tight clumps and attempted to path
-            through walls when targets stood near obstacles. I implemented a radial ring of target sockets
-            around players and generators, paired with a three-stage C++ validation pipeline (line-of-sight
-            trace, solid penetration check, and ground clearance clamp) that prunes blocked nodes so AI
-            only paths to open, reachable positions.
+            Horde enemies seeking a single root pivot collapsed into tight
+            clumps and attempted to path through walls when targets stood near
+            obstacles. I implemented a radial ring of target sockets around
+            players and generators, paired with a three-stage C++ validation
+            pipeline (line-of-sight trace, solid penetration check, and ground
+            clearance clamp) that prunes blocked nodes so AI only paths to open,
+            reachable positions.
           </p>
         </div>
 
