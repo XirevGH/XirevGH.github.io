@@ -164,7 +164,7 @@
         <span class="project-tag">C++</span>
         <span class="project-tag">3D Volumetric Pathfinding</span>
         <span class="project-tag">Gameplay Ability System (GAS)</span>
-        <span class="project-tag">Subsystem Architecture</span>
+        <span class="project-tag">Subsystems</span>
       </div>
 
       <!-- Quick Action Link Above the Fold -->
@@ -203,23 +203,17 @@
       <div class="project-detail-info">
         <h3>Game Overview</h3>
         <p>
-          <strong>Escape Sequence</strong> is an intense sci-fi wave defense
-          shooter developed in Unreal Engine 5. Players defend high-value
-          objectives (such as power generators and reactors) and fight to
-          survive against alien bug swarms trying to dismantle the facility.
+          <strong>Escape Sequence</strong> is a sci-fi wave defense FPS built in
+          Unreal Engine 5. Players defend base objectives (generators and reactors)
+          from incoming waves of alien bug swarms.
         </p>
         <p>
-          As the lead systems and AI programmer, I architected the complete
-          enemy lifecycle, from
-          <strong
-            >modifying and integrating an asynchronous 3D volumetric pathfinding
-            plugin</strong
-          >
-          for flying enemies and
-          <strong>dynamic ballistic jump trajectories</strong> for ground
-          swarms, to <strong>Gameplay Ability System (GAS) combat</strong>,
-          DataAsset-driven spawning pipelines, and
-          <strong>Unreal Engine Subsystem architecture</strong>.
+          I worked as the lead systems and AI programmer, building the core
+          gameplay and enemy systems. This included porting an open-source 3D
+          volumetric pathfinding plugin to UE5 and making it run asynchronously on
+          background threads, setting up jump calculations for ground swarms,
+          implementing abilities with Gameplay Ability System (GAS), and
+          building wave spawning with Unreal World Subsystems.
         </p>
 
         <figure>
@@ -228,42 +222,35 @@
             Your browser does not support the video tag.
           </video>
           <figcaption>
-            Sci-fi wave defense gameplay showcasing flying and ground swarm
-            combat
+            Gameplay demonstration showing flying and ground swarm combat
           </figcaption>
         </figure>
 
-        <h3>Core Technical Architecture</h3>
+        <h3>Core Technical Implementation</h3>
 
-        <h4>
-          1. Async Multi-Threaded 3D Volumetric Pathfinding Plugin Integration
-        </h4>
+        <h4>1. Asynchronous 3D Volumetric Pathfinding in UE5</h4>
         <p>
-          Flying enemies required full 3D spatial mobility without being
-          restricted by standard 2D Recast NavMeshes. I integrated an
-          open-source UE4 3D volumetric navigation plugin and extensively
-          modified it for Unreal Engine 5, resolving compatibility breaking
-          changes and re-engineering its synchronous architecture into an
-          asynchronous worker-thread pipeline:
+          Standard 2D Recast NavMeshes could not handle flying enemies moving freely
+          in 3D space. I ported an open-source UE4 3D volumetric navigation plugin
+          to Unreal Engine 5, fixed engine-breaking API changes, and converted it
+          from a synchronous system to run on background worker threads:
         </p>
         <ul>
           <li>
-            <strong>Off-Thread A* Execution:</strong> Rebuilt the pathfinder to
-            calculate routes inside a lightweight lambda on a background thread
-            pool via <code>ExecutePathfindingOnThread()</code>, completely
-            eliminating Game Thread hitches.
+            <strong>Background A* Execution:</strong> Rebuilt path calculation to
+            run as an asynchronous task on a thread pool, preventing frame drops
+            on the Game Thread when multiple enemies request paths simultaneously.
           </li>
           <li>
-            <strong>Atomic Search Identification:</strong> Engineered
-            thread-safe atomic <code>SearchID</code> increments to isolate
-            concurrent path requests across multiple flying enemies
-            simultaneously without data races.
+            <strong>Thread-Safe Search IDs:</strong> Used atomic
+            <code>FPlatformAtomics::InterlockedIncrement</code> counters to assign
+            unique search IDs, keeping concurrent path requests isolated across
+            threads.
           </li>
           <li>
-            <strong>Top-Down Voxel Error Correction:</strong> Resolved
-            false-positive collisions where voxel cubes slightly overlapped
-            geometry by implementing downward raycast sweeps from the target
-            origin, ensuring path endpoints always snap to valid open space.
+            <strong>Voxel Collision Checks:</strong> Added downward raycasts from
+            target points to correct voxel overlap issues against level geometry,
+            ensuring path ends snap to valid open positions.
           </li>
         </ul>
 
@@ -290,16 +277,14 @@ void UNavigationSubsystem3D::FindPathAsync(
 }</code></pre>
           </div>
           <figcaption>
-            Multi-threaded asynchronous 3D pathfinding dispatcher using atomic
-            search counters
+            Asynchronous 3D pathfinding dispatcher running A* on thread pool tasks
           </figcaption>
         </figure>
 
         <p>
-          The volumetric grid constructs a dynamic 3D voxel space where nodes
-          continuously evaluate world geometry. This enables flying enemies to
-          plot paths above obstacles, through doorways, and around structural
-          pillars in full three-dimensional space:
+          The volumetric grid divides open space into 3D voxels to check geometry.
+          This lets flying enemies navigate over barricades, through doorways, and
+          around pillars in full 3D space:
         </p>
 
         <figure>
@@ -315,29 +300,26 @@ void UNavigationSubsystem3D::FindPathAsync(
               "
             />
           </a>
-          <figcaption>A* Pathfinding Algorithm (Click to enlarge)</figcaption>
+          <figcaption>A* Pathfinding Algorithm diagram (Click to enlarge)</figcaption>
         </figure>
 
-        <h4>2. Perimeter Target Node Distribution & Ground Swarm Ballistics</h4>
+        <h4>2. Target Encircling, NavMesh Projection & Ground Swarms</h4>
         <p>
-          If approaching swarm enemies all navigate toward an actor's central
-          root pivot, they will collapse into a congested clump on top of each
-          other. To create natural crowd encircling, both player characters and
-          defendable generators feature a ring of radial target nodes
-          (<code>EnemyTargetSpheres</code>) attached around their perimeters.
-          Incoming AI units query <code>GetMovementNodes()</code> to claim
-          distinct points around their target.
+          When all swarm enemies path directly to a player's center pivot, they
+          bunch up into a single tight clump. To spread them out naturally,
+          players and defendable objectives have a ring of radial target sockets
+          (<code>EnemyTargetSpheres</code>) around their perimeter. Enemies query
+          <code>GetMovementNodes()</code> to pick open positions around the target.
         </p>
         <p>
-          When a player or generator is situated near walls or uneven terrain,
-          attached nodes can easily clip into geometry or hover over ledges. To
-          prevent AI from picking invalid positions, these perimeter nodes
-          undergo a rigorous three-stage validation pipeline in C++:
+          To prevent enemies from targeting nodes that clip into walls or hang off
+          ledges, nodes are filtered in C++ with line-of-sight traces, solid
+          geometry checks, and ground distance tests:
         </p>
 
         <figure class="code-figure">
           <div class="code-container">
-            <pre><code class="language-cpp">// Multi-stage target node validation and line-of-sight filtering in PlayerCharacter.cpp
+            <pre><code class="language-cpp">// Multi-stage target node validation in PlayerCharacter.cpp
 TArray&lt;USphereComponent*&gt; APlayerCharacter::GetMovementNodes()
 {
     TRACE_CPUPROFILER_EVENT_SCOPE(TEXT("STAT_PC_GetMovementNodes_Total"));
@@ -346,49 +328,28 @@ TArray&lt;USphereComponent*&gt; APlayerCharacter::GetMovementNodes()
     TempValidMovementNodes.Reserve(EnemyTargetSpheres.Num());
 
     float PlayerGroundDist;
-    bool bPlayerIsNearGround;
-    {
-        TRACE_CPUPROFILER_EVENT_SCOPE(TEXT("STAT_PC_GetMovementNodes_IsPlayerNearGround"));
-        bPlayerIsNearGround = IsPlayerConsideredNearGround(PlayerGroundDist);
-    }
+    bool bPlayerIsNearGround = IsPlayerConsideredNearGround(PlayerGroundDist);
 
+    for (TObjectPtr&lt;USphereComponent&gt; Node : EnemyTargetSpheres)
     {
-        TRACE_CPUPROFILER_EVENT_SCOPE(TEXT("STAT_PC_GetMovementNodes_Loop"));
-        for (TObjectPtr&lt;USphereComponent&gt; Node : EnemyTargetSpheres)
+        if (!Node) continue;
+
+        // 1. Line-of-sight check to node
+        if (!HasLineOfSightToNode(Node.Get())) continue;
+    
+        // 2. Filter out nodes embedded inside solid level geometry
+        if (IsNodeInsideSolid(Node.Get())) continue;
+    
+        // 3. Check ground clearance when target is on the ground
+        float NodeToGroundDist;
+        bool bNodeHasGround = GetNodeDistanceToGround(Node.Get(), NodeToGroundDist);
+
+        if (bPlayerIsNearGround &amp;&amp; (!bNodeHasGround || NodeToGroundDist &gt; NodeMaxAerialGroundDistance))
         {
-            if (!Node) continue;
-
-            // 1. Filter out perimeter nodes occluded behind walls
-            bool bHasLineOfSight;
-            {
-                TRACE_CPUPROFILER_EVENT_SCOPE(TEXT("STAT_PC_GetMovementNodes_LineOfSightCheck"));
-                bHasLineOfSight = HasLineOfSightToNode(Node.Get());
-            }
-            if (!bHasLineOfSight) continue;
-        
-            // 2. Filter out nodes embedded inside solid level geometry
-            bool bIsInsideSolid;
-            {
-                TRACE_CPUPROFILER_EVENT_SCOPE(TEXT("STAT_PC_GetMovementNodes_IsNodeInsideSolid"));
-                bIsInsideSolid = IsNodeInsideSolid(Node.Get());
-            }
-            if (bIsInsideSolid) continue;
-        
-            // 3. Verify valid ground clearance when target is grounded
-            float NodeToGroundDist;
-            bool bNodeHasGround;
-            {
-                TRACE_CPUPROFILER_EVENT_SCOPE(TEXT("STAT_PC_GetMovementNodes_GetNodeDistToGround"));
-                bNodeHasGround = GetNodeDistanceToGround(Node.Get(), NodeToGroundDist);
-            }
-
-            if (bPlayerIsNearGround &amp;&amp; (!bNodeHasGround || NodeToGroundDist &gt; NodeMaxAerialGroundDistance))
-            {
-                continue;
-            }
-
-            TempValidMovementNodes.Add(Node);
+            continue;
         }
+
+        TempValidMovementNodes.Add(Node);
     }
 
     TArray&lt;USphereComponent*&gt; ResultArray;
@@ -402,18 +363,15 @@ TArray&lt;USphereComponent*&gt; APlayerCharacter::GetMovementNodes()
 }</code></pre>
           </div>
           <figcaption>
-            Multi-stage target node validation ensuring AI only paths to
-            reachable perimeter positions (PlayerCharacter.cpp)
+            Validating perimeter target nodes against walls and ground clearance (PlayerCharacter.cpp)
           </figcaption>
         </figure>
 
         <p>
-          A major challenge with standard NavMesh AI occurred when the player
-          jumped or launched into the air: ground enemies lost their path and
-          stalled. I developed a custom downward NavMesh projection algorithm
-          that projects the player's 3D airborne coordinate down to the nearest
-          walkable ground polygon, ensuring ground swarms maintain continuous
-          pursuit:
+          When the player jumped into the air, ground enemies using standard
+          NavMesh lost their path and stopped moving. I added a downward projection
+          check that maps the player's airborne 3D position down to the closest
+          walkable NavMesh polygon so ground enemies keep pursuing:
         </p>
 
         <figure>
@@ -422,17 +380,15 @@ TArray&lt;USphereComponent*&gt; APlayerCharacter::GetMovementNodes()
             Your browser does not support the video tag.
           </video>
           <figcaption>
-            Before and after comparison: ground enemies stalling versus
-            maintaining pursuit using custom NavMesh downward projection
+            Comparison: ground enemies stalling in mid-air versus maintaining pursuit using downward NavMesh projection
           </figcaption>
         </figure>
 
         <p>
-          To enhance crowd behavior further, Reciprocal Velocity Obstacles (RVO)
-          avoidance was tuned with a 500cm avoidance consideration radius on
-          spider swarms and 0cm on the player. This enables enemies to naturally
-          push apart and avoid overlapping while allowing the player to freely
-          maneuver through the horde without being physically body-blocked:
+          To prevent spiders from overlapping into a single line, RVO avoidance
+          was set to a 500cm radius on enemies and 0cm on the player. Enemies
+          naturally push apart around the target while the player can still move
+          through the swarm without getting body-blocked:
         </p>
 
         <figure>
@@ -441,43 +397,40 @@ TArray&lt;USphereComponent*&gt; APlayerCharacter::GetMovementNodes()
             Your browser does not support the video tag.
           </video>
           <figcaption>
-            Crowd behavior comparison: single-line stacking versus perimeter
-            node encircling and RVO avoidance
+            Crowd behavior: straight-line stacking versus perimeter encircling with RVO avoidance
           </figcaption>
         </figure>
 
         <p>
-          Ground swarms evaluate target distance, line of sight, and dynamic
-          attack states using custom Behavior Tree services, with automated
-          recovery tasks (<code>BTTask_RelocateStuckEnemy</code>) that detect if
-          an enemy becomes pinned on geometry and recycle them to an active room
-          spawner:
+          Spiders use Behavior Trees to manage pursuit, attack ranges, and line of
+          sight. A custom recovery task (<code>BTTask_RelocateStuckEnemy</code>)
+          detects if an enemy gets stuck on geometry and teleports them back to an
+          active spawner:
         </p>
 
         <figure>
           <a href="./Images/spider-behavior-tree.png" class="lightbox-trigger">
             <img
               src="./Images/spider-behavior-tree.png"
-              alt="Spider Behavior Tree Architecture"
+              alt="Spider Behavior Tree"
               class="enlargeable-image"
               onerror="
                 this.onerror = null;
                 this.src =
-                  'https://placehold.co/800x450/0d1b2a/00BFFF?text=Spider+Behavior+Tree+Architecture';
+                  'https://placehold.co/800x450/0d1b2a/00BFFF?text=Spider+Behavior+Tree';
               "
             />
           </a>
           <figcaption>
-            Spider Behavior Tree logic and state evaluations (Click to enlarge)
+            Spider Behavior Tree logic and state checks (Click to enlarge)
           </figcaption>
         </figure>
 
         <p>
-          Ground spiders navigate vertical arena platforms using custom
-          <code>BP_NavLinks</code> proxy calculations. Launch velocities
-          dynamically scale based on jump direction: jumping upward uses steeper
-          arcs with lower gravity (-6000), while jumping downward applies heavy
-          gravity (-11000) to clear platform edges cleanly:
+          Spiders jump between vertical platforms using custom <code>BP_NavLinks</code>.
+          Jump velocities adjust based on direction: upward jumps use higher arcs
+          with lower gravity (-6000), while downward jumps use heavy gravity
+          (-11000) to clear platform edges cleanly:
         </p>
 
         <figure>
@@ -486,15 +439,13 @@ TArray&lt;USphereComponent*&gt; APlayerCharacter::GetMovementNodes()
             Your browser does not support the video tag.
           </video>
           <figcaption>
-            Ground spider NavLink jumps executing custom ballistic launch
-            velocities across multi-level platforms
+            Spiders jumping across vertical platforms using calculated launch velocities
           </figcaption>
         </figure>
 
         <p>
-          Flying Wasps utilize Perlin noise vector math in Blueprint to generate
-          natural bob-and-weave flight patterns, steering smoothly along reused
-          spline components (<code>BP_FlyingEnemySplinePath</code>):
+          Flying Wasps use Perlin noise vector offsets to create bobbing flight
+          movement, steering along reused spline components (<code>BP_FlyingEnemySplinePath</code>):
         </p>
 
         <figure>
@@ -503,35 +454,30 @@ TArray&lt;USphereComponent*&gt; APlayerCharacter::GetMovementNodes()
             Your browser does not support the video tag.
           </video>
           <figcaption>
-            Wasps utilizing Perlin noise flight steering along 3D splines
+            Flying Wasps following 3D spline paths with Perlin noise flight offsets
           </figcaption>
         </figure>
 
-        <h4>3. Gameplay Ability System (GAS), Chain Lightning & Combat VFX</h4>
+        <h4>3. Gameplay Ability System (GAS) & Combat Abilities</h4>
         <p>
-          Player weapons and specialized enemy behaviors are engineered natively
-          within Epic's Gameplay Ability System (GAS):
+          Player weapons and enemy attack behaviors are built using Unreal's
+          Gameplay Ability System (GAS):
         </p>
         <ul>
           <li>
-            <strong>Chain Lightning Ability (`GA_Fire_Chaining`):</strong>
-            Spawns an initial electric projectile that applies damage stagger,
-            subsequently calculating nearest candidate targets and propagating
-            chained lightning arcs between enemy sockets.
+            <strong>Chain Lightning (`GA_Fire_Chaining`):</strong> Fires an electric
+            projectile that finds nearby enemies and arcs lightning between target
+            sockets on impact.
           </li>
           <li>
-            <strong>Suicide Drone Ability Suite:</strong> The exploding drone
-            ("GloOrb") utilizes <code>GA_ExplodeAttack</code>,
-            <code>GE_AOE_ExplosionDamage</code>, and
-            <code>GC_ChargeUpExplosion</code> to handle suction toward targets,
-            material parameter charge-up scaling, and dual pre-death explosion
-            triggers.
+            <strong>Exploding Drone ("GloOrb"):</strong> Uses <code>GA_ExplodeAttack</code>,
+            <code>GE_AOE_ExplosionDamage</code>, and <code>GC_ChargeUpExplosion</code>
+            to handle target pull, charging materials, and detonation on death.
           </li>
           <li>
             <strong>Distance-Scaled Damage Numbers:</strong> Damage indicators
-            (<code>BP_DamageAmount</code>) dynamically scale their screen-space
-            offset and spread radius based on camera distance, preventing UI
-            clutter during long-range combat.
+            (<code>BP_DamageAmount</code>) scale their screen-space offset and spread
+            radius based on distance to the camera to keep text readable.
           </li>
         </ul>
 
@@ -549,58 +495,42 @@ TArray&lt;USphereComponent*&gt; APlayerCharacter::GetMovementNodes()
             />
           </a>
           <figcaption>
-            Chain lightning arc propagation across enemy sockets (Click to
-            enlarge)
+            Chain lightning arc propagation across enemy sockets (Click to enlarge)
           </figcaption>
         </figure>
 
-        <h4>
-          4. Subsystem Architecture, Type-Segregated Pooling & Contextual
-          Spawning
-        </h4>
+        <h4>4. Subsystems, Object Pooling & Wave Spawning</h4>
         <p>
-          Enemy spawning and wave coordination are managed globally by
-          <code>UEnemySpawnManagerSubsystem</code> (a
-          <code>UWorldSubsystem</code>), completely decoupling spawn logic from
-          scene-dependent actors:
+          Spawning and wave management are coordinated globally through
+          <code>UEnemySpawnManagerSubsystem</code> (a <code>UWorldSubsystem</code>):
         </p>
         <ul>
           <li>
-            <strong>Contextual Trigger-Zone Spawner Activation:</strong> Room
-            trigger volumes (<code>APlayerLocationDetection</code>) send overlap
-            events to the subsystem, which maintains a spatial map
-            (<code>SpawnersByLocation</code>). As players move between rooms,
-            the active spawner list dynamically updates to keep enemy pressure
-            concentrated in the active combat zone.
+            <strong>Trigger-Based Spawner Activation:</strong> Room trigger volumes
+            (<code>APlayerLocationDetection</code>) send overlap events to the
+            subsystem. As players move between rooms, only spawners in the active
+            area remain enabled.
           </li>
           <li>
-            <strong>Objective vs. Player Redirection:</strong> When a defense
-            reactor objective activates, the subsystem binds to objective
-            delegates, instantly redirecting the spawn pool to
-            <code>MainObjectiveEnemySpawners</code> and routing incoming waves
-            to the generator.
+            <strong>Objective Redirection:</strong> When a defense objective starts,
+            the subsystem binds to objective events and redirects spawning toward
+            the generator.
           </li>
           <li>
-            <strong>Type-Segregated Object Pooling:</strong> Dead and alive
-            enemies are tracked across type-mapped wrapper structs
-            (<code>FEnemyArrayWrapper</code>). When spawning,
-            <code>AEnemySpawner</code>
-            checks the dead pool first, reviving and repositioning recycled
-            actors (<code>ReuseDeadEnemy</code>) to eliminate runtime heap
-            allocations.
+            <strong>Type-Segregated Object Pooling:</strong> Enemies are tracked by
+            class type in wrapper structs (<code>FEnemyArrayWrapper</code>). Spawners
+            check the dead pool first, resetting and repositioning dead actors
+            (<code>ReuseDeadEnemy</code>) to avoid runtime spawn hitches.
           </li>
           <li>
-            <strong>Proactive Distance Culling & Relocation:</strong> A
-            recurring timer evaluates <code>DistanceToTargetSquared</code> via
-            the AI blackboard. If an enemy trails the player by more than 6500
-            units squared, <code>RelocateToRandomSpawner</code> teleports them
-            ahead to an active spawner.
+            <strong>Trailing Enemy Relocation:</strong> If an enemy falls behind the
+            player by more than 6500 units squared, a blackboard timer teleports
+            them forward to an active spawner.
           </li>
           <li>
-            <strong>Logarithmic Spawn Rate Scaling:</strong> The spawn manager
-            accelerates wave intervals over time using the logarithmic formula
-            <code>t = T0 - k * std::logf(cycleIndex + 1)</code> (clamped to
-            <code>Tmin</code>), driving an escalating horde density curve.
+            <strong>Logarithmic Wave Scaling:</strong> Wave intervals scale using the
+            formula <code>t = T0 - k * log(cycleIndex + 1)</code> (clamped to a
+            minimum time), creating a gradual ramp in enemy density.
           </li>
         </ul>
 
@@ -653,19 +583,15 @@ AEnemyAI* AEnemySpawner::SpawnEnemy(const TSubclassOf&lt;AEnemyAI&gt;&amp; Enemy
 }</code></pre>
           </div>
           <figcaption>
-            Two-tier object pooling and actor recycling pipeline
-            (EnemySpawner.cpp)
+            Checking dead object pool before spawning new actors (EnemySpawner.cpp)
           </figcaption>
         </figure>
 
-        <h4>5. Simulation Loading, Extended Wireframe & Stencil Punchouts</h4>
+        <h4>5. Stencil Punchouts, Wireframe Transition & Level Loading</h4>
         <p>
-          To establish a diegetic sci-fi atmosphere, the match begins inside a
-          pitch-black void. Using custom stencil buffer masks
-          (<code>M_Font_StencilPunchout</code>) and post-process rendering,
-          floating 3D world text and the green start console punch through the
-          darkness, giving the impression of booting up a virtual simulation
-          terminal:
+          The match starts in a dark void. Using stencil buffer masks
+          (<code>M_Font_StencilPunchout</code>), 3D floating text and the start
+          console render through the darkness to look like a boot terminal:
         </p>
 
         <figure>
@@ -674,108 +600,90 @@ AEnemyAI* AEnemySpawner::SpawnEnemy(const TSubclassOf&lt;AEnemyAI&gt;&amp; Enemy
             Your browser does not support the video tag.
           </video>
           <figcaption>
-            Simulation boot sequence: 3D stencil punchout text and console
-            interaction triggering the wireframe world load
+            Boot sequence showing 3D stencil text and console interaction
           </figcaption>
         </figure>
 
         <p>
-          I extended the wireframe grid animation
-          (<code>BP_WireframeLoad</code>) to support bidirectional timeline
-          playback. When the player interacts with the start console, the
-          wireframe scans forward across the environment to "load in" the world
-          and seamlessly transition into active gameplay. When the game is over,
-          the wireframe scans in reverse back to black.
+          Interacting with the console triggers a wireframe grid scan
+          (<code>BP_WireframeLoad</code>) that moves across the environment to
+          reveal the level. On game over, the wireframe scans in reverse back to
+          black.
         </p>
         <p>
-          For seamless level streaming, I engineered a custom viewport client
-          (<code>CustomGameViewportClient.cpp</code>) that draws direct canvas
-          screen fades, paired with a persistent
-          <code>BP_GameInstance</code> audio pipeline that prevents music from
-          restarting or hitching during level loads.
+          For smooth scene transitions, a custom viewport client
+          (<code>CustomGameViewportClient.cpp</code>) handles screen fades directly
+          on the canvas, while <code>BP_GameInstance</code> keeps music playing
+          without cutting out during level loads.
         </p>
 
         <h3>Key Challenges Overcome</h3>
         <div class="challenge-solution">
           <p class="challenge">
-            <b>High-Latency 3D Volumetric A* Searches:</b>
+            <b>3D Volumetric Pathfinding Frame Drops:</b>
           </p>
           <p class="solution">
-            Profiling with Unreal Insights revealed that long-range 3D voxel
-            searches initially cost up to 81.3 ms on the main thread. Porting
-            the pathfinder to an off-thread asynchronous task graph and
-            implementing distance-tiered re-pathing thresholds reduced search
-            overhead by over 70%.
+            Long-range 3D voxel searches initially took up to 81.3 ms on the main
+            Game Thread in Unreal Insights. Porting the search logic to background
+            threads using asynchronous task graphs reduced pathfinding overhead by
+            over 70%.
           </p>
 
           <p class="challenge">
-            <b>Combat Pacing & Trailing AI in Distant Rooms:</b>
+            <b>Trailing Enemies in Large Levels:</b>
           </p>
           <p class="solution">
-            Enemies spawned in previous areas frequently lagged behind, taking
-            too long to reach the player and leaving combat encounters sparse.
-            To maintain consistent horde intensity, the
-            <code>UEnemySpawnManagerSubsystem</code> maps spawners to spatial
-            room triggers, activating only spawners in the player's immediate
-            sector. Additionally, a recurring timer evaluates
-            <code>DistanceToTargetSquared</code> via the AI blackboard,
-            automatically teleporting trailing enemies to active spawners ahead
-            of the player.
+            Enemies spawned in earlier rooms fell behind when players moved
+            forward. The spawn subsystem activates only spawners in the player's
+            current room, while a distance check on the AI blackboard automatically
+            teleports trailing enemies ahead to active combat areas.
           </p>
 
           <p class="challenge">
-            <b>Automated NavLink Jumping & Level Design Tooling:</b>
+            <b>Automated Platform Jumping for Spiders:</b>
           </p>
           <p class="solution">
-            Manually placing and configuring custom jump trajectories across
-            multi-tiered platforms would have created an enormous workflow
-            bottleneck for level designers. I automated the process by enabling
-            automatic NavLink generation in RecastNavMesh and programming
-            dynamic ballistic jump calculations
-            (<code>SuggestProjectileVelocityCustomArc</code>). Launch velocities
-            and gravity dynamically adjust based on trajectory direction,
-            ensuring spiders automatically clear obstacles whether leaping
-            upward or downward without manual setup.
+            Manually setting up jump arcs across multi-level platforms took too
+            much time. Automated the setup by generating NavLinks in RecastNavMesh
+            and calculating jump velocities dynamically based on whether the jump
+            was moving upward or downward.
           </p>
 
           <p class="challenge">
-            <b>AI Navigation Stalls on Multi-Level Geometry:</b>
+            <b>Enemies Getting Stuck on Geometry:</b>
           </p>
           <p class="solution">
-            Enemies occasionally became trapped behind dynamic obstacles or
-            steep geometry. I Engineered an automated Behavior Tree recovery
-            task (<code>BTTask_RelocateStuckEnemy</code>) that monitors
-            stationary timers and recycles trapped actors back into active room
-            pools.
+            Enemies occasionally became trapped behind obstacles on uneven
+            ground. Added a Behavior Tree recovery task (<code>BTTask_RelocateStuckEnemy</code>)
+            that checks for stationary timers and teleports stuck enemies back into
+            active room pools.
           </p>
+
           <p class="challenge">
-            <b>Swarm Stacking & Wall Clipping on Target Perimeters:</b>
+            <b>Enemies Clumping and Clipping into Walls:</b>
           </p>
           <p class="solution">
-            Horde enemies seeking a single root pivot collapsed into tight
-            clumps and attempted to path through walls when targets stood near
-            obstacles. I implemented a radial ring of target sockets around
-            players and generators, paired with a three-stage C++ validation
-            pipeline (line-of-sight trace, solid penetration check, and ground
-            clearance clamp) that prunes blocked nodes so AI only paths to open,
-            reachable positions.
+            Swarm enemies targeting a single center point clustered together and
+            walked into walls when players stood near geometry. Attached a ring of
+            target sockets around actors with a C++ check (line of sight, solid
+            geometry, and ground clearance) so enemies only path to open, reachable
+            spots.
           </p>
         </div>
 
         <h3>Project Outcome</h3>
-        <p>Delivered over the 7-week development cycle, the game achieved:</p>
+        <p>Built over the 7-week development period, the project delivered:</p>
         <ul>
           <li>
-            An asynchronous 3D volumetric pathfinding plugin running seamlessly
-            across multi-threaded worker pools
+            An asynchronous 3D volumetric pathfinding system running on background
+            worker threads
           </li>
           <li>
-            Robust Behavior Tree AI with custom ballistic NavLink jumping and
-            Perlin noise flight steering
+            Behavior Tree swarm AI with ballistic NavLink jumping and Perlin noise
+            flight steering
           </li>
           <li>
-            Decoupled Unreal Subsystem architecture supporting DataAsset-driven
-            wave spawning and object pooling
+            An Unreal World Subsystem managing object pooling and wave scaling
           </li>
         </ul>
       </div>
@@ -830,7 +738,7 @@ AEnemyAI* AEnemySpawner::SpawnEnemy(const TSubclassOf&lt;AEnemyAI&gt;&amp; Enemy
           </a>
           <p class="footer-description">
             Passionate game developer specializing in Unreal Engine and Unity.
-            Building immersive worlds and engaging gameplay experiences.
+            Building gameplay systems and mechanics.
           </p>
           <div class="social-links">
             <a
@@ -873,176 +781,176 @@ AEnemyAI* AEnemySpawner::SpawnEnemy(const TSubclassOf&lt;AEnemyAI&gt;&amp; Enemy
                 <title>GitHub</title>
                 <path
                   d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"
-                />
-              </svg>
-            </a>
-            <a
-              href="https://x.com/xirevwow"
-              class="social-link"
-              aria-label="X (Twitter) Profile"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <svg
-                role="img"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                fill="black"
-              >
-                <title>X</title>
-                <path
-                  d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z"
-                />
-              </svg>
-            </a>
-          </div>
-        </div>
-        <div class="footer-links-group">
-          <h4 class="footer-title">Quick Links</h4>
-          <ul class="footer-links">
-            <li>
-              <a href="index.html#home"><span>Home</span></a>
-            </li>
-            <li>
-              <a href="index.html#projects"><span>Projects</span></a>
-            </li>
-            <li>
-              <a href="index.html#skills"><span>Skills</span></a>
-            </li>
-            <li>
-              <a href="index.html#about"><span>About</span></a>
-            </li>
-            <li>
-              <a href="index.html#contact"><span>Contact</span></a>
-            </li>
-          </ul>
-        </div>
-        <div class="footer-links-group">
-          <h4 class="footer-title">Contact</h4>
-          <ul class="footer-links">
-            <li>
-              <a href="mailto:david.dacosta.dev@outlook.com">
-                <span>Email Me</span>
-              </a>
-            </li>
-            <li>
-              <a href="#"><span>Request CV</span></a>
-            </li>
-          </ul>
-        </div>
+            />
+          </svg>
+        </a>
+        <a
+          href="https://x.com/xirevwow"
+          class="social-link"
+          aria-label="X (Twitter) Profile"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <svg
+            role="img"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            fill="black"
+          >
+            <title>X</title>
+            <path
+              d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z"
+            />
+          </svg>
+        </a>
       </div>
-      <div class="copyright">
-        © <span id="currentYear"></span> David da Costa. All rights reserved.
-      </div>
-    </footer>
-
-    <button
-      class="back-to-top"
-      id="backToTopBtn"
-      aria-label="Scroll back to top"
-    >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      >
-        <path d="m5 12 7-7 7 7" />
-        <path d="M12 19V5" />
-      </svg>
-    </button>
-
-    <div id="lightbox-overlay" class="lightbox-overlay">
-      <span class="lightbox-close" id="lightbox-close" title="Close">
-        &times;
-      </span>
-      <img
-        src=""
-        alt="Enlarged image"
-        id="lightbox-image"
-        class="lightbox-image"
-      />
-      <div class="lightbox-caption" id="lightbox-caption"></div>
     </div>
+    <div class="footer-links-group">
+      <h4 class="footer-title">Quick Links</h4>
+      <ul class="footer-links">
+        <li>
+          <a href="index.html#home"><span>Home</span></a>
+        </li>
+        <li>
+          <a href="index.html#projects"><span>Projects</span></a>
+        </li>
+        <li>
+          <a href="index.html#skills"><span>Skills</span></a>
+        </li>
+        <li>
+          <a href="index.html#about"><span>About</span></a>
+        </li>
+        <li>
+          <a href="index.html#contact"><span>Contact</span></a>
+        </li>
+      </ul>
+    </div>
+    <div class="footer-links-group">
+      <h4 class="footer-title">Contact</h4>
+      <ul class="footer-links">
+        <li>
+          <a href="mailto:david.dacosta.dev@outlook.com">
+            <span>Email Me</span>
+          </a>
+        </li>
+        <li>
+          <a href="#"><span>Request CV</span></a>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div class="copyright">
+    © <span id="currentYear"></span> David da Costa. All rights reserved.
+  </div>
+</footer>
 
-    <script src="./js/script.js"></script>
-    <script>
-      document.addEventListener("DOMContentLoaded", () => {
-        const lightboxOverlay = document.getElementById("lightbox-overlay");
-        const lightboxImage = document.getElementById("lightbox-image");
-        const lightboxCaption = document.getElementById("lightbox-caption");
-        const lightboxClose = document.getElementById("lightbox-close");
-        const imageTriggers = document.querySelectorAll(".enlargeable-image");
+<button
+  class="back-to-top"
+  id="backToTopBtn"
+  aria-label="Scroll back to top"
+>
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  >
+    <path d="m5 12 7-7 7 7" />
+    <path d="M12 19V5" />
+  </svg>
+</button>
 
-        if (
-          !lightboxOverlay ||
-          !lightboxImage ||
-          !lightboxClose ||
-          !lightboxCaption
-        ) {
-          return;
+<div id="lightbox-overlay" class="lightbox-overlay">
+  <span class="lightbox-close" id="lightbox-close" title="Close">
+    &times;
+  </span>
+  <img
+    src=""
+    alt="Enlarged image"
+    id="lightbox-image"
+    class="lightbox-image"
+  />
+  <div class="lightbox-caption" id="lightbox-caption"></div>
+</div>
+
+<script src="./js/script.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const lightboxOverlay = document.getElementById("lightbox-overlay");
+    const lightboxImage = document.getElementById("lightbox-image");
+    const lightboxCaption = document.getElementById("lightbox-caption");
+    const lightboxClose = document.getElementById("lightbox-close");
+    const imageTriggers = document.querySelectorAll(".enlargeable-image");
+
+    if (
+      !lightboxOverlay ||
+      !lightboxImage ||
+      !lightboxClose ||
+      !lightboxCaption
+    ) {
+      return;
+    }
+
+    imageTriggers.forEach((img) => {
+      img.style.cursor = "zoom-in";
+      img.addEventListener("click", (event) => {
+        event.preventDefault();
+
+        const imageElement = event.currentTarget;
+        const figureElement = imageElement.closest("figure");
+        const captionElement = figureElement
+          ? figureElement.querySelector("figcaption")
+          : null;
+
+        lightboxImage.src = imageElement.src;
+        lightboxImage.alt = imageElement.alt;
+
+        if (captionElement) {
+          lightboxCaption.textContent = captionElement.textContent;
+          lightboxCaption.style.display = "block";
+        } else {
+          lightboxCaption.style.display = "none";
         }
 
-        imageTriggers.forEach((img) => {
-          img.style.cursor = "zoom-in";
-          img.addEventListener("click", (event) => {
-            event.preventDefault();
-
-            const imageElement = event.currentTarget;
-            const figureElement = imageElement.closest("figure");
-            const captionElement = figureElement
-              ? figureElement.querySelector("figcaption")
-              : null;
-
-            lightboxImage.src = imageElement.src;
-            lightboxImage.alt = imageElement.alt;
-
-            if (captionElement) {
-              lightboxCaption.textContent = captionElement.textContent;
-              lightboxCaption.style.display = "block";
-            } else {
-              lightboxCaption.style.display = "none";
-            }
-
-            lightboxOverlay.style.display = "flex";
-          });
-        });
-
-        lightboxClose.addEventListener("click", () => {
-          lightboxOverlay.style.display = "none";
-          lightboxImage.src = "";
-          lightboxImage.alt = "";
-          lightboxCaption.textContent = "";
-        });
-
-        lightboxOverlay.addEventListener("click", (event) => {
-          if (event.target === lightboxOverlay) {
-            lightboxOverlay.style.display = "none";
-            lightboxImage.src = "";
-            lightboxImage.alt = "";
-            lightboxCaption.textContent = "";
-          }
-        });
-
-        document.addEventListener("keydown", (event) => {
-          if (
-            event.key === "Escape" &&
-            lightboxOverlay.style.display === "flex"
-          ) {
-            lightboxOverlay.style.display = "none";
-            lightboxImage.src = "";
-            lightboxImage.alt = "";
-            lightboxCaption.textContent = "";
-          }
-        });
+        lightboxOverlay.style.display = "flex";
       });
-    </script>
-  </body>
+    });
+
+    lightboxClose.addEventListener("click", () => {
+      lightboxOverlay.style.display = "none";
+      lightboxImage.src = "";
+      lightboxImage.alt = "";
+      lightboxCaption.textContent = "";
+    });
+
+    lightboxOverlay.addEventListener("click", (event) => {
+      if (event.target === lightboxOverlay) {
+        lightboxOverlay.style.display = "none";
+        lightboxImage.src = "";
+        lightboxImage.alt = "";
+        lightboxCaption.textContent = "";
+      }
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (
+        event.key === "Escape" &&
+        lightboxOverlay.style.display === "flex"
+      ) {
+        lightboxOverlay.style.display = "none";
+        lightboxImage.src = "";
+        lightboxImage.alt = "";
+        lightboxCaption.textContent = "";
+      }
+    });
+  });
+</script>
+</body>
 </html>

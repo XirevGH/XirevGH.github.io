@@ -203,12 +203,11 @@
         <h3>Game Overview</h3>
         <p>
           Developed over 7 weeks in Unreal Engine 5 (C++ and Blueprints) as a
-          5-person team project, <strong>A.R.E.N.A</strong> is a competitive
-          sci-fi hero arena fighter featuring 1v1, 2v2, and 3v3 team
-          deathmatches. Inspired by MMORPG arena combat, the game emphasizes
-          low-latency networked replication, MMO-style dual-mouse movement,
-          real-time overhead UI feedback, and modular ability combat driven by
-          the Gameplay Ability System (GAS).
+          5-person team project, <strong>A.R.E.N.A</strong> is a multiplayer
+          sci-fi hero arena fighter featuring 1v1, 2v2, and 3v3 team deathmatches.
+          Inspired by MMO arena combat, I built the network replication, dual-mouse
+          character movement, real-time UI, and combat abilities using the
+          Gameplay Ability System (GAS).
         </p>
 
         <figure>
@@ -216,44 +215,35 @@
             <source src="./Videos/arena-healthbars.mp4" type="video/mp4" />
             Your browser does not support the video tag.
           </video>
-          <figcaption>1v1 multiplayer match</figcaption>
+          <figcaption>1v1 multiplayer match demonstration</figcaption>
         </figure>
 
         <h3>Core Technical Implementation</h3>
 
-        <h4>
-          1. Session-Persistent Team Replication & Custom Replicated Structs
-        </h4>
+        <h4>1. Session Team Replication & Custom Replicated Structs</h4>
         <p>
-          When transitioning from pre-match lobbies into dedicated match
-          sessions, Unreal Engine destroys player actors, wiping session
-          identifiers. To preserve team identity and resolve Unreal's network
-          replication limits, a multi-tier replication pipeline was engineered:
+          When transitioning from lobbies into match servers, player actors are
+          destroyed and recreated. To keep team assignments intact across level
+          loads and handle Unreal's replication constraints:
         </p>
         <ul>
           <li>
-            <strong>GameInstance Handoff:</strong> When a lobby matches teams,
-            player controllers store their host-assigned
-            <code>TeamID</code> locally in the <code>GameInstance</code>,
-            bridging data across level transitions.
+            <strong>GameInstance Handoff:</strong> Player controllers store their
+            assigned <code>TeamID</code> in the local <code>GameInstance</code> to
+            carry data across level transitions.
           </li>
           <li>
-            <strong
-              >Replication of Nested Collections via Wrapper Structs:</strong
-            >
-            Because Unreal Engine cannot natively replicate
-            <code>TMap</code> collections or nested arrays, custom replicated
-            <code>USTRUCT()</code> containers (<code>S_PlayerStateTeams</code>)
-            were engineered to map string team IDs to arrays of
-            <code>PlayerState</code> pointers across the network.
+            <strong>Replication Wrapper Structs:</strong> Because Unreal Engine
+            does not replicate <code>TMap</code> collections or nested arrays out
+            of the box, I wrapped them in replicated <code>USTRUCT()</code>
+            containers (<code>S_PlayerStateTeams</code>) to sync team-to-player
+            mappings across clients.
           </li>
           <li>
-            <strong>C++ RepNotify Server Synchronization:</strong> In C++,
-            <code>ReplicatedUsing</code> callback functions (such as
-            <code>OnRep_TeamID</code>) do not trigger automatically on the
-            server/host. The authority pipeline explicitly calls these callbacks
-            server-side on assignment, ensuring client and host team maps remain
-            strictly synchronized.
+            <strong>Server-Side RepNotify Execution:</strong> In C++,
+            <code>OnRep</code> callbacks do not execute automatically on the
+            server/host. I called <code>OnRep_TeamID</code> explicitly on the
+            server when assigning IDs to keep host and client states matching.
           </li>
         </ul>
 
@@ -284,30 +274,27 @@ void ABasePlayerState::SetTeamID(FString NewTeamID)
 
         <h4>2. Gameplay Ability System (GAS), Friendly Fire & Critical Hits</h4>
         <p>
-          All combat abilities, cooldowns, and damage calculations are
-          implemented through Unreal Engine's Gameplay Ability System (GAS):
+          Combat abilities, cooldowns, and damage are handled through Unreal's
+          Gameplay Ability System (GAS):
         </p>
         <ul>
           <li>
-            <strong>Centralized Enum Keybinding (`EAbilityInputID`):</strong>
-            Mapped input actions directly to GAS ability triggers using a custom
-            byte enum, allowing Enhanced Input contexts to activate abilities
-            cleanly.
+            <strong>Ability Keybinding (`EAbilityInputID`):</strong> Bound input
+            actions directly to GAS ability triggers using a byte enum to link
+            with Enhanced Input.
           </li>
           <li>
-            <strong>Team-Based Friendly Fire Filtering:</strong> Created custom
-            validation logic (<code>ShouldSkipHit</code>) on ability actors,
-            comparing caster and target <code>PlayerState</code> team IDs to
-            prevent damage, debuffs, or collision overlap on allies.
+            <strong>Friendly Fire Checks:</strong> Added team validation
+            (<code>ShouldSkipHit</code>) on ability actors to compare caster and
+            target <code>PlayerState</code> team IDs, preventing damage and
+            collision overlap on allies.
           </li>
           <li>
-            <strong>Critical Hit Execution & Attribute Callbacks:</strong> In
-            <code>CharacterAttributeSet.cpp</code>
-            (<code>PostGameplayEffectExecute</code>), critical hits are
-            calculated with a 20% probability for 1.5x damage. The outcome is
-            packaged into a payload sent to the character, dynamically
-            triggering yellow (normal) or red (critical) floating damage
-            indicators.
+            <strong>Critical Hits & Damage Numbers:</strong> In
+            <code>CharacterAttributeSet.cpp</code> (<code>PostGameplayEffectExecute</code>),
+            damage checks for a 20% critical hit chance (1.5x damage) and
+            triggers colored floating combat text (yellow for normal, red for
+            crit).
           </li>
         </ul>
 
@@ -348,43 +335,32 @@ void UCharacterAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModC
           </figcaption>
         </figure>
 
-        <h4>
-          3. Dynamic Replicated UI (UMG) & Consecutive Cast Synchronization
-        </h4>
+        <h4>3. Replicated UI (UMG) & Cast Synchronization</h4>
         <p>
-          I engineered a networked UI framework that reacts in real time to game
-          state changes, including overhead nameplates, party frames, cast bars,
-          and scoreboards:
+          Built networked UMG widgets that update with replicated game state:
         </p>
         <ul>
           <li>
-            <strong>Line-of-Sight Overhead Nameplates:</strong> Overhead
-            nameplates query the target's <code>PlayerState</code> for team
-            affiliation (Green for friendly, Red for enemy). Nameplate opacity
-            dynamically fades based on camera distance and line-of-sight
-            raycasts.
+            <strong>Overhead Nameplates:</strong> Nameplates read team IDs from
+            <code>PlayerState</code> (green for allies, red for enemies) and
+            fade opacity based on camera distance and line of sight.
           </li>
           <li>
-            <strong>Consecutive Cast Notification Hack (`S_CastInfo`):</strong>
-            When players cast the same spell repeatedly, identical replicated
-            variables would fail to trigger <code>OnRep</code> on clients
-            because the data had not changed. To solve this, a custom struct
-            (<code>S_CastInfo</code>) was built with an auto-incrementing
-            integer timestamp, forcing network dirtiness and ensuring every cast
-            bar triggers reliably.
+            <strong>Consecutive Cast Sync (`S_CastInfo`):</strong> When casting
+            the same ability repeatedly, replicated variables did not trigger
+            <code>OnRep</code> because values were identical. Added an
+            incrementing timestamp counter inside <code>S_CastInfo</code> to
+            force property updates across the network for every cast.
           </li>
           <li>
-            <strong>Dynamic Party & Enemy Frames:</strong> Party frames
-            construct dynamically from replicated <code>GameState</code> player
-            arrays, subscribing to live health and cast delegates with safe
-            fallback handling for late-connecting clients.
+            <strong>Party & Enemy Frames:</strong> Built frames dynamically from
+            <code>GameState</code> player arrays, binding to health and cast
+            delegates with checks for late-joining players.
           </li>
           <li>
-            <strong>End-of-Match Scoreboard & Rematch Voting:</strong>
-            Replicated scoreboard entries track kills and damage, exposing
-            player states directly on spawn. When the match concludes, a voting
-            loop tallies player votes in <code>GameState</code> and returns the
-            party to the lobby.
+            <strong>Scoreboard & Rematch Voting:</strong> Replicated scoreboard
+            tracks kills and damage. At match end, players vote in
+            <code>GameState</code> to return to the lobby.
           </li>
         </ul>
 
@@ -399,55 +375,48 @@ void UCharacterAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModC
           </figcaption>
         </figure>
 
-        <h4>4. Memory-Optimized Lobby Architecture & DataTable Mannequins</h4>
+        <h4>4. Lobby Architecture & Character Mannequins</h4>
         <p>
-          Loading heavy, combat-ready character Blueprints with full Gameplay
-          Ability System components inside pre-match lobbies caused excessive
-          memory usage and prolonged load times:
+          To avoid loading full combat characters with GAS components in the
+          pre-match lobby:
         </p>
         <ul>
           <li>
-            <strong>Lightweight Lobby Mannequins:</strong> Created a dedicated
-            preview character (<code>BP_LobbyMannequin</code>) that completely
-            bypasses GAS initialization.
+            <strong>Lobby Mannequins:</strong> Created a lightweight character
+            (<code>BP_LobbyMannequin</code>) that skips GAS initialization
+            entirely.
           </li>
           <li>
-            <strong>DataTable-Driven Mesh Swapping:</strong> Preview characters
-            query a <code>DataTable</code> (<code>DT_CharacterLobbyData</code>)
-            to dynamically load skeletal meshes, material parameters, and lobby
-            idle animations without allocating combat memory.
+            <strong>DataTable Mesh Swapping:</strong> Mannequins read skeletal
+            meshes, materials, and idle animations from
+            <code>DT_CharacterLobbyData</code> without loading combat assets.
           </li>
           <li>
-            <strong>Match Start Countdown Gates:</strong> Synchronized arena
-            barrier gates (<code>BP_StartGate</code>) that open across all
-            clients when preparation timers elapse.
+            <strong>Start Gates:</strong> Synchronized arena gates
+            (<code>BP_StartGate</code>) that open across all clients when
+            preparation timers expire.
           </li>
         </ul>
 
-        <h4>5. MMO-Style Controls, Ground Decal Targeting & Debug Tooling</h4>
+        <h4>5. Dual-Mouse Movement, Ground Decals & Debug Tools</h4>
         <p>
-          To deliver responsive, PC-arena controls, custom input mapping and
-          targeting tools were implemented:
+          Input handling and developer tools:
         </p>
         <ul>
           <li>
-            <strong>Dual-Mouse Navigation:</strong> Holding Right-Click rotates
-            both character and camera; holding Left-Click orbits the camera
-            independently; holding Both Mouse Buttons drives movement forward.
+            <strong>Dual-Mouse Movement:</strong> Right-click rotates character
+            and camera; left-click orbits the camera; holding both moves the
+            player forward.
           </li>
           <li>
-            <strong>Ground Decal Reticle Targeting (`BP_Cast_AOE`):</strong>
-            Ground-targeted abilities project a cursor-snapping decal reticle
-            with cancel recovery logic, keeping the indicator anchored under the
-            mouse until cast confirmation.
+            <strong>Ground Decal Reticle (`BP_Cast_AOE`):</strong>
+            Area-of-effect abilities display a cursor-snapping ground decal until
+            cast or canceled.
           </li>
           <li>
-            <strong
-              >In-Game Developer Debug Menu (`WBP_DeveloperOptions`):</strong
-            >
-            Created an in-game developer panel allowing instant runtime
-            modification of <code>TeamID</code> and team arrays for rapid local
-            testing without re-launching multiple game instances.
+            <strong>Developer Debug Menu (`WBP_DeveloperOptions`):</strong>
+            In-game panel to change TeamIDs and test team assignments locally
+            without restarting multiple clients.
           </li>
         </ul>
 
@@ -458,43 +427,41 @@ void UCharacterAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModC
           </p>
           <p class="solution">
             Unreal Engine cannot replicate <code>TMap</code> collections or
-            nested arrays natively, and level transitions wipe player state
-            data. Wrapping arrays into custom replicated
-            <code>USTRUCT()</code> containers (<code>S_PlayerStateTeams</code>)
-            and caching team IDs in the local <code>GameInstance</code> enabled
-            seamless team reconstruction across match servers.
+            nested arrays directly, and level transitions wipe player state data.
+            Wrapping arrays into replicated <code>USTRUCT()</code> containers
+            (<code>S_PlayerStateTeams</code>) and caching team IDs in the local
+            <code>GameInstance</code> kept team assignments synced across match
+            servers.
           </p>
 
           <p class="challenge">
-            <b> Consecutive Identical Casts Failing to Trigger OnRep:</b>
+            <b>Consecutive Identical Casts Failing to Trigger OnRep:</b>
           </p>
           <p class="solution">
-            Casting the exact same spell twice in a row caused Unreal's
-            replication system to skip sending updates because variable values
-            were identical. Embedding an incremental integer timestamp into the
-            replicated struct (<code>S_CastInfo</code>) forced property
-            dirtiness, guaranteeing cast bars update reliably every single cast.
+            Casting the same spell twice in a row caused Unreal's replication to
+            skip sending updates because property values did not change. Added an
+            incremental integer timestamp into the replicated struct
+            (<code>S_CastInfo</code>) to mark the property dirty on every cast,
+            ensuring cast bars trigger reliably.
           </p>
 
           <p class="challenge">
             <b>C++ RepNotify Server/Host Desynchronization:</b>
           </p>
           <p class="solution">
-            Unlike Blueprints, C++ <code>ReplicatedUsing</code> callback
-            functions do not automatically execute on the server when modified.
-            Explicitly invoking the <code>OnRep</code> callback server-side
-            during property assignment ensured host and client team logic
-            remained in parity.
+            Unlike Blueprints, C++ <code>ReplicatedUsing</code> callbacks do not
+            run on the server when modified. Calling the <code>OnRep</code>
+            callback explicitly on the server during assignment kept host and
+            client team states matching.
           </p>
 
           <p class="challenge">
-            <b>Steam AppID Restrictions & Session Broadcasting:</b>
+            <b>Steam AppID Session Broadcasting:</b>
           </p>
           <p class="solution">
             Steam's default testing AppID (480) stopped broadcasting available
-            sessions reliably, halting multiplayer testing. Migrating the
-            project matchmaking backend over to Epic Online Services (EOS)
-            restored reliable worldwide session discovery.
+            sessions reliably during testing. Migrated matchmaking to Epic
+            Online Services (EOS) to restore session discovery.
           </p>
         </div>
 
@@ -502,16 +469,15 @@ void UCharacterAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModC
         <p>Delivered over the 7-week development cycle, the game achieved:</p>
         <ul>
           <li>
-            A complete 1v1, 2v2, and 3v3 arena combat framework with low-latency
-            replication in C++
+            A complete 1v1, 2v2, and 3v3 arena combat setup with C++ network
+            replication
           </li>
           <li>
-            Full Gameplay Ability System (GAS) integration with team filtering
-            and critical hit calculations
+            Gameplay Ability System (GAS) integration with team filtering
           </li>
           <li>
-            Dynamic, replicated overhead nameplates, cast bars, party frames,
-            and scoreboard UI
+            Replicated overhead nameplates, cast bars, party frames, and
+            scoreboard UI
           </li>
         </ul>
       </div>
@@ -566,7 +532,7 @@ void UCharacterAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModC
           </a>
           <p class="footer-description">
             Passionate game developer specializing in Unreal Engine and Unity.
-            Building immersive worlds and engaging gameplay experiences.
+            Building gameplay systems and mechanics.
           </p>
           <div class="social-links">
             <a
@@ -609,176 +575,176 @@ void UCharacterAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModC
                 <title>GitHub</title>
                 <path
                   d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"
-                />
-              </svg>
-            </a>
-            <a
-              href="https://x.com/xirevwow"
-              class="social-link"
-              aria-label="X (Twitter) Profile"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <svg
-                role="img"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                fill="black"
-              >
-                <title>X</title>
-                <path
-                  d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z"
-                />
-              </svg>
-            </a>
-          </div>
-        </div>
-        <div class="footer-links-group">
-          <h4 class="footer-title">Quick Links</h4>
-          <ul class="footer-links">
-            <li>
-              <a href="index.html#home"><span>Home</span></a>
-            </li>
-            <li>
-              <a href="index.html#projects"><span>Projects</span></a>
-            </li>
-            <li>
-              <a href="index.html#skills"><span>Skills</span></a>
-            </li>
-            <li>
-              <a href="index.html#about"><span>About</span></a>
-            </li>
-            <li>
-              <a href="index.html#contact"><span>Contact</span></a>
-            </li>
-          </ul>
-        </div>
-        <div class="footer-links-group">
-          <h4 class="footer-title">Contact</h4>
-          <ul class="footer-links">
-            <li>
-              <a href="mailto:david.dacosta.dev@outlook.com">
-                <span>Email Me</span>
-              </a>
-            </li>
-            <li>
-              <a href="#"><span>Request CV</span></a>
-            </li>
-          </ul>
-        </div>
+            />
+          </svg>
+        </a>
+        <a
+          href="https://x.com/xirevwow"
+          class="social-link"
+          aria-label="X (Twitter) Profile"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <svg
+            role="img"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            fill="black"
+          >
+            <title>X</title>
+            <path
+              d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z"
+            />
+          </svg>
+        </a>
       </div>
-      <div class="copyright">
-        © <span id="currentYear"></span> David da Costa. All rights reserved.
-      </div>
-    </footer>
-
-    <button
-      class="back-to-top"
-      id="backToTopBtn"
-      aria-label="Scroll back to top"
-    >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      >
-        <path d="m5 12 7-7 7 7" />
-        <path d="M12 19V5" />
-      </svg>
-    </button>
-
-    <div id="lightbox-overlay" class="lightbox-overlay">
-      <span class="lightbox-close" id="lightbox-close" title="Close">
-        &times;
-      </span>
-      <img
-        src=""
-        alt="Enlarged image"
-        id="lightbox-image"
-        class="lightbox-image"
-      />
-      <div class="lightbox-caption" id="lightbox-caption"></div>
     </div>
+    <div class="footer-links-group">
+      <h4 class="footer-title">Quick Links</h4>
+      <ul class="footer-links">
+        <li>
+          <a href="index.html#home"><span>Home</span></a>
+        </li>
+        <li>
+          <a href="index.html#projects"><span>Projects</span></a>
+        </li>
+        <li>
+          <a href="index.html#skills"><span>Skills</span></a>
+        </li>
+        <li>
+          <a href="index.html#about"><span>About</span></a>
+        </li>
+        <li>
+          <a href="index.html#contact"><span>Contact</span></a>
+        </li>
+      </ul>
+    </div>
+    <div class="footer-links-group">
+      <h4 class="footer-title">Contact</h4>
+      <ul class="footer-links">
+        <li>
+          <a href="mailto:david.dacosta.dev@outlook.com">
+            <span>Email Me</span>
+          </a>
+        </li>
+        <li>
+          <a href="#"><span>Request CV</span></a>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div class="copyright">
+    © <span id="currentYear"></span> David da Costa. All rights reserved.
+  </div>
+</footer>
 
-    <script src="./js/script.js"></script>
-    <script>
-      document.addEventListener("DOMContentLoaded", () => {
-        const lightboxOverlay = document.getElementById("lightbox-overlay");
-        const lightboxImage = document.getElementById("lightbox-image");
-        const lightboxCaption = document.getElementById("lightbox-caption");
-        const lightboxClose = document.getElementById("lightbox-close");
-        const imageTriggers = document.querySelectorAll(".enlargeable-image");
+<button
+  class="back-to-top"
+  id="backToTopBtn"
+  aria-label="Scroll back to top"
+>
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  >
+    <path d="m5 12 7-7 7 7" />
+    <path d="M12 19V5" />
+  </svg>
+</button>
 
-        if (
-          !lightboxOverlay ||
-          !lightboxImage ||
-          !lightboxClose ||
-          !lightboxCaption
-        ) {
-          return;
+<div id="lightbox-overlay" class="lightbox-overlay">
+  <span class="lightbox-close" id="lightbox-close" title="Close">
+    &times;
+  </span>
+  <img
+    src=""
+    alt="Enlarged image"
+    id="lightbox-image"
+    class="lightbox-image"
+  />
+  <div class="lightbox-caption" id="lightbox-caption"></div>
+</div>
+
+<script src="./js/script.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const lightboxOverlay = document.getElementById("lightbox-overlay");
+    const lightboxImage = document.getElementById("lightbox-image");
+    const lightboxCaption = document.getElementById("lightbox-caption");
+    const lightboxClose = document.getElementById("lightbox-close");
+    const imageTriggers = document.querySelectorAll(".enlargeable-image");
+
+    if (
+      !lightboxOverlay ||
+      !lightboxImage ||
+      !lightboxClose ||
+      !lightboxCaption
+    ) {
+      return;
+    }
+
+    imageTriggers.forEach((img) => {
+      img.style.cursor = "zoom-in";
+      img.addEventListener("click", (event) => {
+        event.preventDefault();
+
+        const imageElement = event.currentTarget;
+        const figureElement = imageElement.closest("figure");
+        const captionElement = figureElement
+          ? figureElement.querySelector("figcaption")
+          : null;
+
+        lightboxImage.src = imageElement.src;
+        lightboxImage.alt = imageElement.alt;
+
+        if (captionElement) {
+          lightboxCaption.textContent = captionElement.textContent;
+          lightboxCaption.style.display = "block";
+        } else {
+          lightboxCaption.style.display = "none";
         }
 
-        imageTriggers.forEach((img) => {
-          img.style.cursor = "zoom-in";
-          img.addEventListener("click", (event) => {
-            event.preventDefault();
-
-            const imageElement = event.currentTarget;
-            const figureElement = imageElement.closest("figure");
-            const captionElement = figureElement
-              ? figureElement.querySelector("figcaption")
-              : null;
-
-            lightboxImage.src = imageElement.src;
-            lightboxImage.alt = imageElement.alt;
-
-            if (captionElement) {
-              lightboxCaption.textContent = captionElement.textContent;
-              lightboxCaption.style.display = "block";
-            } else {
-              lightboxCaption.style.display = "none";
-            }
-
-            lightboxOverlay.style.display = "flex";
-          });
-        });
-
-        lightboxClose.addEventListener("click", () => {
-          lightboxOverlay.style.display = "none";
-          lightboxImage.src = "";
-          lightboxImage.alt = "";
-          lightboxCaption.textContent = "";
-        });
-
-        lightboxOverlay.addEventListener("click", (event) => {
-          if (event.target === lightboxOverlay) {
-            lightboxOverlay.style.display = "none";
-            lightboxImage.src = "";
-            lightboxImage.alt = "";
-            lightboxCaption.textContent = "";
-          }
-        });
-
-        document.addEventListener("keydown", (event) => {
-          if (
-            event.key === "Escape" &&
-            lightboxOverlay.style.display === "flex"
-          ) {
-            lightboxOverlay.style.display = "none";
-            lightboxImage.src = "";
-            lightboxImage.alt = "";
-            lightboxCaption.textContent = "";
-          }
-        });
+        lightboxOverlay.style.display = "flex";
       });
-    </script>
-  </body>
+    });
+
+    lightboxClose.addEventListener("click", () => {
+      lightboxOverlay.style.display = "none";
+      lightboxImage.src = "";
+      lightboxImage.alt = "";
+      lightboxCaption.textContent = "";
+    });
+
+    lightboxOverlay.addEventListener("click", (event) => {
+      if (event.target === lightboxOverlay) {
+        lightboxOverlay.style.display = "none";
+        lightboxImage.src = "";
+        lightboxImage.alt = "";
+        lightboxCaption.textContent = "";
+      }
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (
+        event.key === "Escape" &&
+        lightboxOverlay.style.display === "flex"
+      ) {
+        lightboxOverlay.style.display = "none";
+        lightboxImage.src = "";
+        lightboxImage.alt = "";
+        lightboxCaption.textContent = "";
+      }
+    });
+  });
+</script>
+</body>
 </html>

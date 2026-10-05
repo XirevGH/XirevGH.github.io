@@ -394,8 +394,7 @@
     <div class="project-detail-header">
       <h1 class="project-detail-title">Othello AI & Visualizer</h1>
       <p class="project-detail-subtitle">
-        A High-Performance AI & Algorithmic State Visualizer - 2 Week Solo
-        Project
+        Performance Benchmark & Minimax Search Visualizer - 2 Week Solo Project
       </p>
     </div>
 
@@ -410,7 +409,7 @@
         <span class="project-tag">Java</span>
         <span class="project-tag">64-Bit Bitboard</span>
         <span class="project-tag">Minimax & Alpha-Beta Pruning</span>
-        <span class="project-tag">Algorithmic Visualizer</span>
+        <span class="project-tag">Search Visualizer</span>
       </div>
 
       <!-- Quick Action Link Above the Fold -->
@@ -449,21 +448,18 @@
       <div class="project-detail-info">
         <h3>Project Overview</h3>
         <p>
-          Originally conceived during a university course on algorithms and data
-          structures, this project evolved from a simple console application
-          into a high-performance Othello (Reversi) AI benchmark and interactive
-          state visualizer written in Java.
+          This project started during an algorithms and data structures course,
+          growing into an Othello (Reversi) AI benchmark and step-by-step state
+          visualizer built in Java.
         </p>
         <p>
-          To explore the real-world performance differences between memory
-          layout paradigms and tree search algorithms, four separate board
-          representations were developed from scratch and evaluated across
-          millions of board states:
+          I implemented and compared four board representations to measure how
+          memory layout and pointer dereferencing affect Minimax search speed:
           <strong>2D Cell Objects</strong>, <strong>2D Primitives</strong>,
           <strong>1D Flat Array</strong>, and
-          <strong>64-Bit Parallel Bitboards</strong>. Through Alpha-Beta pruning
-          and heuristic move ordering, the final Bitboard engine achieved a
-          <strong>2.68 million times speedup</strong> over the naive baseline.
+          <strong>64-Bit Parallel Bitboards</strong>. Combining Alpha-Beta pruning,
+          move ordering, and bitwise operations reduced the search space at depth 15
+          from trillions of states to 9.5 million, evaluating in 2.8 seconds.
         </p>
 
         <figure>
@@ -472,76 +468,69 @@
             Your browser does not support the video tag.
           </video>
           <figcaption>
-            Empirical benchmark presentation comparing memory layouts, pruning
-            efficiency, and execution speeds
+            Benchmark walkthrough comparing board representations, pruning
+            efficiency, and node throughput
           </figcaption>
         </figure>
 
         <h3>Core Technical Implementation</h3>
 
-        <h4>1. Four Memory Architecture Paradigms</h4>
+        <h4>1. Four Board Memory Architectures</h4>
         <p>
-          The project systematically tests how memory layout and pointer
-          overhead directly impact search throughput during deep recursive
-          minimax evaluation:
+          To measure how cache locality and object overhead impact search
+          performance during recursive tree sweeps, four engines were built:
         </p>
         <ul>
           <li>
-            <strong>Engine 1 (2D Cell Objects):</strong> Models the 8x8 board as
-            an array of object references (<code>Cell[][]</code>). Naively
-            iterates over all 64 coordinates and checks all 8 directions from
-            scratch.
+            <strong>Engine 1 (2D Cell Objects):</strong> Uses an 8x8 array of
+            object references (<code>Cell[][]</code>). Iterates over coordinates
+            and checks all 8 directions with standard object method calls.
           </li>
           <li>
-            <strong>Engine 2 (2D Primitive Values):</strong> Replaces
-            heap-allocated Cell objects with a contiguous primitive integer
-            array (<code>int[][]</code>), searching strictly for opponent pieces
-            first before evaluating adjacent spaces.
+            <strong>Engine 2 (2D Primitive Array):</strong> Replaces Cell objects
+            with a flat 2D integer array (<code>int[][]</code>), checking for
+            adjacent opponent pieces before scanning directions.
           </li>
           <li>
-            <strong>Engine 3 (1D Flat Array):</strong> Compresses the board into
-            a single 64-index primitive array (<code>int[]</code>). Implements
-            line-scanning that tests opposite directions simultaneously and
-            skips previously processed paths.
+            <strong>Engine 3 (1D Flat Array):</strong> Flattens the board into a
+            single 64-element array (<code>int[]</code>), scanning opposite
+            directions in pairs to reduce loop overhead.
           </li>
           <li>
-            <strong>Engine 4 (64-Bit Parallel Bitboards):</strong> Eliminates
-            array structures entirely. The entire board state is represented as
-            two 64-bit integers (Java <code>long</code>), processing directional
-            queries across all 64 tiles simultaneously using parallel bitwise
-            math.
+            <strong>Engine 4 (64-Bit Bitboard):</strong> Replaces arrays with two
+            64-bit unsigned integers (Java <code>long</code>), calculating valid
+            moves and piece flips across all 64 tiles simultaneously using
+            bitwise shift and mask operations.
           </li>
         </ul>
 
-        <h4>2. 64-Bit Branchless Bitboard Move Generation</h4>
+        <h4>2. 64-Bit Bitboard Move Generation</h4>
         <p>
-          By storing disc locations as binary bitmasks, valid moves and disc
-          flips in any of the 8 directions are calculated simultaneously using
-          bitwise shifts (e.g. <code>&lt;&lt; 1</code> for East,
-          <code>&gt;&gt; 8</code> for North) and logical masks:
+          Board states are stored as binary bitmasks. Move validation and disc
+          flips in all 8 directions run using parallel bit shifts
+          (<code>&lt;&lt; 1</code> for East, <code>&gt;&gt; 8</code> for North)
+          and bitwise AND masking:
         </p>
         <ul>
           <li>
-            <strong>Parallel Directional Propagation:</strong> A single bit
-            shift shifts every friendly piece on the board into its adjacent
-            neighbor in that direction.
+            <strong>Directional Bit Shifts:</strong> A single bit shift shifts all
+            friendly pieces on the board into adjacent neighbor cells in that
+            direction simultaneously.
           </li>
           <li>
-            <strong>Opponent Masking & Chain Extension:</strong> Bitwise AND
-            operations with the opponent mask identify contiguous lines of enemy
-            discs in one CPU cycle, propagating the ray until hitting an empty
-            boundary cell.
+            <strong>Opponent Mask Propagation:</strong> Bitwise AND operations
+            against the opponent mask identify contiguous lines of enemy discs,
+            propagating along the ray until reaching an open boundary square.
           </li>
           <li>
-            <strong>Zero Branching Overhead:</strong> Completely eliminates
-            nested coordinate loops and boundary checking conditions from the
-            search core.
+            <strong>Loop-Free Evaluation:</strong> Eliminates nested coordinate
+            loops and boundary checking conditions from the search core.
           </li>
         </ul>
 
         <figure class="code-figure">
           <div class="code-container">
-            <pre><code class="language-java">// Highly optimized, branchless move generator using 64-bit parallel shifts
+            <pre><code class="language-java">// Move generator using 64-bit parallel shifts
 public long getValidMovesBitboard(long playerBoard, long opponentBoard) {
     long validMoves = 0L;
     long empty = ~(playerBoard | opponentBoard);
@@ -558,43 +547,37 @@ public long getValidMovesBitboard(long playerBoard, long opponentBoard) {
 }</code></pre>
           </div>
           <figcaption>
-            Parallel 64-bit Bitboard move generator evaluating all 64 tiles
-            simultaneously
+            Parallel 64-bit Bitboard move generator evaluating all tiles simultaneously
           </figcaption>
         </figure>
 
-        <h4>3. Search Optimizations: Minimax, Alpha-Beta & Move Ordering</h4>
+        <h4>3. Search Optimization: Minimax, Alpha-Beta & Move Ordering</h4>
         <p>
-          To manage the combinatorial explosion of the Othello search tree, two
-          foundational search optimizations were integrated:
+          To evaluate deep search plies within interactive time limits, the engine
+          uses standard game-tree optimizations:
         </p>
         <ul>
           <li>
-            <strong>Alpha-Beta Pruning:</strong> Prunes branches proven to
-            produce sub-optimal outcomes, discarding vast subtrees without
-            evaluating leaf nodes. At depth 15, this prunes
-            <strong>99.993%</strong> of the 2.8 trillion possible board states.
+            <strong>Alpha-Beta Pruning:</strong> Prunes branches that cannot
+            influence the final decision, skipping subtrees once a refutation is
+            found.
           </li>
           <li>
-            <strong>Heuristic Move Ordering (Insertion Sort):</strong>
-            Alpha-Beta pruning is only as effective as the order in which moves
-            are evaluated. Using a stable Insertion Sort driven by a positional
-            static weight table, the engine explores the most promising
-            candidate moves first, maximizing early alpha-beta cutoffs.
+            <strong>Positional Move Ordering:</strong> Sorts candidate moves using
+            a static board weight table (prioritizing corners and safe edges).
+            Searching stronger moves first triggers early alpha-beta cutoffs.
           </li>
           <li>
-            <strong>Stack-Allocated Backtracking:</strong> Shared primitive
-            arrays write flips directly to the active board state and log
-            changes to a pre-allocated undo stack, ensuring zero heap
-            allocations per search node during deep recursive sweeps.
+            <strong>Zero-Allocation Board Updates:</strong> Primitive engines apply
+            moves directly in-place and log changes to an undo stack, avoiding
+            heap allocations during recursive tree traversal.
           </li>
         </ul>
 
         <h3>Empirical Benchmark Results</h3>
         <p>
-          Performance benchmarks were conducted across multiple search depths
-          and algorithmic configurations to quantify the exact speedups gained
-          from data layout and search pruning:
+          Performance was measured across multiple search depths and pruning
+          configurations on the same test positions:
         </p>
 
         <div class="benchmark-table-wrapper">
@@ -618,7 +601,7 @@ public long getValidMovesBitboard(long playerBoard, long opponentBoard) {
                   <span style="color: #ff4d4d; font-weight: 700">OFF</span>
                   <span
                     style="color: #888; font-size: 0.85rem; margin-left: 8px"
-                    >(Exhaustive Baseline)</span
+                    >(Exhaustive Search)</span
                   >
                 </td>
               </tr>
@@ -629,7 +612,7 @@ public long getValidMovesBitboard(long playerBoard, long opponentBoard) {
                 <td>370,248 states/s</td>
               </tr>
               <tr>
-                <td><strong>2. 2D Primitive Values</strong></td>
+                <td><strong>2. 2D Primitive Array</strong></td>
                 <td>7,007,938</td>
                 <td>13.82s</td>
                 <td>506,983 states/s</td>
@@ -664,7 +647,7 @@ public long getValidMovesBitboard(long playerBoard, long opponentBoard) {
                 <td>438,613 states/s</td>
               </tr>
               <tr>
-                <td><strong>2. 2D Primitive Values</strong></td>
+                <td><strong>2. 2D Primitive Array</strong></td>
                 <td>224,141,131</td>
                 <td>416.81s (6m 56s)</td>
                 <td>537,759 states/s</td>
@@ -692,7 +675,7 @@ public long getValidMovesBitboard(long playerBoard, long opponentBoard) {
                   <span style="color: #00ff00; font-weight: 700">ON</span>
                   <span
                     style="color: #888; font-size: 0.85rem; margin-left: 8px"
-                    >(Fully Optimized)</span
+                    >(Optimized)</span
                   >
                 </td>
               </tr>
@@ -703,7 +686,7 @@ public long getValidMovesBitboard(long playerBoard, long opponentBoard) {
                 <td>469,618 states/s</td>
               </tr>
               <tr>
-                <td><strong>2. 2D Primitive Values</strong></td>
+                <td><strong>2. 2D Primitive Array</strong></td>
                 <td>9,453,120</td>
                 <td>20.02s</td>
                 <td>472,138 states/s</td>
@@ -725,33 +708,21 @@ public long getValidMovesBitboard(long playerBoard, long opponentBoard) {
         </div>
 
         <p>
-          <strong>Key Benchmark Findings:</strong>
+          <strong>Summary of Results:</strong>
         </p>
         <ul>
           <li>
-            <strong>Exhaustive Throughput:</strong> At depth 9 without pruning,
-            the 64-bit Bitboard engine evaluated all 7.0M states in
-            <strong>1.74 seconds</strong> (over 4.03 million states/s),
-            outperforming the baseline 2D Cell Object engine by over
-            <strong>10.8x</strong> purely through memory locality and parallel
-            bit shifts.
+            <strong>Throughput Difference:</strong> At depth 9 (exhaustive search
+            over 7.0M states), the Bitboard engine finished in
+            <strong>1.74 seconds</strong> (over 4.03 million states/sec),
+            running <strong>10.8x faster</strong> than the 2D Object baseline
+            (18.93s) due to bitwise move generation and zero object overhead.
           </li>
           <li>
-            <strong>Pruning Efficiency:</strong> The full theoretical search
-            tree at depth 15 encompasses approximately
-            <strong>2.78 trillion states</strong> (estimated ~87 days for the
-            unoptimized baseline). Enabling Alpha-Beta Pruning with Heuristic
-            Move Ordering reduced the required search space to just
-            <strong>9.5 million states</strong> (searching only
-            <strong>0.00034%</strong> of the tree).
-          </li>
-          <li>
-            <strong>Combined 2.68 Million Times Speedup:</strong> Combining
-            bitwise parallel move generation with optimal branch pruning brought
-            depth-15 search times down to <strong>2.80 seconds</strong>,
-            representing an overall
-            <strong>2.68 million times speedup</strong> over the naive
-            exhaustive baseline.
+            <strong>Search Space Reduction:</strong> On depth 15, adding
+            Alpha-Beta pruning and move ordering reduced the total evaluated
+            nodes from ~169M down to <strong>9.5M</strong>, dropping search
+            times from 45.16s to <strong>2.80s</strong> on the Bitboard engine.
           </li>
         </ul>
 
@@ -766,7 +737,7 @@ public long getValidMovesBitboard(long playerBoard, long opponentBoard) {
           "
         >
           <h4 style="margin: 0 0 8px 0; color: #00bfff; font-size: 1.05rem">
-            Why Search Depth Scales Exponentially
+            Search Tree Growth by Depth
           </h4>
           <p
             style="
@@ -776,10 +747,8 @@ public long getValidMovesBitboard(long playerBoard, long opponentBoard) {
               color: #ddd;
             "
           >
-            In turn-based games like Othello, search complexity does not grow
-            additively. With an average branching factor of
-            <strong>~6–10 valid moves per turn</strong>, each additional ply of
-            depth multiplies the total search tree:
+            With an average branching factor of <strong>~6–10 moves per ply</strong>,
+            unpruned search space grows exponentially:
           </p>
           <ul
             style="
@@ -790,76 +759,55 @@ public long getValidMovesBitboard(long playerBoard, long opponentBoard) {
               line-height: 1.6;
             "
           >
-            <li><strong>Depth 9:</strong> ~7.0 million possible game states</li>
+            <li><strong>Depth 9 (Exhaustive):</strong> ~7.0 million states</li>
+            <li><strong>Depth 15 (Unpruned Estimate):</strong> ~2.78 trillion states</li>
             <li>
-              <strong>Depth 10:</strong> ~60 million game states (<strong
-                >8.6×</strong
-              >
-              larger than Depth 9)
-            </li>
-            <li>
-              <strong>Depth 15:</strong> <strong>~2.78 TRILLION</strong> game
-              states (<strong>~400,000×</strong> larger than Depth 9)
+              <strong>Depth 15 (With Alpha-Beta & Move Ordering):</strong>
+              <strong>9.5 million states</strong> evaluated in 2.80s
             </li>
           </ul>
-          <p style="margin: 10px 0 0 0; font-size: 0.9rem; color: #aaa">
-            Without algorithmic pruning, evaluating Depth 15 would take
-            <strong>over 87 continuous days of computing</strong>. Searching it
-            in <strong>2.80 seconds</strong> represents cutting out 99.9996% of
-            irrelevant branches while still finding the mathematically optimal
-            move.
-          </p>
         </div>
 
         <h3>Key Challenges Overcome</h3>
         <div class="challenge-solution">
-          <p class="challenge"><b>Thread Safety & UI Progress Ticking:</b></p>
+          <p class="challenge"><b>UI Freezes During Deep Searches:</b></p>
           <p class="solution">
-            Running depth-15 minimax searches freezes the main UI thread. I
-            implemented a decoupled thread architecture using a dedicated
-            SwingWorker thread. To keep the live UI node progress counter
-            ticking smoothly, the counter was wrapped in a shared volatile,
-            thread-safe memory state, allowing the UI thread to read live
-            metrics while the background thread computes in isolation.
+            Running depth-15 minimax on the main thread blocked the Swing UI.
+            Moved search execution to a background <code>SwingWorker</code> thread
+            and updated the live node counter via thread-safe variables so the UI
+            remains responsive while the search runs.
           </p>
 
-          <p class="challenge"><b>Cache Misses & Memory Alignment:</b></p>
+          <p class="challenge"><b>Memory Footprint & Cache Locality:</b></p>
           <p class="solution">
-            Object pointer dereferencing in complex nested nodes created immense
-            CPU cache misses. By compressing OO search variables into tight,
-            contiguous primitive arrays, the entire 8x8 game block fits
-            perfectly inside a single L1 Cache line (64 ints = 256 bytes),
-            achieving instant memory reads and bypassing slow RAM lookups.
+            Heap-allocated <code>Cell</code> objects caused frequent cache misses
+            due to scattered pointer dereferencing. Replacing objects with two
+            64-bit <code>long</code> bitboards (16 bytes total) allows the entire
+            board state to fit inside a single CPU cache line, eliminating heap
+            lookups during tree recursion.
           </p>
 
-          <p class="challenge"><b>Visualizer Reference Aliasing:</b></p>
+          <p class="challenge"><b>Visualizer State Reference Leaks:</b></p>
           <p class="solution">
-            An elusive bug caused evaluated search targets to retrospectively
-            show up as Valid or Invalid in early visualizer frames before they
-            were ever evaluated. This was caused by 2D array pointer aliasing
-            where working state references leaked into previous visualizer
-            states. Completely resolved this by implementing strict deep-copy
-            setters inside the visualization state machine.
+            Reusing array buffers caused visualizer frames to display modified
+            board states from later recursive steps. Resolved by storing explicit
+            deep copies of board states in the visualizer timeline.
           </p>
         </div>
 
         <h3>Project Outcome</h3>
-        <p>
-          Delivered as a standalone high-performance Java engine, the project
-          achieved:
-        </p>
+        <p>Built over 2 weeks, the project delivered:</p>
         <ul>
           <li>
-            An ultra-fast 64-bit parallel Bitboard move generator operating at
-            over 4 million states per second
+            A 64-bit Bitboard move generator evaluating over 4 million states/sec
           </li>
           <li>
-            A complete Minimax AI with Alpha-Beta pruning and heuristic move
-            ordering achieving a 2.68M speedup
+            Minimax AI with Alpha-Beta pruning and static move ordering running
+            depth-15 searches in under 3 seconds
           </li>
           <li>
-            A frame-by-frame algorithmic visualizer exposing search mechanics
-            and bit-shifting operations graphically
+            A step-by-step state visualizer displaying tree evaluation and board
+            changes
           </li>
         </ul>
       </div>
@@ -914,7 +862,7 @@ public long getValidMovesBitboard(long playerBoard, long opponentBoard) {
           </a>
           <p class="footer-description">
             Passionate game developer specializing in Unreal Engine and Unity.
-            Building immersive worlds and engaging gameplay experiences.
+            Building gameplay systems and mechanics.
           </p>
           <div class="social-links">
             <a
@@ -957,92 +905,92 @@ public long getValidMovesBitboard(long playerBoard, long opponentBoard) {
                 <title>GitHub</title>
                 <path
                   d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"
-                />
-              </svg>
-            </a>
-            <a
-              href="https://x.com/xirevwow"
-              class="social-link"
-              aria-label="X (Twitter) Profile"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <svg
-                role="img"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                fill="black"
-              >
-                <title>X</title>
-                <path
-                  d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z"
-                />
-              </svg>
-            </a>
-          </div>
-        </div>
-        <div class="footer-links-group">
-          <h4 class="footer-title">Quick Links</h4>
-          <ul class="footer-links">
-            <li>
-              <a href="index.html#home"><span>Home</span></a>
-            </li>
-            <li>
-              <a href="index.html#projects"><span>Projects</span></a>
-            </li>
-            <li>
-              <a href="index.html#skills"><span>Skills</span></a>
-            </li>
-            <li>
-              <a href="index.html#about"><span>About</span></a>
-            </li>
-            <li>
-              <a href="index.html#contact"><span>Contact</span></a>
-            </li>
-          </ul>
-        </div>
-        <div class="footer-links-group">
-          <h4 class="footer-title">Contact</h4>
-          <ul class="footer-links">
-            <li>
-              <a href="mailto:david.dacosta.dev@outlook.com">
-                <span>Email Me</span>
-              </a>
-            </li>
-            <li>
-              <a href="#"><span>Request CV</span></a>
-            </li>
-          </ul>
-        </div>
+            />
+          </svg>
+        </a>
+        <a
+          href="https://x.com/xirevwow"
+          class="social-link"
+          aria-label="X (Twitter) Profile"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <svg
+            role="img"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            fill="black"
+          >
+            <title>X</title>
+            <path
+              d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z"
+            />
+          </svg>
+        </a>
       </div>
-      <div class="copyright">
-        © <span id="currentYear"></span> David da Costa. All rights reserved.
-      </div>
-    </footer>
+    </div>
+    <div class="footer-links-group">
+      <h4 class="footer-title">Quick Links</h4>
+      <ul class="footer-links">
+        <li>
+          <a href="index.html#home"><span>Home</span></a>
+        </li>
+        <li>
+          <a href="index.html#projects"><span>Projects</span></a>
+        </li>
+        <li>
+          <a href="index.html#skills"><span>Skills</span></a>
+        </li>
+        <li>
+          <a href="index.html#about"><span>About</span></a>
+        </li>
+        <li>
+          <a href="index.html#contact"><span>Contact</span></a>
+        </li>
+      </ul>
+    </div>
+    <div class="footer-links-group">
+      <h4 class="footer-title">Contact</h4>
+      <ul class="footer-links">
+        <li>
+          <a href="mailto:david.dacosta.dev@outlook.com">
+            <span>Email Me</span>
+          </a>
+        </li>
+        <li>
+          <a href="#"><span>Request CV</span></a>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div class="copyright">
+    © <span id="currentYear"></span> David da Costa. All rights reserved.
+  </div>
+</footer>
 
-    <button
-      class="back-to-top"
-      id="backToTopBtn"
-      aria-label="Scroll back to top"
-    >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      >
-        <path d="m5 12 7-7 7 7" />
-        <path d="M12 19V5" />
-      </svg>
-    </button>
+<button
+  class="back-to-top"
+  id="backToTopBtn"
+  aria-label="Scroll back to top"
+>
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  >
+    <path d="m5 12 7-7 7 7" />
+    <path d="M12 19V5" />
+  </svg>
+</button>
 
-    <script src="./js/script.js"></script>
-  </body>
+<script src="./js/script.js"></script>
+</body>
 </html>

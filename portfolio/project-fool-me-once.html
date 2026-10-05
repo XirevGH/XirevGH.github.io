@@ -147,7 +147,7 @@
     <div class="project-detail-header">
       <h1 class="project-detail-title">Fool Me Once</h1>
       <p class="project-detail-subtitle">
-        Competitive Splitscreen Maze Duel - 5 Day Game Jam
+        Splitscreen Maze Duel - 5 Day Game Jam
       </p>
     </div>
 
@@ -203,44 +203,39 @@
         <h3>Game Overview</h3>
         <p>
           Developed during a 5-day game jam in Unreal Engine 5,
-          <strong>Fool Me Once</strong> is a competitive local multiplayer maze
-          duel built for physical Dance Dance Revolution (DDR) dance pads. Two
-          players navigate a space station in splitscreen, racing to collect
-          cakes and deploying unpredictable power-ups and traps to disorient
-          each other.
+          <strong>Fool Me Once</strong> is a local splitscreen maze runner built
+          to be played on physical Dance Dance Revolution (DDR) dance pads. Two
+          players navigate a space station maze, racing to collect cakes while
+          using power-ups and traps against each other.
         </p>
 
         <h3>Core Technical Implementation</h3>
 
-        <h4>1. Node-Based Navigation & Dot-Product Direction Validation</h4>
+        <h4>1. Node Navigation & Dot-Product Direction Checks</h4>
         <p>
-          Instead of standard physics and continuous Character Movement
-          components, we built a responsive, deterministic
-          <strong>grid navigation system</strong> using custom
-          <code>AMovementNode</code> actors:
+          Instead of standard continuous character movement, I built a discrete
+          grid navigation system using custom <code>AMovementNode</code> actors to
+          match step inputs from DDR pads:
         </p>
         <ul>
           <li>
-            <strong>Dot-Product Direction Validation:</strong> When a player
-            inputs a move or turn command, the character calculates the vector
-            dot product between its facing direction and all connected nodes,
-            confirming valid moves within a 45° forward cone (<code
-              >ForwardVectorMatchThreshold = 0.707f</code
-            >).
+            <strong>Dot-Product Move Checks:</strong> When a player steps in a
+            direction, the pawn checks the vector dot product between its forward
+            facing vector and connected node vectors, allowing movement only if
+            the node sits within a 45° forward cone
+            (<code>ForwardVectorMatchThreshold = 0.707f</code>).
           </li>
           <li>
-            <strong>Look-Ahead Corner Smoothing:</strong> To eliminate sudden
-            stops at 90-degree turns, the system checks ahead for the next
-            connected corridor (<code>NextForwardNode</code>). While moving
-            toward its current node, the pawn smoothly blends its rotation
-            (<code>TargetForwardRotation</code>) into the upcoming corner using
-            an easing curve.
+            <strong>Corner Rotation Look-Ahead:</strong> To prevent abrupt stops
+            at 90-degree turns, the character inspects the upcoming corridor
+            (<code>NextForwardNode</code>) while still moving toward its current
+            target, blending rotation smoothly into the turn.
           </li>
           <li>
-            <strong>Quaternion SLERP Interpolation:</strong> Rotations use
-            spherical linear interpolation (<code>FQuat::Slerp</code>) alongside
-            custom easing curves (<code>InterpEaseInOut</code>) to keep camera
-            and character turning smooth and predictable.
+            <strong>Slerp Rotation:</strong> Rotations interpolate with
+            <code>FQuat::Slerp</code> and an ease-in-out curve
+            (<code>InterpEaseInOut</code>) to keep camera and character turning
+            smooth in first-person view.
           </li>
         </ul>
 
@@ -250,8 +245,7 @@
             Your browser does not support the video tag.
           </video>
           <figcaption>
-            Demonstration of discrete grid-based movement and predictive
-            rotation mechanics
+            Discrete grid-based movement and predictive corner rotation
           </figcaption>
         </figure>
 
@@ -261,31 +255,27 @@
             Your browser does not support the video tag.
           </video>
           <figcaption>
-            Demonstration of dynamic camera rotation and look-ahead node
-            visibility
+            Camera rotation and look-ahead node visibility in corridors
           </figcaption>
         </figure>
 
-        <h4>2. Automated Ground-Snapping Level Tool</h4>
+        <h4>2. Automatic Node Floor-Snapping Tool</h4>
         <p>
-          Because the player pawn moves between node origins by targeting its
-          center pivot, movement nodes must sit at the exact half-height of the
-          character capsule. To eliminate manual height adjustments across
-          uneven maze geometry, each
-          <code>AMovementNode</code> aligns itself automatically on startup:
+          Pawns navigate directly to node pivots, meaning nodes must sit at the
+          exact capsule half-height of the character. To avoid manually adjusting
+          node heights across uneven floors, each <code>AMovementNode</code>
+          snaps itself to the floor on startup:
         </p>
         <ul>
           <li>
-            <strong>Downward Ground Trace:</strong> During
-            <code>BeginPlay()</code>, the node fires a downward line trace on
-            the <code>ECC_Visibility</code> collision channel.
+            <strong>Downward Trace:</strong> On <code>BeginPlay()</code>, the node
+            runs a line trace downward on the <code>ECC_Visibility</code> channel.
           </li>
           <li>
-            <strong>Automatic Height Offset:</strong> When it hits walkable
-            floor geometry, the node snaps its position to
-            <code>Hit.Location.Z + 102.15f</code> (the exact capsule center
-            offset), guaranteeing clean ground clearance without manual
-            placement errors.
+            <strong>Capsule Center Offset:</strong> When floor geometry is hit,
+            the node snaps its Z-position to <code>Hit.Location.Z + 102.15f</code>
+            (the character capsule half-height), ensuring correct ground
+            clearance.
           </li>
         </ul>
 
@@ -312,39 +302,31 @@ void AMovementNode::BeginPlay()
 }</code></pre>
           </div>
           <figcaption>
-            Automated Z-axis floor snapping using capsule center offset
+            Snapping node Z-position to floor collision with capsule half-height offset
             (MovementNode.cpp)
           </figcaption>
         </figure>
 
-        <h4>3. Data-Driven Item Spawning & Count Synchronization</h4>
+        <h4>3. Item Spawning & Overlap Checks</h4>
         <p>
-          Collectibles and power-ups are managed centrally by
-          <code>ACakeChaseGameMode</code>
-          to ensure fair, collision-free spawning across open gameplay nodes:
+          Pickups and power-ups are managed by <code>ACakeChaseGameMode</code> to
+          distribute items across unoccupied nodes:
         </p>
         <ul>
           <li>
-            <strong>Configurable Spawn Rules:</strong> Uses a structured
-            configuration array (<code>FPowerUpSpawnConfig</code>) to control
-            spawn intervals, probabilities, max active limits, and actor
+            <strong>Spawn Configs:</strong> Uses <code>FPowerUpSpawnConfig</code>
+            structs to define spawn timers, chances, maximum active limits, and
             classes.
           </li>
           <li>
-            <strong>Anti-Overlap Sphere Checks:</strong> Before spawning an
-            item, the GameMode performs a spherical overlap query (<code
-              >SphereOverlapActors</code
-            >
-            checking <code>WorldStatic</code>, <code>WorldDynamic</code>,
-            <code>Pawn</code>, and <code>PhysicsBody</code>) to filter out
-            occupied nodes.
+            <strong>Sphere Overlap Checks:</strong> Before spawning, the GameMode
+            runs a 50cm <code>SphereOverlapActors</code> check on the target node
+            (querying WorldStatic, WorldDynamic, Pawns, and PhysicsBodies) to
+            skip occupied spots.
           </li>
           <li>
-            <strong>Active Count Synchronization:</strong> Runs periodic world
-            checks (<code>UpdateActualCakeCount</code>,
-            <code>UpdateActualPowerUpCounts</code>) to keep active item limits
-            in sync, even when pickups are collected or destroyed
-            asynchronously.
+            <strong>Active Item Tracking:</strong> Tracks live cake and power-up
+            counts to maintain target numbers when items are collected.
           </li>
         </ul>
 
@@ -406,39 +388,35 @@ AActor* ACakeChaseGameMode::AttemptSpawnActorAtRandomNode(TSubclassOf&lt;AActor&
 }</code></pre>
           </div>
           <figcaption>
-            Dynamic spawn candidate selection with anti-overlap checks
+            Selecting unoccupied nodes with sphere overlap checks
             (CakeChaseGameMode.cpp)
           </figcaption>
         </figure>
 
-        <h4>4. Modular Power-Ups & Clean Input Redirection</h4>
+        <h4>4. Power-Up Base Class & Inverted Controls</h4>
         <p>
-          Power-up effects are structured cleanly using an extensible class
-          hierarchy:
+          Power-up and trap logic:
         </p>
         <ul>
           <li>
-            <strong>Modular Base Class:</strong> <code>APowerUp</code> serves as
-            an abstract base actor combining a trigger sphere, a static mesh,
-            and a custom <code>UPickupComponent</code>. It exposes a
-            <code>BlueprintNativeEvent</code> (<code>ApplyEffect</code>) so
-            designers can easily build new trap effects in Blueprints.
+            <strong>Base Power-Up Actor:</strong> <code>APowerUp</code> provides a
+            shared base with a collision sphere, mesh, and
+            <code>UPickupComponent</code>, exposing a
+            <code>BlueprintNativeEvent</code> (<code>ApplyEffect</code>) to build
+            new power-ups in Blueprints.
           </li>
           <li>
-            <strong>Input Inversion Trap:</strong> To implement disorienting
-            trap effects (such as reversed steering), the character uses an
-            internal input router (<code>bHasInvertedInput</code>) that remaps
-            forward moves to 180-degree turns and swaps left/right triggers in
-            place, bypassing the need to reallocate Input Mapping Contexts at
-            runtime.
+            <strong>Inverted Input Trap:</strong> The inverted steering trap sets
+            <code>bHasInvertedInput</code> on the pawn, which flips forward
+            movement to 180-degree turns and swaps left/right inputs directly in
+            code without needing to change input mapping contexts.
           </li>
         </ul>
 
-        <h4>5. Splitscreen Multi-Controller Setup</h4>
+        <h4>5. Splitscreen Setup for DDR Dance Pads</h4>
         <p>
-          To support two simultaneous players on physical DDR dance pads,
-          players are dynamically spawned and bound to dedicated viewports and
-          separate controller inputs.
+          Players are spawned on game start, splitting the viewport horizontally
+          and mapping separate controller IDs to the two physical dance pads.
         </p>
 
         <figure>
@@ -455,59 +433,54 @@ AActor* ACakeChaseGameMode::AttemptSpawnActorAtRandomNode(TSubclassOf&lt;AActor&
             />
           </a>
           <figcaption>
-            Spawning players and hooking up controls for splitscreen (Click
-            image to enlarge)
+            Spawning two splitscreen players and mapping input controllers (Click to enlarge)
           </figcaption>
         </figure>
 
         <h3>Key Challenges Overcome</h3>
         <div class="challenge-solution">
           <p class="challenge">
-            <b>Physical DDR Locomotion vs. Continuous Movement:</b>
+            <b>DDR Mat Movement vs. Standard Continuous Movement:</b>
           </p>
           <p class="solution">
-            When our faculty provided two DDR mats for the jam, we chose to
-            subvert expectations by building a physical maze-runner rather than
-            a rhythm game. However, standard continuous CharacterMovement caused
-            players stepping on floor pads to easily overshoot corners.
-            Replacing it with a deterministic node-based navigation system gave
-            players tactile, step-by-step control as if physically walking the
-            maze.
+            Standard continuous CharacterMovement caused players stepping on
+            physical DDR pads to overshoot corridor turns. Replacing physics
+            movement with a node-based step system gave players direct,
+            discrete control that lined up with physical foot taps.
           </p>
 
           <p class="challenge">
-            <b>Camera Corner Snapping & Motion Sickness:</b>
+            <b>First-Person Camera Snapping on 90-Degree Turns:</b>
           </p>
           <p class="solution">
-            Instant 90-degree pivots caused disorientation in first-person
-            splitscreen. Implementing predictive look-ahead rotation and
-            Quaternion SLERP easing created smooth, natural cornering.
+            Instant 90-degree pivots caused disorientation in splitscreen.
+            Added look-ahead corridor checks and <code>FQuat::Slerp</code> easing
+            to blend camera rotation into the turn while the player moves.
           </p>
 
           <p class="challenge">
-            <b>Item Overlap Contention:</b>
+            <b>Pickups Spawning on Occupied Nodes:</b>
           </p>
           <p class="solution">
-            Spawning pickups on a confined grid caused cakes and power-ups to
-            occasionally spawn on top of active players or existing items.
-            Enforcing a spherical overlap query across all static, dynamic,
-            pawn, and physics bodies guaranteed that the nodes would be empty.
+            Items occasionally spawned on top of players or other items in narrow
+            hallways. Added a sphere overlap check across Pawns, PhysicsBodies,
+            and World objects to filter out occupied nodes before spawning.
           </p>
         </div>
 
         <h3>Project Outcome</h3>
-        <p>Delivered in just 5 days, the game achieved:</p>
+        <p>Delivered in 5 days, the game achieved:</p>
         <ul>
           <li>
-            A clean, highly responsive discrete node navigation engine in C++
+            A discrete node movement system in C++ tailored for physical DDR pad
+            input
           </li>
           <li>
-            Robust splitscreen multiplayer with dynamic item and power-up
-            spawning
+            Local splitscreen multiplayer with dynamic item spawning and trap
+            effects
           </li>
           <li>
-            Positive feedback during playtests for its fluid corner transitions
-            and competitive game feel
+            Smooth 90-degree corner easing with predictive camera rotation
           </li>
         </ul>
 
@@ -517,7 +490,7 @@ AActor* ACakeChaseGameMode::AttemptSpawnActorAtRandomNode(TSubclassOf&lt;AActor&
             Your browser does not support the video tag.
           </video>
           <figcaption>
-            Full gameplay showcase with splitscreen UI and power-up collection
+            Splitscreen gameplay showing maze navigation and power-up collection
           </figcaption>
         </figure>
       </div>
@@ -572,7 +545,7 @@ AActor* ACakeChaseGameMode::AttemptSpawnActorAtRandomNode(TSubclassOf&lt;AActor&
           >
           <p class="footer-description">
             Passionate game developer specializing in Unreal Engine and Unity.
-            Building immersive worlds and engaging gameplay experiences.
+            Building gameplay systems and mechanics.
           </p>
           <div class="social-links">
             <a
@@ -663,7 +636,6 @@ AActor* ACakeChaseGameMode::AttemptSpawnActorAtRandomNode(TSubclassOf&lt;AActor&
             <li>
               <a href="#"><span>Request CV</span></a>
             </li>
-
           </ul>
         </div>
       </div>

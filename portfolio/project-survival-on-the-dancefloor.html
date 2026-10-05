@@ -159,10 +159,10 @@
         >
         <span class="project-tag">Team Size: 6</span>
         <span class="project-tag">Time: 7 Weeks</span>
-        <span class="project-tag">Unity</span>
-        <span class="project-tag">C#</span>
-        <span class="project-tag">Roguelite</span>
-        <span class="project-tag">Audio & Graphics Architecture</span>
+        <span class="project-tag">Unity (C#)</span>
+        <span class="project-tag">ScriptableObjects</span>
+        <span class="project-tag">Unity Localization</span>
+        <span class="project-tag">Audio & Graphics</span>
       </div>
 
       <!-- Quick Action Link Above the Fold -->
@@ -202,20 +202,15 @@
         <h3>Game Overview</h3>
         <p>
           Developed over 7 weeks in Unity (C#) as a 6-person team project,
-          <strong>Survival on the Dancefloor</strong> is a fast-paced
-          survivor-like pixel roguelite set inside an unforgiving retro
-          nightclub. Trapped on an infinite dancefloor, players must battle
-          swarms of mad bouncers, dancers, and drunk patrons for as long as
-          possible.
+          <strong>Survival on the Dancefloor</strong> is a survivor-like pixel
+          roguelite set in a retro nightclub. Players survive waves of bouncers,
+          dancers, and patrons on an infinite dancefloor.
         </p>
         <p>
-          The core gameplay combines musical tempo directly with weapon firing
-          rates: players catch musical notes scattered across the floor to
-          accelerate the song's BPM and speed up attack execution. Missing notes
-          causes the music and weapons to decelerate to a crawl. Players gain
-          XP, select music-themed weapons and utilities from a random selection
-          on level-up, defeat powerful bosses, and purchase permanent upgrades
-          after each game.
+          Weapon firing rates are tied to the music tempo: collecting musical
+          notes increases track BPM and attack speeds, while missing notes slows
+          both down. Players level up to choose weapons and utilities, defeat
+          bosses, and buy permanent upgrades between runs.
         </p>
 
         <figure>
@@ -224,69 +219,75 @@
             Your browser does not support the video tag.
           </video>
           <figcaption>
-            Endgame gameplay showcase with active horde density and visual
-            effects
+            Gameplay demonstration showing enemy hordes and visual effects
           </figcaption>
         </figure>
 
         <h3>Core Technical Implementation</h3>
 
-        <h4>1. Hierarchical Upgrade Architecture & JSON Persistence</h4>
+        <h4>1. Weapon Class Hierarchy & ScriptableObject Architecture</h4>
         <p>
-          Progression and meta-progression are handled through an extensible OOP
-          hierarchy and reflection-driven stat modifications, built specifically
-          to eliminate manual UI labor in the Unity Editor:
+          All player equipment derives from an object-oriented class structure.
+          The base <code>Item</code> class splits into <code>Weapon</code> and
+          <code>Utility</code>. Weapons branch into specialized behavior types:
+          <code>PhysicalWeapon</code> for melee swings, <code>ProjectileWeapon</code>
+          for shooting notes, <code>TetheringWeapon</code> for lightning arcs,
+          and <code>PermanentProjectileWeapon</code> for projectiles that are generated once and do not disappear.
+          Utilities handle passive stat modifiers like speed boosts, extra health,
+          slow fields, and decoys.
         </p>
-        <ul>
-          <li>
-            <strong>Automated UI Data-Binding Pipeline:</strong> The primary
-            goal was eliminating UI hierarchy bloat. The naive approach would
-            have required creating individual buttons for every single upgrade
-            across all 3 draft panels (75+ buttons in total), making adding new
-            abilities a tedious manual chore. Instead, a single generic panel
-            dynamically binds icons, localized text, and action payloads at
-            runtime based on clean naming conventions.
-          </li>
-          <li>
-            <strong>Polymorphic Item Hierarchy:</strong> Separates active
-            musical <strong>Weapons</strong> (Bass Guitar, Electric Guitar,
-            Synthwave Blast, Saxophone, Yoyo, Disco Ball, Vinyl Disc,
-            Breakdance) from passive <strong>Utilities</strong>
-            (Roller Skates for speed, Groove Armor for health, Chill Vibe for
-            enemy slow, Personal Space for pushback).
-          </li>
-          <li>
-            <strong>Reflection-Driven Modifiers:</strong> C# reflection queries
-            item types and method names at runtime, enabling detailed upgrades
-            across projectile counts, penetration limits, damage values, and
-            area radii without switch-case bloat or manual inspector hookups.
-          </li>
-          <li>
-            <strong>Cross-Session JSON Save Data:</strong> Meta-progression
-            ranks, lifetime stats, and currency are serialized to persistent
-            JSON files, allowing progress retention between runs and the main
-            menu meta-shop.
-          </li>
-          <li>
-            <strong>Boss Encounters & Drop Containers:</strong> High-health boss
-            encounters drop special loot containers (<code>Purse.cs</code>) that
-            reward players with bonus upgrades extracted dynamically from the
-            active upgrade pool.
-          </li>
-        </ul>
 
         <figure>
           <a href="./Images/hierarchy.png" class="lightbox-trigger">
             <img
               src="./Images/hierarchy.png"
-              alt="Item and upgrade class hierarchy"
+              alt="Item and weapon class hierarchy"
               class="enlargeable-image"
             />
           </a>
           <figcaption>
-            Item and upgrade class hierarchy diagram (Click to enlarge)
+            C# weapon and utility inheritance structure (Click to enlarge)
           </figcaption>
         </figure>
+
+        <p>
+          Equipment stats and upgrades are handled with ScriptableObjects and
+          JSON save files:
+        </p>
+        <ul>
+          <li>
+            <strong>ScriptableObject Data Setup:</strong> Base item data is
+            stored in <code>ItemDefinitionSO</code> assets (split into
+            <code>WeaponDataSO</code> and <code>UtilityDataSO</code>). Upgrades
+            use <code>UpgradeDefinitionSO</code> to define stats
+            (<code>StatType</code>), costs, and values.
+          </li>
+          <li>
+            <strong>Event-Based Shop UI:</strong> Shop buttons
+            (<code>MetaUpgradeNodeUI</code>) subscribe to
+            <code>OnUpgradePurchased</code> and <code>OnCurrencyChanged</code>
+            events on the <code>MetaUpgradeManager</code>, avoiding constant
+            <code>Update()</code> checks.
+          </li>
+          <li>
+            <strong>In-Run Card Draft:</strong> Level-up choice cards are built
+            dynamically from available items and upgrade assets, wiring button
+            clicks directly to item methods using lambdas.
+          </li>
+          <li>
+            <strong>JSON Save System:</strong> Save data
+            (<code>MetaSaveData</code>) writes purchased ranks
+            (<code>UpgradeID &rarr; Rank</code>) to disk via JSON, keeping
+            ScriptableObjects clean and resetting player stats properly between
+            runs.
+          </li>
+          <li>
+            <strong>Results Screen Architecture:</strong>
+            <code>ResultManager</code> stays active across scenes to track kills,
+            time, and item assets, while <code>ResultScreenUI</code> reads this
+            data to display the game-over screen.
+          </li>
+        </ul>
 
         <figure>
           <video controls>
@@ -294,74 +295,72 @@
             Your browser does not support the video tag.
           </video>
           <figcaption>
-            Main menu meta-upgrade shop and in-game level-up progression
+            Shop menu upgrades and in-game level-up card selection
           </figcaption>
         </figure>
 
-        <h4>2. Combat Hit-Registration, Proximity Targeting & Trajectories</h4>
+        <h4>2. Combat Hit-Detection, Target Sorting & Trajectories</h4>
         <p>
-          The combat engine powers an arsenal of musical weapons with
-          specialized collision, targeting, and movement behaviors:
+          Each weapon uses dedicated targeting and collision logic:
         </p>
         <ul>
           <li>
-            <strong>Directional Melee Hit-Validation:</strong> The Bass Guitar
-            swing uses a <code>HashSet&lt;Collider2D&gt;</code> to record hit
-            enemies during an active swing (<code>BassGuitarSwing</code>),
-            automatically flushing references upon returning to idle
-            (<code>BassGuitarIdle</code>) to prevent duplicate damage ticks per
-            frame.
+            <strong>Melee Hit Checks:</strong> The Bass Guitar uses
+            <code>Animator.StringToHash</code> and a
+            <code>HashSet&lt;Collider2D&gt;</code> to track hit enemies during
+            the swing animation, clearing the set when returning to idle to
+            prevent multi-hits on the same swing.
           </li>
           <li>
-            <strong>Proximity Sorting with SortedSet:</strong> The Electric
-            Guitar lightning attack gathers enemies inside a circular trigger
-            and sorts them by distance using a
-            <code>SortedSet&lt;GameObject&gt;</code> with a custom distance
-            comparer (<code>GameObjectComparer</code>), cleanly tethering the
-            closest units via LINQ (<code>Take(amountOfTethers)</code>).
+            <strong>Distance-Based Targeting:</strong> The Electric Guitar
+            collects enemies in a trigger and sorts them by distance using a
+            <code>SortedSet&lt;GameObject&gt;</code> with a custom comparer
+            (<code>GameObjectComparer</code>), tethering the closest targets.
           </li>
           <li>
-            <strong>Trajectory Mathematics & Dual-Stick Aiming:</strong>
-            Projectiles utilize quadratic Bezier curve trajectories
-            (<code>WaveTime.cs</code>) for boomerang Vinyl Discs, orbiting paths
-            for Yoyos, and 360-degree <code>Mathf.Atan2</code> vector
-            calculations for independent joystick aiming.
+            <strong>Custom Movement Paths:</strong> Vinyl discs follow a 2-stage
+            quadratic Bezier curve to fly out and return like boomerangs, Yoyos
+            orbit the player using angle math, and aiming uses
+            <code>Mathf.Atan2</code> for dual-joystick controls.
           </li>
         </ul>
 
         <figure class="code-figure">
           <div class="code-container">
-            <pre><code class="language-csharp">// Dynamic lightning tether targeting using SortedSet proximity sorting
+            <pre><code class="language-csharp">// Targets nearest enemies inside a trigger using a SortedSet
 public override void Attack()
 {
-    if (gameObject.activeSelf && enemies.Count != 0)
-    {
-        SoundManager.Instance.PlaySFX(attackSound, 1);
-        GameObject[] targetEnemies = GetClosestEnemies(AdjustTargetOverflow(amountOfTethers));
+    if (!gameObject.activeSelf) return;
 
-        for (int i = 0; i &lt; targetEnemies.Length; i++)
+    enemies.RemoveWhere(e => e == null);
+
+    if (enemies.Count > 0)
+    {
+        if (weaponData != null && weaponData.AttackSound != null)
         {
-            GameObject clone = Instantiate(bolt);
-            clone.GetComponent&lt;ElectricBolt&gt;().SetPlayerObject(gameObject);
-            clone.GetComponent&lt;ElectricBolt&gt;().SetTargetUnit(targetEnemies[i]);
-            clone.SetActive(true);
+            SoundManager.Instance.PlaySFX(weaponData.AttackSound, 1f);
         }
-    } 
-}
 
-protected GameObject[] GetClosestEnemies(int amountOfTethers)
-{
-    SortedSet&lt;GameObject&gt; sortedEnemies = new SortedSet&lt;GameObject&gt;(new GameObjectComparer());
-    foreach (GameObject enemy in enemies)
-    {
-        sortedEnemies.Add(enemy);
+        GameObject[] targetEnemies = GetClosestEnemies(AdjustTargetOverflow(GetCurrentTetherAmount()));
+        float finalDamage = GetCurrentDamage();
+        Transform sourceTransform = player != null ? player.transform : transform;
+
+        for (int i = 0; i < targetEnemies.Length; i++)
+        {
+            if (targetEnemies[i] != null && bolt != null)
+            {
+                GameObject clone = Instantiate(bolt);
+                if (clone.TryGetComponent<ElectricBolt>(out var electricBolt))
+                {
+                    electricBolt.Initialize(sourceTransform, targetEnemies[i], finalDamage);
+                }
+            }
+        }
     }
-    return sortedEnemies.Take(amountOfTethers).ToArray();
 }</code></pre>
           </div>
           <figcaption>
-            Proximity-based enemy sorting and dynamic bolt tethering
-            (ElectricGuitar.cs)
+            Enemy proximity sorting and lightning bolt tethering (ElectricGuitar.cs)
           </figcaption>
         </figure>
 
@@ -371,40 +370,35 @@ protected GameObject[] GetClosestEnemies(int amountOfTethers)
             Your browser does not support the video tag.
           </video>
           <figcaption>
-            Demonstration of Electric Guitar targeting nearest enemies
-            dynamically
+            Electric Guitar targeting and lightning bolt arcs
           </figcaption>
         </figure>
 
-        <h4>3. Multi-Camera Rendering & Selective 2D Bloom Pipeline</h4>
+        <h4>3. Multi-Camera Setup & 2D Bloom Pipeline</h4>
         <p>
-          To achieve a punchy retro nightclub aesthetic without washing out
-          gameplay elements, the visual pipeline uses a 3-camera architecture
-          with isolated 2D light layers:
+          The graphics setup uses three dedicated cameras to keep the retro
+          club look clear during busy combat:
         </p>
         <ul>
           <li>
-            <strong>Isolated Camera Hierarchy:</strong> Scene rendering is split
-            across three dedicated cameras: a <em>Floor Camera</em>, an
-            <em>Objects/Player Camera</em>, and a
+            <strong>3-Camera Hierarchy:</strong> Rendering is split into a
+            <em>Floor Camera</em>, an <em>Objects/Player Camera</em>, and a
             <em>World-Space UI Camera</em>.
           </li>
           <li>
-            <strong>World-Space UI for Particle System Integration:</strong> The
-            UI canvas is built in World Space rather than Screen Space Overlay,
-            allowing Unity Particle Systems (for confetti popups) to render when
-            leveling up or earning bonus upgrades.
+            <strong>World-Space UI:</strong> The UI canvas is in World Space so
+            Unity particle systems (like level-up confetti) render properly on
+            top of menus.
           </li>
           <li>
-            <strong>Selective Post-Processing Volumes:</strong> Dedicated Bloom
-            volumes allow high-intensity, pulsating neon light on the dancefloor
-            without overexposing character sprites, enemies, or UI elements.
+            <strong>Isolated Bloom Volumes:</strong> Bloom is applied only to the
+            floor layer so the dancefloor lights glow without washing out
+            character sprites or text.
           </li>
           <li>
-            <strong>Procedural Viewport Tilemap:</strong> Built an automated
-            floor generation script that checks camera viewport bounds to
-            recycle tiles dynamically with weighted 7-color palette
-            distributions.
+            <strong>Viewport Floor Generation:</strong> A tilemap script checks
+            camera bounds to place and remove floor tiles as the player moves,
+            using a 7-color palette.
           </li>
         </ul>
 
@@ -415,55 +409,48 @@ protected GameObject[] GetClosestEnemies(int amountOfTethers)
             class="enlargeable-image"
           />
           <figcaption>
-            Dynamic disco dancefloor with randomized color tiles and border
-            enemy spawns
+            Procedural tile placement around camera bounds with bloom lighting
           </figcaption>
         </figure>
 
-        <h4>4. Event-Driven Audio Synchronization & Dynamic BPM Modulation</h4>
+        <h4>4. Music Synchronization & Beat Trigger Engine</h4>
         <p>
-          Instead of standard delta-time timers, weapons and rhythm visuals fire
-          in strict synchronization with the music track using a centralized,
-          sample-accurate event engine (<code>TriggerController</code>):
+          Weapon firing and beat animations are driven by audio playback timing
+          rather than frame timers via <code>TriggerController</code>:
         </p>
         <ul>
           <li>
-            <strong>Sample-Accurate Audio Timing:</strong> The controller reads
-            raw playback samples (<code>inGameMusic.timeSamples</code>) divided
-            by the clip frequency (<code>clip.frequency</code>) and interval
-            length. This ensures beat tracking remains anchored directly to the
-            audio buffer without drifting during framerate spikes or pitch
-            shifts.
+            <strong>Sample-Based Timing:</strong> The script reads
+            <code>inGameMusic.timeSamples</code> divided by clip frequency and
+            trigger interval, keeping beats in sync even when track pitch or BPM
+            changes.
           </li>
           <li>
-            <strong>Dynamic Musical Subdivisions:</strong> Each configurable
-            <code>Trigger</code> object calculates its interval dynamically via
-            <code>60f / (BPM / noteValue)</code>, allowing simultaneous tracking
-            of whole notes, quarter notes, and custom subdivisions.
+            <strong>Configurable Beat Subdivisions:</strong> Each
+            <code>Trigger</code> calculates its interval using
+            <code>60f / (BPM / noteValue)</code> to track whole notes, quarter
+            notes, and custom fractions while ignoring passive items
+            (<code>noteValue = 0</code>).
           </li>
           <li>
-            <strong>Discrete Integer Beat Detection:</strong> By monitoring
-            transitions in the floored interval index (<code
-              >Mathf.FloorToInt(interval) != lastQuaterNote</code
-            >), the system executes events exactly once per musical step and
-            broadcasts to registered weapons via
-            <code>UnityEvent</code> delegates.
+            <strong>Integer Beat Tracking:</strong> Fires events when the floored
+            interval index changes, sending triggers to registered weapons via
+            <code>UnityEvent</code> callbacks.
           </li>
           <li>
-            <strong>Original Audio Synthesis:</strong> Synthesized custom 80s
-            synthwave sound effects (level-up chimes and death stings) from
-            scratch using modular synthesis in VCV Rack.
+            <strong>Custom Sound Design:</strong> Created 80s synthwave level-up
+            and death sound effects using modular synthesis in VCV Rack.
           </li>
         </ul>
 
         <figure class="code-figure">
           <div class="code-container">
-            <pre><code class="language-csharp">// Sample-accurate audio event dispatcher and beat trigger engine
+            <pre><code class="language-csharp">// Dispatches events on music beat steps
 public class TriggerController : MonoBehaviour
 {
-    [SerializeField] public float inGameCurrentTrackBPM;
+    [SerializeField] public float inGameCurrentTrackBPM = 120f;
     [SerializeField] public Trigger[] triggers;
-    [SerializeField] public bool isTriggering;
+    [SerializeField] public bool isTriggering = true;
 
     private AudioSource inGameMusic;
     public static TriggerController Instance { get; private set; }
@@ -471,188 +458,161 @@ public class TriggerController : MonoBehaviour
     [System.Serializable]
     public class Trigger
     {
-        [SerializeField] public float noteValue;
+        [SerializeField] public float noteValue = 1f;
         [SerializeField] public UnityEvent quaterNoteTrigger;
-        private int lastQuaterNote;
-        public bool isTriggering;
-        private AudioClip currentClip;
+        private int lastQuarterNote = -1;
+        private AudioClip lastClip;
 
-        public float GetIntervalLength(float BPM)
+        public float GetIntervalLength(float bpm)
         {
-            return 60f / (BPM / noteValue);
+            if (noteValue <= 0f || bpm <= 0f) return 1f;
+            return 60f / (bpm / noteValue);
         }
 
-        public void CheckForNewQuaterNote(float interval)
+        public void CheckForNewQuarterNote(float sampleInterval, AudioClip currentClip, bool canTrigger)
         {
-            // Reset state if track clip changes
-            if (currentClip != SoundManager.Instance.transform.GetChild(0).GetComponent&lt;AudioSource&gt;().clip)
+            if (lastClip != currentClip)
             {
-                currentClip = SoundManager.Instance.transform.GetChild(0).GetComponent&lt;AudioSource&gt;().clip;
-                lastQuaterNote = 0;
+                lastClip = currentClip;
+                lastQuarterNote = -1;
             }
 
-            // Fire event on integer beat threshold transition
-            if (Mathf.FloorToInt(interval) != lastQuaterNote)
+            int currentQuarterNote = Mathf.FloorToInt(sampleInterval);
+            if (currentQuarterNote != lastQuarterNote)
             {
-                lastQuaterNote = Mathf.FloorToInt(interval);
-
-                if (isTriggering)
+                lastQuarterNote = currentQuarterNote;
+                if (canTrigger && quaterNoteTrigger != null)
                 {
                     quaterNoteTrigger.Invoke();
-                } 
+                }
             }
         }
     }
 
-    private void Awake()
-    { 
-        Instance = this;
-    }
-
-    void Start()
+    private void Update()
     {
-        isTriggering = true;
-        inGameMusic = SoundManager.Instance.transform.GetChild(0).GetComponent&lt;AudioSource&gt;();
-    }
+        if (!isTriggering) return;
+        if (inGameMusic == null || inGameMusic.clip == null) return;
 
-    void Update()
-    {
-        inGameMusic = SoundManager.Instance.transform.GetChild(0).GetComponent&lt;AudioSource&gt;();
-        inGameCurrentTrackBPM = SoundManager.Instance.GetCurrentBPM();
+        AudioClip clip = inGameMusic.clip;
+        float frequency = clip.frequency;
+        int timeSamples = inGameMusic.timeSamples;
 
-        if (isTriggering)
+        for (int i = 0; i < triggers.Length; i++)
         {
-            foreach (Trigger trigger in triggers)
-            {
-                // Calculate position based on raw audio samples and frequency
-                float intervalLength = trigger.GetIntervalLength(inGameCurrentTrackBPM);
-                float sampledTime = inGameMusic.timeSamples / (inGameMusic.clip.frequency * intervalLength);
-                trigger.CheckForNewQuaterNote(sampledTime);
-            }
-        }
-    }
+            Trigger trigger = triggers[i];
+            if (trigger == null || trigger.noteValue <= 0f) continue;
 
-    public void SetTrigger(int triggerNumber, UnityAction action)
-    {
-        triggers[triggerNumber].quaterNoteTrigger.AddListener(action);
+            float intervalLength = trigger.GetIntervalLength(inGameCurrentTrackBPM);
+            float sampledTime = timeSamples / (frequency * intervalLength);
+            trigger.CheckForNewQuarterNote(sampledTime, clip, isTriggering);
+        }
     }
 }</code></pre>
           </div>
           <figcaption>
-            Sample-accurate audio rhythm dispatcher and beat listener system
-            (TriggerController.cs)
+            Audio sample beat trigger dispatcher (TriggerController.cs)
           </figcaption>
         </figure>
 
         <h4>
-          5. Custom Editor Tooling, UI Pipeline & Multi-Language Localization
+          5. Unity Localization & Mobile Touch Controls
         </h4>
         <p>
-          To streamline development and support internationalization, custom
-          editor tooling and UI systems were built:
+          Language support and mobile input handling were built using standard
+          Unity systems:
         </p>
         <ul>
           <li>
-            <strong
-              >Custom Unity Editor Inspector
-              (`DynamicJoystickEditor.cs`):</strong
-            >
-            Built custom inspector tooling using
-            <code>SerializedProperty</code> to configure screen-split touch
-            zones for movement and aiming.
+            <strong>Unity Localization Package:</strong> Item assets
+            (<code>ItemDefinitionSO</code>) and upgrades
+            (<code>UpgradeDefinitionSO</code>) use <code>LocalizedString</code>
+            entries to support 5 languages: <strong>English</strong>,
+            <strong>Swedish</strong>, <strong>Spanish</strong>,
+            <strong>Dutch</strong>, and <strong>Thai</strong>.
           </li>
           <li>
-            <strong>Touch Joystick Snap-Back Fix:</strong> Customized dynamic
-            touch controls to automatically reset to their home anchors on
-            release, preventing stuck inputs on mobile devices.
+            <strong>Dynamic Value Insertion:</strong> Stat numbers and
+            percentages are passed to
+            <code>LocalizedString.GetLocalizedString(value)</code> to fill in
+            <code>{0}</code> placeholders while keeping correct word order for
+            each language.
           </li>
           <li>
-            <strong>Multi-Language Localization Engine:</strong> Built a custom
-            text parser supporting 4 languages (English, Swedish, Dutch, and
-            Thai), dynamically formatting method names, upgrade stats, and
-            symbols into UI templates.
+            <strong>Locale Change Listener:</strong> UI components hook into
+            <code>LocalizationSettings.SelectedLocaleChanged</code> to update
+            displayed text instantly when the language is changed in settings.
           </li>
           <li>
-            <strong>LeanTween UI & Haptics:</strong> Programmed modal scale
-            transitions, scroll rect centering on selected items, screen flash
-            feedback, and mobile hardware vibration on player damage.
+            <strong>Mobile Controls & Haptics:</strong> Setup screen-split
+            joysticks that snap back to home position on release, with device
+            vibration triggers on player hits.
           </li>
         </ul>
 
         <h3>Key Challenges Overcome</h3>
         <div class="challenge-solution">
           <p class="challenge">
-            <b>UI Hierarchy Bloat vs. Automated Data-Binding:</b>
+            <b>Managing 27 Unique Upgrades Without Hardcoded UI:</b>
           </p>
           <p class="solution">
-            <strong>Automated UI Data-Binding Pipeline:</strong> The primary
-            goal was eliminating manual UI labor and hierarchy bloat. Supporting
-            27 individual upgrades across 13 separate items created 40 unique
-            selectable states. The naive approach would have required 40
-            individual buttons inside each of the 3 draft panels (120 buttons in
-            total) and complex runtime visibility toggling. Instead, 3 generic
-            panels dynamically bind icons, localized text, and reflection method
-            payloads (<code>PrepareMethodToExecute</code>) at runtime based on
-            standardized naming conventions.
+            With 13 items and 27 upgrades, creating individual UI buttons for
+            every card would have required over 100 manual buttons. Built a
+            ScriptableObject pipeline where 3 reusable card panels populate
+            text, icons, and click actions directly from asset definitions.
           </p>
 
           <p class="challenge">
-            <b>Post-Processing Overexposure on Layered 2D Sprites:</b>
+            <b>Bloom Overexposure on 2D Sprites:</b>
           </p>
           <p class="solution">
-            High-intensity bloom needed for the dancefloor severely overexposed
-            the player sprite and UI. Splitting rendering across a 3-camera
-            architecture with isolated layer volumes allowed the dancefloor to
-            flash vibrantly while characters and UI remained crisp.
+            Strong bloom on the dancefloor was blinding the player and hiding UI
+            text. Splitting rendering across 3 cameras with layer-specific
+            post-processing kept the floor glowing while characters and text
+            stayed clear.
           </p>
 
           <p class="challenge">
-            <b>Dynamic Music Tempo & Attack Synchronization:</b>
+            <b>Keeping Attacks in Sync During Dynamic BPM Shifts:</b>
           </p>
           <p class="solution">
-            Modulating track pitch and tempo in real time as players gathered or
-            missed ground notes caused frame-based attack timers to drift.
-            Polling active audio playback time inside an event-driven
-            <code>TriggerController</code> ensured attack frequencies
-            accelerated and decelerated in perfect sync with the music.
+            Speeding up the track when collecting notes caused delta-time attack
+            timers to desync from the music. Reading raw audio samples in
+            <code>TriggerController</code> kept weapon attacks locked to the
+            beat regardless of pitch or tempo changes.
           </p>
 
           <p class="challenge">
-            <b>Multi-Hit Trigger Glitches on Continuous Swings:</b>
+            <b>Formatting Upgrade Numbers Across 5 Languages:</b>
           </p>
           <p class="solution">
-            Melee hitbox colliders caused duplicate damage ticks per frame
-            during active swing animations. Implementing a state-bound
-            <code>HashSet&lt;Collider2D&gt;</code>
-            ensured enemies take damage exactly once per swing cycle and flushed
-            references cleanly on idle.
+            Different languages place numbers and percentages in different parts
+            of the sentence. Used Unity’s <code>LocalizedString</code> Smart
+            Strings so that values passed into <code>{0}</code> format correctly
+            in English, Swedish, Spanish, Dutch, and Thai.
           </p>
 
-          <p class="challenge"><b>Dynamic Proximity Target Selection:</b></p>
+          <p class="challenge"><b>Fast Proximity Target Sorting:</b></p>
           <p class="solution">
-            Finding and tethering the closest enemies in dense hordes caused
-            performance hiccups with standard array sorting. Passing targets
-            through a
-            <code>SortedSet&lt;GameObject&gt;</code> with a custom distance
-            comparer allowed clean, efficient extraction of the nearest
-            candidates.
+            Finding nearest targets in large hordes slowed down with basic array
+            searches. Used a <code>SortedSet&lt;GameObject&gt;</code> with a
+            custom distance comparer to collect and sort nearby enemies cleanly.
           </p>
         </div>
 
         <h3>Project Outcome</h3>
-        <p>Delivered over the 7-week development cycle, the game achieved:</p>
+        <p>Built over 7 weeks, the project delivered:</p>
         <ul>
           <li>
-            A complete survivor-like roguelite loop with tempo-driven horde
-            combat and custom audio synthesis
+            A complete survivor-like roguelite loop with tempo-synced weapon
+            combat and custom audio effects
           </li>
           <li>
-            A modular C# item hierarchy with persistent JSON meta-progression
-            and 4-language localization
+            A modular ScriptableObject equipment system with JSON save files and
+            5-language localization
           </li>
           <li>
-            A performant multi-camera 2D rendering pipeline with selective
-            post-processing bloom
+            A 3-camera 2D rendering pipeline with layer-isolated bloom
           </li>
         </ul>
       </div>
@@ -707,7 +667,7 @@ public class TriggerController : MonoBehaviour
           >
           <p class="footer-description">
             Passionate game developer specializing in Unreal Engine and Unity.
-            Building immersive worlds and engaging gameplay experiences.
+            Building gameplay systems and mechanics.
           </p>
           <div class="social-links">
             <a
